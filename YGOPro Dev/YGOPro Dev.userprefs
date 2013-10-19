@@ -1,0 +1,17 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Network\HubServer\HubClient.cs">
+    <Files>
+      <File FileName="Assets\Network\HubServer\HubClient.cs" Line="39" Column="10" />
+      <File FileName="Assets\Network\HubServer\HubHandler.cs" Line="11" Column="32" />
+      <File FileName="Assets\Windows\Login.cs" Line="30" Column="36" />
+      <File FileName="Assets\Network\HubServer\ServerDetails.cs" Line="14" Column="1" />
+      <File FileName="Assets\Main.cs" Line="10" Column="1" />
+      <File FileName="Assets\Windows\Console.cs" Line="112" Column="5" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
