@@ -5,9 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Net.Sockets;
 using System.IO;
-using System.Threading;
-using System.Security.Cryptography;
-using JsonFx.Json;
 using DevPro.Network.Enums;
 using DevPro.Network.Data;
 
@@ -18,12 +15,8 @@ namespace DevPro.Network
         bool m_isConnected;
         private TcpClient m_client;
         private BinaryReader m_reader;
-        private DateTime m_pingRequest;
         private Queue<MessageReceived> m_recivedQueue;
         private Queue<byte[]>  m_sendQueue;
-	
-		private JsonReader m_jsonReader;
-		private JsonWriter m_jsonWriter;
 
 
         public HubClient()
@@ -31,8 +24,6 @@ namespace DevPro.Network
             m_client = new TcpClient();
             m_recivedQueue = new Queue<MessageReceived>();
             m_sendQueue = new Queue<byte[]>();
-			m_jsonReader = new JsonReader();
-			m_jsonWriter = new JsonWriter();
         }
 
         public bool Connect(string address, int port)
@@ -41,39 +32,18 @@ namespace DevPro.Network
             {
                 m_client.Connect(address, port);
                 m_reader = new BinaryReader(m_client.GetStream());
-                m_isConnected = true;
+                m_isConnected = true;			
+				Debug.Log("Connected.");
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-				Debug.Log(ex);
+				Debug.Log("Failed to connect.");
                 return false;
             }
         }
 		
-		public void Login(string username, string password)
-		{
-			SendPacket(DevServerPackets.Login,
-				m_jsonWriter.Write(new LoginRequest() 
-			{ 
-				Username = username, 
-				Password =  EncodePassword(password), 
-				UID = "Test"
-			}));
-		}
-		
-		private string EncodePassword(string password)
-        {
-            var salt = Encoding.UTF8.GetBytes("&^%£$Ugdsgs:;");
-            var userpassword = Encoding.UTF8.GetBytes(password);
 
-            var hmacMD5 = new HMACMD5(salt);
-            var saltedHash = hmacMD5.ComputeHash(userpassword);
-
-
-            //Convert encoded bytes back to a 'readable' string
-            return Convert.ToBase64String(saltedHash);
-        }
 		
         public void Disconnect()
         {
@@ -103,14 +73,8 @@ namespace DevPro.Network
         public void SendPacket(DevServerPackets type)
         {
 			Debug.Log("Sent: " + type);
-            if (type == DevServerPackets.Ping) m_pingRequest = DateTime.Now;
             lock (m_sendQueue)
                 m_sendQueue.Enqueue(new[] { (byte)type });
-        }
-        public void SendMessage(MessageType type, CommandType command, string channel, string message)
-        {
-            SendPacket(DevServerPackets.ChatMessage, 
-                m_jsonWriter.Write(new ChatMessage(type,command,channel,message)));
         }
 
         private void SendPacket(byte[] packet)
