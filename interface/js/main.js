@@ -1,3 +1,37 @@
+var u = new UnityObject2();
+u.observeProgress(function (progress) {
+	var $missingScreen = jQuery(progress.targetEl).find(".missing");
+	switch(progress.pluginStatus) {
+		case "unsupported":
+			showUnsupported();
+		break;
+		case "broken":
+			alert("You will need to restart your browser after installation.");
+		break;
+		case "missing":
+			$missingScreen.find("a").click(function (e) {
+				e.stopPropagation();
+				e.preventDefault();
+				u.installPlugin();
+				return false;
+			});
+			$missingScreen.show();
+		break;
+		case "installed":
+			$missingScreen.remove();
+		break;
+		case "first":
+		break;
+	}
+});
+jQuery(function(){
+	u.initPlugin(jQuery("#unityPlayer")[0], "DevProWeb.unity3d");
+
+});
+
+function messageUnity(functionName, message ){
+	u.getUnity().SendMessage("HubClient", functionName, message);
+}
 $('.downloadbutton, #lobbycancel').on('click',function(){
 	$('#intro').toggle();
 	$('.game').toggle();
