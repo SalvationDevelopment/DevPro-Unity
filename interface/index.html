@@ -15,6 +15,8 @@
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        <script type="text/javascript" src="http://webplayer.unity3d.com/download_webplayer-3.x/3.0/uo/UnityObject2.js"></script>
+        </script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -41,23 +43,22 @@
                     <li>Magnet Link</li>
                 </ul>
             </nav>
-            <footer class='superfooter'>
-            YGOPro, DevPro Online and our sister systems are not affliated with Konami.
-            </footer>
+            
         </header>
-        <section class='hidden'><div class='container'>
+        <section id='intro'><div class='container'>
             <article>
                 
                 <h3>The Basics</h3>
-                <p>DevPro is a suite of opensource programs that allow you to play the Yu-Gi-Oh! TCG/OCG/Anime card game online with people around the world. The suite uses YGOPro as the base client along with a special launcher system for chat, customization, and file management.</p>
+                <p>DevPro is a suite of opensource web and desktop applications that allow you to play the Yu-Gi-Oh! TCG/OCG/Anime card game online with people around the world. The suite uses YGOPro as the base client along with a special launcher system for chat, customization, and file management.</p>
                 
-                
-            </article>
-            <article>
+                <p>Play in the browser or on the desktop, this is a system designed from user request and hard work that spares no excuse.</p>
                 
             </article>
             <article>
-                
+                <div class='iconic'>ABC</div>
+            </article>
+            <article>
+                <div class='iconic'>MMO</div>
             </article>
             <article>
                 
@@ -71,20 +72,22 @@
                 YGOPro is the heart of DevPro Online, the simulator uses Lua to apply known rules 100% via server scripts. There is no cheating on YGOPro Clients. Via an international team of Judges, Programmers, and bug reports we maintain ruling intergrity.
             </article>
             <article>
-                
+                <div class='iconic'>Safe</div>
             </article>
             <article>
-                
+                <div class='iconic'>Auto</div>
             </article>
             <article>
                 <h3>Self Updates &amp; Maintaince</h3>
                 <p>DevPro Online automatically updates its launcher and client software on startup, onced installed and online you will always have the latest announced cards, rulings, software, features, and options.</p>
             </article>
             <article>
-                <h3>MIT Licensed Opensourced Code</h3>
+                <h3>Licensed as Opensourced Code</h3>
                 <p>YGOPro is based out of Github, so we encourage all to fork and improve the code. If you love the system contribute. Regular Contributers are marked in our chat with a special [Dev] Tag.</p>
             </article>
-            
+            <article>
+                <div class='iconic'>MIT</div>
+            </article>
         
             <footer>
                 <p>DevPro Online thanks its sister YGOPro teams</p>
@@ -122,13 +125,59 @@
         </section>
         <div class='field' style='display:none;'>
             <div class='fieldcontainer'>
-                <div class='info-controls'>
+                <!-- <div class='info-controls'>
                     <div class='info-image'>
                     </div>
 
-                </div>
+                </div> -->
                 <div class='gameplayarea'>
-                    
+                    <div id='cards'>
+                        
+                    </div>
+                    <div class='fieldimage'>
+                        <div id='player1'>
+                            <div id='pl00001' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00002' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00003' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00004' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00005' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00006' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00007' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00008' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00009' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00010' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00011' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00012' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00013' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00014' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00015' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00016' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00017' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00018' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00019' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00020' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00021' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00022' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00023' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00024' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00025' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00026' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00027' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00028' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00029' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00030' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00031' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00032' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00033' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00034' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00035' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00036' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00037' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00038' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00039' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                            <div id='pl00040' class='card c80214235 deck'><div class='back'></div><div class='front'></div></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -139,8 +188,16 @@
                 WARNING : Invalid Deck<br /> Chaos Empoerer Dragon - Evoy of the End, is banned
             </div>
         </div>
-
-
+        <footer class='superfooter'>
+            YGOPro, DevPro Online and our sister systems are not affliated with Konami.
+        <footer>
+        <div id="unityPlayer">
+                <div class="missing">
+                    <a href="http://unity3d.com/webplayer/" title="Unity Web Player. Install now!">
+                        <img alt="Unity Web Player. Install now!" src="http://webplayer.unity3d.com/installation/getunity.png" width="193" height="63" />
+                    </a>
+                </div>
+            </div>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
 
