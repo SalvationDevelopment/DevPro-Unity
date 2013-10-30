@@ -87,10 +87,12 @@ aside {width:50%; float:left; padding: 0 20px;}
                  color:#fff; margin:0 auto; margin-top:20px;padding:10px; text-align: center;box-shadow:0 0 20px black,inset 0 0 2px #fff;}
                  .downloadbutton:hover {background:rgba(50,200,50,1);}
 
-article {width:50%; float:left; text-align: justify; padding:20px; height:300px;}
+article {width:50%; float:left; text-align: justify; padding:20px; height:300px; margin-bottom: 100px;}
 .container footer {float:left; text-align: center; width:100%;}
-.superfooter {background:black; color:white; font-weight: 200; height:3em; line-height: 3em; text-align:center;position: absolute;bottom: 0; width: 100%}
-
+.superfooter {background:black; color:white; font-weight: 200; height:3em; line-height: 3em; text-align:center;position: fixed;bottom: 0; width: 100%}
+.iconic {background: green; width:80%; height:80%; margin:10% auto; color: white;
+text-align: center;
+font-size: 140px;}
 
 .lobby h2 {font-size: 2em; width:100%;}
 .game {background:rgba(0,0,0,.65); height: 100%; min-height: 40px; width: 100%}
@@ -113,11 +115,42 @@ article {width:50%; float:left; text-align: justify; padding:20px; height:300px;
 .message {width:300px;  margin:25% auto; color:white; text-align: center; border: 1px solid white; padding:20px;}
 .message:before {content:'!'; font-size: 130px; position:absolute; left:25%; width:50%; text-align:center;color:#fff;top:30%;}
 
-.field {width:100%; background:black;}
+.field {width:100%; background:rgba(0,0,0,.65);  -webkit-perspective: 1000px; position: relative; -webkit-transform-style: preserve-3d}
+.fieldcontainer {width:1000px; margin:0 auto; height:1000px;margin-top:-160px;}
 .info-controls{float:left;}
 .info-image {height:294px; padding:20px; width: 198px; background:brown;}
-.gameplayarea{ width:900px; height:600px; border: 1px solid white; float: left}
-/* ==========================================================================
+.gameplayarea{ width:1000px; height:1000px; margin   : 0 auto; }
+.fieldimage {width:85%; height:85%;  -webkit-transform: rotate3d(1,0,0,45deg); margin:0 auto; background-image: url(../img/field.png); background-size: 100% 100%;}
+.card { -webkit-transform-style: preserve-3d; width:83px; height:124px; background:blue; position:absolute; -z-index: 3; bottom:5px; right: 5px;  -webkit-transition: all 500ms;}
+.card.deck { -webkit-transition: left 15ms;}
+
+
+.card div {
+    display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  
+}
+.card .front {
+  background:black;
+}
+.card .back {background-image:url(http://images1.wikia.nocookie.net/__cb20100726082135/yugioh/images/thumb/e/e5/Back-EN.png/330px-Back-EN.png);
+    background-size: 100% 100%;
+    -webkit-transform: rotate3d(0,1,0, 180deg );
+
+}
+.defensemode{
+    -webkit-transform: rotate3d(0,0,1, 90deg );
+
+}
+.faceup {-webkit-transform: rotate3d(0,1,0 180deg ); }
+.defensemode.faceup { -webkit-transform: rotate3d(0,0,1, 90deg ) rotate3d(0,1,0, 180deg );}
+.faceup div {
+    -webkit-backface-visibility: hidden;
+}
+/* =========================================
+=================================
    Media Queries
    ========================================================================== */
 
