@@ -22,7 +22,13 @@
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
-
+        <div id="unityPlayer" style='height:1px'>
+            <div class="missing">
+                <a href="http://unity3d.com/webplayer/" title="Unity Web Player. Install now!">
+                    <img alt="Unity Web Player. Install now!" src="http://webplayer.unity3d.com/installation/getunity.png" width="193" height="63" />
+                </a>
+            </div>
+        </div>
         <header>
             
             <h1><img src='img/logo.png' alt="" id='logo'/><span style='color:#ff6600; font-weight:bold; text-shadow:0 0 1px #ff6600'>DevPro</span> Online</h1>
@@ -179,9 +185,16 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
         </div>
-        <section class='login hidden'>
+        <section class='login' style='display:none'>
+            <div class='loginscreen'>
+                <h3>Login</h3>
+                <label>Username</label><input type='text' id='username'><br />
+                <label>Password</label><input type='password' id='password'><br />
+                <div class='button' id='loginbutton'>Login</div>
+            </div>
+
         </section>
         <div id='majorpopup' style='display:none;'>
             <div class='message'>
@@ -191,13 +204,7 @@
         <footer class='superfooter'>
             YGOPro, DevPro Online and our sister systems are not affliated with Konami.
         <footer>
-        <div id="unityPlayer">
-                <div class="missing">
-                    <a href="http://unity3d.com/webplayer/" title="Unity Web Player. Install now!">
-                        <img alt="Unity Web Player. Install now!" src="http://webplayer.unity3d.com/installation/getunity.png" width="193" height="63" />
-                    </a>
-                </div>
-            </div>
+        
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
 

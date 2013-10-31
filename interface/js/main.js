@@ -34,10 +34,13 @@ function messageUnity(functionName, message ){
 }
 $('.downloadbutton, #lobbycancel').on('click',function(){
 	$('#intro').toggle();
-	$('.game').toggle();
+	$('.login').toggle();
 	$('header').toggle();
 });
-
+$('#loginbutton').on('click',function(){
+	u.getUnity().SendMessage("HubClient", "Login",  "{'Username' : '"+($('#username').val())+"', 'Password' : '"+($('#password').val())+"', 'UID' : 'Unity'}");
+	console.log("{'Username' : '"+($('#username').val())+"', 'Password' : '"+($('#password').val())+"', 'UID' : 'Unity'}");
+});
 $('#lobbylock, #majorpopup').on('click',function(){
 	$('#majorpopup').toggle();
 	$
@@ -50,8 +53,18 @@ $('.card').on('click',function(){
 	complete(deckpositionx);
 });
 deckpositionx = 735
-
-
+Unityconsole = false
+$('body').keypress(function( event ) {
+  if ( event.which == 96 ) {
+     if (Unityconsole){
+     	$('#unityPlayer').css('height', 'auto');
+     	Unityconsole = false;
+     }else{
+     	$('#unityPlayer').css('height', '1px');
+     	Unityconsole = true;
+     }
+  }
+});
 function clearposition(card){
 	$('#'+card).removeClass('deck');
 	$('#'+card).removeClass('hand');
@@ -59,6 +72,13 @@ function clearposition(card){
 	$('#'+card).removeClass('head');
 	cardmargin(deck);
 }
+
+
+
+
+
+
+
 
 function position(card, position){
 	$('#'+card).addClass('deckpositionx');
@@ -113,3 +133,7 @@ var started = Date.now();
 }
 
 positions = {extra : {x : 25}}
+
+function MessageBrowser(message){
+	console.log(message);
+}
