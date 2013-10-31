@@ -6,15 +6,8 @@ namespace DevPro.Network.Data
 {
     public class ServerInfo
     {
-        public string serverName { get; private set; }
-        public string serverAddress { get; private set; }
-        public int serverPort { get; private set; }
-
-        public ServerInfo(string name, string address, int port)
-        {
-            this.serverName = name;
-            this.serverAddress = address;
-            this.serverPort = port;
-        }
+        public string serverName { get; set; }
+        public string serverAddress { get; set; }
+        public int serverPort { get; set; }
     }
 }

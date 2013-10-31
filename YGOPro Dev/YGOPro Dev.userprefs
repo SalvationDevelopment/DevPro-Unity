@@ -5,14 +5,17 @@
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Assembly-CSharp" expanded="True">
+            <Node name="References" expanded="True" />
             <Node name="Assets" expanded="True">
               <Node name="Network" expanded="True">
                 <Node name="DuelClient" expanded="True">
-                  <Node name="Enums" expanded="True" />
-                  <Node name="GameServerPacket.cs" selected="True" />
+                  <Node name="Helpers" expanded="True">
+                    <Node name="GameConnection.cs" selected="True" />
+                  </Node>
                 </Node>
-                <Node name="Helpers" expanded="True" />
-                <Node name="HubServer" expanded="True" />
+                <Node name="HubServer" expanded="True">
+                  <Node name="Data" expanded="True" />
+                </Node>
               </Node>
             </Node>
           </Node>

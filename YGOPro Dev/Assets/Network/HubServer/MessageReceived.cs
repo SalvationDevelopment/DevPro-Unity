@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using DevPro.Network.Enums;
 
 namespace DevPro.Network
@@ -15,5 +16,10 @@ namespace DevPro.Network
             Raw = raw;
             Reader = reader;
         }
+		
+		public string GetString()
+		{
+			return Encoding.UTF8.GetString(Raw);	
+		}
     }
 }

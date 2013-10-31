@@ -5,8 +5,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using DevPro.Game.Network.Enums;
+using UnityEngine;
 
-namespace DevPro.Game.Network
+namespace DevPro.Game.Network.Helpers
 {
     public class GameConnection
     {
@@ -26,7 +27,16 @@ namespace DevPro.Game.Network
             m_sendQueue = new Queue<GameClientPacket>();
             m_receiveQueue = new Queue<GameServerPacket>();
             m_lastAction = DateTime.Now;
-            m_client = new TcpClient(address.ToString(), port);
+			try
+			{
+            	m_client = new TcpClient(address.ToString(), port);
+				Debug.Log ("Connected to duel server.");
+			}
+			catch
+			{
+				Debug.Log ("Failed to connect to Duel Server.");
+				return;
+			}
             IsConnected = true;
             m_reader = new BinaryReader(m_client.GetStream());
             m_thread = new Thread(NetworkTick);

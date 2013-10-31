@@ -3,30 +3,26 @@ using System.Collections;
 using DevPro.Network;
 using DevPro.Network.Enums;
 using DevPro.Network.Data;
-using JsonFx.Json;
 using System;
 using System.Text;
 using System.Security.Cryptography;
+using Pathfinding.Serialization.JsonFx;
 
 public class HubCommands : MonoBehaviour 
 {
 	HubClient m_client;
-	JsonWriter m_jsonWriter;
-	JsonReader m_jsonReader;
-	UserData User;
 
 	// Use this for initialization
 	void Start () 
 	{
 		m_client = new HubClient();
-		m_jsonWriter = new JsonWriter();
-		m_jsonReader = new JsonReader();
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		if(m_client.Connected())
+		
+		if(m_client != null && m_client.Connected())
 		{
 			m_client.HandleSendReceive();
 		
@@ -56,6 +52,43 @@ public class HubCommands : MonoBehaviour
 	{
 		Debug.Log(data.Packet);
 	//handle incoming packets here
+		
+		switch(data.Packet)
+		{
+		case DevClientPackets.LoginAccepted:
+			LoginData login = JsonReader.Deserialize<LoginData>(data.GetString());
+			ServerDetails.User = new UserData
+			{
+				rank = login.UserRank,
+				username = login.Username,
+				team = login.Team,
+				teamRank = login.TeamRank
+			};
+			ServerDetails.LoginKey = login.LoginKey;
+			break;
+		case DevClientPackets.LoginFailed:
+		case DevClientPackets.RegisterFailed:
+			//Send Web-Client message
+			break;
+		case DevClientPackets.GameServers:
+			ServerInfo[] servers = JsonReader.Deserialize<ServerInfo[]>(data.GetString());
+			ServerDetails.ServerList.Clear();
+			foreach(ServerInfo server in servers)
+				if(!ServerDetails.ServerList.ContainsKey(server.serverName))
+					ServerDetails.ServerList.Add(server.serverName,server);
+			break;
+		case DevClientPackets.AddServer:
+			ServerInfo gameserver = JsonReader.Deserialize<ServerInfo>(data.GetString());
+			if(!ServerDetails.ServerList.ContainsKey(gameserver.serverName))
+				ServerDetails.ServerList.Add(gameserver.serverName,gameserver);
+			break;
+		case DevClientPackets.RemoveServer:
+			string removeserver = data.GetString();
+			if(ServerDetails.ServerList.ContainsKey(removeserver))
+				ServerDetails.ServerList.Remove(removeserver);
+			break;
+			
+		}
 	}
 	
 	DateTime m_lastRegisterRequest  = new DateTime();
@@ -64,12 +97,12 @@ public class HubCommands : MonoBehaviour
 		TimeSpan delay = DateTime.Now - m_lastRegisterRequest;
 		if(delay.TotalMilliseconds < 5000)
 			return;
-		LoginRequest loginRequest = m_jsonReader.Read<LoginRequest>(data);
+		LoginRequest loginRequest = JsonReader.Deserialize<LoginRequest>(data);
 		loginRequest.Password = EncodePassword(loginRequest.Password);
 		Connect();
 	
 		m_client.SendPacket(DevServerPackets.Register,
-			m_jsonWriter.Write(loginRequest));
+			JsonWriter.Serialize(loginRequest));
 		
 		m_lastRegisterRequest = DateTime.Now;
 	}
@@ -78,13 +111,13 @@ public class HubCommands : MonoBehaviour
 	public void Login(string data) 
 	{
 		TimeSpan delay = DateTime.Now - m_lastLoginRequest;	
-		if(User != null || delay.TotalMilliseconds < 5000)
+		if(ServerDetails.User != null || delay.TotalMilliseconds < 5000)
 			return;
-		LoginRequest loginRequest = m_jsonReader.Read<LoginRequest>(data);
+		LoginRequest loginRequest = JsonReader.Deserialize<LoginRequest>(data);
 		loginRequest.Password = EncodePassword(loginRequest.Password);
 		Connect();
 		m_client.SendPacket(DevServerPackets.Login,
-			m_jsonWriter.Write(loginRequest));
+			JsonWriter.Serialize(loginRequest));
 		m_lastLoginRequest = DateTime.Now;
 	}
 }

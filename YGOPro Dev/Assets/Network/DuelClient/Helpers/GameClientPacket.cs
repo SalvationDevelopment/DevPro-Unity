@@ -2,7 +2,7 @@
 using DevPro.Game.Network.Enums;
 using DevPro.Game.Network.Helpers;
 
-namespace DevPro.Game.Network
+namespace DevPro.Game.Network.Helpers
 {
     public class GameClientPacket
     {
