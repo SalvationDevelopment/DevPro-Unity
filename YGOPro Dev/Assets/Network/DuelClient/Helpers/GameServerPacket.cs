@@ -47,10 +47,15 @@ namespace DevPro.Game.Network.Helpers
         }
 
         public int ReadInt32()
-        {
+		{
             return m_reader.ReadInt32();
         }
-
+		
+		public uint ReadUInt32()
+		{
+			return m_reader.ReadUInt32();	
+		}
+		
         public string ReadUnicode(int len)
         {
             return m_reader.ReadUnicode(len);

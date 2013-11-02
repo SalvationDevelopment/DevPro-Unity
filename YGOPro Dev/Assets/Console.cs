@@ -53,7 +53,7 @@ public class Console : MonoBehaviour
 
 	void OnGUI ()
 	{
-		GUILayout.Window(123456, new Rect(margin, margin, Screen.width - (2 * margin), Screen.height - margin), ConsoleWindow, "Console");
+		GUILayout.Window(123456, new Rect(margin, margin, Screen.width - 200, Screen.height - margin), ConsoleWindow, "Console");
 	}
 
 	/// <summary>

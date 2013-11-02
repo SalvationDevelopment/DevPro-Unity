@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using DevPro.Game.Network.Enums;
 using DevPro.Game.Network.Helpers;
+using DevPro.Network;
+using UnityEngine;
 
 namespace DevPro.Game
 {
@@ -100,62 +102,78 @@ namespace DevPro.Game
 
         private void OnJoinGame(GameServerPacket packet)
         {
-            //GameClientPacket deck = new GameClientPacket(CtosMessage.UpdateDeck);
-            //deck.Write(Deck.Cards.Count + Deck.ExtraCards.Count);
-            //deck.Write(Deck.SideCards.Count);
-            //foreach (CardData card in Deck.Cards)
-                //deck.Write(card.Id);
-            //foreach (CardData card in Deck.ExtraCards)
-                //deck.Write(card.Id);
-            //foreach (CardData card in Deck.SideCards)
-                //deck.Write(card.Id);
-            //Connection.Send(deck);
+			//read packet
+			
+			RoomInfo roomInfo = new RoomInfo();
+			
+			roomInfo.banlist = packet.ReadUInt32();
+			roomInfo.rule = packet.ReadByte();
+			roomInfo.mode = packet.ReadByte();
+			roomInfo.priority = Convert.ToBoolean(packet.ReadByte());
+			roomInfo.checkdeck = Convert.ToBoolean(packet.ReadByte());
+			roomInfo.shuffledeck = Convert.ToBoolean(packet.ReadByte());
+			//c++ padding, skip it
+			for(int i = 0; i < 3; i++)
+				packet.ReadByte();
+			
+			roomInfo.startlp = packet.ReadInt32();
+			roomInfo.starthand = packet.ReadByte();
+			roomInfo.drawcount = packet.ReadByte();
+			roomInfo.timer = packet.ReadInt16();
+			
+			BrowserMessages.RoomInfo(roomInfo);
+			
         }
 
         private void OnTypeChange(GameServerPacket packet)
         {
-//            int type = packet.ReadByte();
-//            int pos = type & 0xF;
-//            m_room.IsHost = ((type >> 4) & 0xF) != 0;
-//            m_room.IsReady[pos] = true;
-//            Connection.Send(CtosMessage.HsReady);
+            int type = packet.ReadByte();
+            int pos = type & 0xF;
+            m_room.IsHost = ((type >> 4) & 0xF) != 0;
+			BrowserMessages.PositionUpdate(pos);
         }
 
         private void OnPlayerEnter(GameServerPacket packet)
         {
-//            string name = packet.ReadUnicode(20);
-//            int pos = packet.ReadByte();
-//            if (pos < 8)
-//                m_room.Names[pos] = name;
+            string name = packet.ReadUnicode(20);
+            int pos = packet.ReadByte();
+            if (pos < 8)
+                m_room.Names[pos] = name;
+			BrowserMessages.PlayerEnter(name,pos);
         }
 
         private void OnPlayerChange(GameServerPacket packet)
         {
-//            int change = packet.ReadByte();
-//            int pos = (change >> 4) & 0xF;
-//            int state = change & 0xF;
-//            if (pos > 3)
-//                return;
-//            if (state < 8)
-//            {
-//                string oldname = m_room.Names[pos];
-//                m_room.Names[pos] = null;
-//                m_room.Names[state] = oldname;
-//                m_room.IsReady[pos] = false;
-//                m_room.IsReady[state] = false;
-//            }
-//            else if (state == (int)PlayerChange.Ready)
-//                m_room.IsReady[pos] = true;
-//            else if (state == (int)PlayerChange.NotReady)
-//                m_room.IsReady[pos] = false;
-//            else if (state == (int)PlayerChange.Leave || state == (int)PlayerChange.Observe)
-//            {
-//                m_room.IsReady[pos] = false;
-//                m_room.Names[pos] = null;
-//            }
-//
-//            if (m_room.IsHost && m_room.IsReady[0] && m_room.IsReady[1])
-//                Connection.Send(CtosMessage.HsStart);
+            int change = packet.ReadByte();
+            int pos = (change >> 4) & 0xF;
+            int state = change & 0xF;
+            if (pos > 3)
+                return;
+            if (state < 8)
+            {
+                string oldname = m_room.Names[pos];
+                m_room.Names[pos] = null;
+                m_room.Names[state] = oldname;
+                m_room.IsReady[pos] = false;
+                m_room.IsReady[state] = false;
+				BrowserMessages.UpdatePlayer(pos,state);
+            }
+            else if (state == (int)PlayerChange.Ready)
+			{
+                m_room.IsReady[pos] = true;
+				BrowserMessages.PlayerReady(pos,true);
+			}
+            else if (state == (int)PlayerChange.NotReady)
+			{
+                m_room.IsReady[pos] = false;
+				BrowserMessages.PlayerReady(pos,false);
+			}
+            else if (state == (int)PlayerChange.Leave || state == (int)PlayerChange.Observe)
+            {
+                m_room.IsReady[pos] = false;
+                m_room.Names[pos] = null;
+				BrowserMessages.PlayerLeave(pos);
+            }
         }
 
         private void OnSelectHand(GameServerPacket packet)
