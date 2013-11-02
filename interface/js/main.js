@@ -28,6 +28,21 @@ jQuery(function(){
 	u.initPlugin(jQuery("#unityPlayer")[0], "DevProWeb.unity3d");
 
 });
+cardIndex = {};
+var cardData; 
+   $(document).ready(function() {
+     $.getJSON("http://ygopro.de/cardreader/index.php?folder=English&callback=?", function(data){
+         cardData = data;
+         for (var i = data.length - 1; i >= 0; i--) { /* this might be backwards? */
+         	l = "c"+data[i][0];
+         	cardIndex[l] = i;
+         	/* c80009998 would be cardData[cardIndex.c80009998] */
+         };
+      });
+   });
+
+
+
 
 function messageUnity(functionName, message ){
 	u.getUnity().SendMessage("HubClient", functionName, message);
@@ -39,7 +54,7 @@ $('.downloadbutton, #lobbycancel').on('click',function(){
 });
 $('#loginbutton').on('click',function(){
 	u.getUnity().SendMessage("HubClient", "Login",  "{'Username' : '"+($('#username').val())+"', 'Password' : '"+($('#password').val())+"', 'UID' : 'Unity'}");
-	console.log("{'Username' : '"+($('#username').val())+"', 'Password' : '"+($('#password').val())+"', 'UID' : 'Unity'}");
+	
 });
 $('#lobbylock, #majorpopup').on('click',function(){
 	$('#majorpopup').toggle();
