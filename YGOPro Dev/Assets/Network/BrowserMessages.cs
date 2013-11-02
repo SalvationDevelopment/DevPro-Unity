@@ -9,12 +9,7 @@ namespace DevPro.Network
 	{
 		public static void SendConsoleMessage(string message)
 		{
-			Application.ExternalCall("ConsoleMessage", message);
-		}
-		
-		public static void SendMessage(string message)
-		{
-			Application.ExternalCall("SayHello", message);
+			Application.ExternalCall("MessageBrowser", message);
 		}
 	}
 }
