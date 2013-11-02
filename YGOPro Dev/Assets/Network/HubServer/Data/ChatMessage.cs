@@ -9,21 +9,5 @@ namespace DevPro.Network.Data
         public UserData from { get; set; }
         public int type { get; set; }
         public int command { get; set; }
-
-        public ChatMessage(MessageType type, CommandType command,UserData user, string channel, string message)
-        {
-            this.message = message;
-            this.type = (int)type;
-            this.channel = channel;
-            this.command = (int)command;
-            this.from = user;
-        }
-        public ChatMessage(MessageType type,CommandType command, string channel, string message)
-        {
-            this.message = message;
-            this.type = (int)type;
-            this.channel = channel;
-            this.command = (int)command;
-        }
     }
 }

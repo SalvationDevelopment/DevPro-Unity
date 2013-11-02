@@ -3,6 +3,7 @@ using System.Net;
 using System.Collections;
 using DevPro.Game.Network.Helpers;
 using DevPro.Game.Network.Enums;
+using DevPro.Game;
 using DevPro.Network;
 using DevPro.Network.Data;
 
@@ -10,12 +11,7 @@ public class GameClient : MonoBehaviour {
 	
 	public const short Version = 0x1320;
 	public GameConnection Connection { get; private set; }
-	
-	// Use this for initialization
-	void Start () 
-	{
-	
-	}
+	private GameBehavior m_behavior;
 	
 	// Update is called once per frame
 	void Update () 
@@ -26,17 +22,22 @@ public class GameClient : MonoBehaviour {
 			{
 				GameServerPacket packet = Connection.Receive();
 				Debug.Log ("GamePacket: " +(StocMessage)packet.Content[0]);
-				//handle game packets here
+				m_behavior.OnPacket(packet);
 			}
 		}
 	}
 	
 	public void CreateGame(string roomInfos)
 	{
+		if(Connection != null)
+			if(Connection.IsConnected)
+				Connection.Close();
+		
 		ServerInfo server = ServerDetails.GetRandomServer();
 		if(server != null && ServerDetails.User != null)
 		{
-			Connection = new GameConnection(IPAddress.Parse(server.serverAddress),server.serverPort);	
+			Connection = new GameConnection(IPAddress.Parse(server.serverAddress),server.serverPort);
+			m_behavior = new GameBehavior(this);
 	    	GameClientPacket packet = new GameClientPacket(CtosMessage.PlayerInfo);
         	packet.Write(ServerDetails.User.username + "$" + ServerDetails.LoginKey, 20);
         	Connection.Send(packet);
