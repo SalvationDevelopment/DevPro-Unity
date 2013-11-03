@@ -25,7 +25,7 @@ u.observeProgress(function (progress) {
 	}
 });
 jQuery(function(){
-	u.initPlugin(jQuery("#unityPlayer")[0], "DevProWeb.unity3d");
+	u.initPlugin(jQuery("#unityPlayer")[0], "http://unity.devpro.org/DevProWeb.unity3d");
 
 });
 cardIndex = {};
@@ -151,4 +151,30 @@ positions = {extra : {x : 25}}
 
 function MessageBrowser(message){
 	console.log(message);
+}
+function MessagePopUp(message){
+    }
+function LoginAccept(username){
+	console.log(username);
+}
+function SetRoomInfo (info){
+	eval("info = "+info);
+}
+function PosUpdate(pos){
+
+}
+function PlayerEnter(username, pos){
+
+}
+function PlayerLeave(pos){
+
+}
+function UpdatePlayer(pos, newpos){
+
+}
+function PlayerReady(pos, ready){
+
+}
+function IsLoaded(){
+	
 }
