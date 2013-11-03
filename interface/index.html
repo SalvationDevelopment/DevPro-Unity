@@ -103,7 +103,43 @@
         </div><!-- End Container --></section>
         <section id='launcher' style='display:none;'>
             <div class='container'>
-                <span id='creategame'>create game</span>
+                <span id='creategamebutton'>create game</span>
+            </div>
+        </section>
+        <section id='creategame'>
+            <div class='container'>
+                <h2>Settings</h2>
+                <label>Ban List</label><select>
+                    <option value='0' selected>...</option>
+                    <option value='1'>...</option>
+                    <option value='2'>...</option>
+                </select>
+                <label>Card Pool</label><select>
+                    <option value='0'>OCG</option>
+                    <option value='1'>TCG</option>
+                    <option value='2' selected>OCG/TCG</option>
+                </select>
+                <label>Duel Mode</label><select>
+                    <option value='0' selected>Single</option>
+                    <option value='1'>Match</option>
+                    <option value='2'>Tag</option>
+                </select>
+                <label>Time Limit</label><select>
+                    <option value='0' selected>3 Minutes</option>
+                    <option value='1'>5 Minutes</option>
+                    
+                </select>
+
+                <h2>Additional Options</h2>
+                <label>Enable Priority</label><input type='checkbox' id='enableprio'><br />
+                <label>Disable Check Deck</label><input type='checkbox' id='discheckdeck'><br />
+                <label>Disable Shuffle Deck</label><input type='checkbox' id='disshuffledeck'><br />
+                <br />
+                <label>Lifepoints</label><input type='text' value='8000' /><br />
+                <label>Password</label><input type='text' id='creategamepassword' /><br />
+                <div class='button' id='creategameok'>OK</div>
+                <div class='button' id='creategamecancel'>cancel</div>
+
             </div>
         </section>
         <section class='game' style='display:none;'>
