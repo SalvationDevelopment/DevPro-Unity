@@ -95,8 +95,10 @@ public class HubCommands : MonoBehaviour
 			BrowserMessages.LoginAccept(login.Username);
 			break;
 		case DevClientPackets.LoginFailed:
+			BrowserMessages.MessagePopUp("Login Failed.");
+			break;
 		case DevClientPackets.RegisterFailed:
-			//Send Web-Client message
+			BrowserMessages.MessagePopUp("Register Failed.");
 			break;
 		case DevClientPackets.GameServers:
 			ServerInfo[] servers = JsonReader.Deserialize<ServerInfo[]>(data.GetString());

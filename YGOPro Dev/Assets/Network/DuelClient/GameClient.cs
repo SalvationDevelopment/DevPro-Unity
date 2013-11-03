@@ -51,7 +51,8 @@ public class GameClient : MonoBehaviour {
 		}
 		else
 		{
-			//send no servers avliable message	
+			//send no servers avliable message
+			BrowserMessages.MessagePopUp("No servers are currently available.");
 		}
 	
 	}
