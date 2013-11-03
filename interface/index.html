@@ -106,39 +106,50 @@
                 <span id='creategamebutton'>create game</span>
             </div>
         </section>
-        <section id='creategame'>
+        <section id='creategame' style='display:none'>
             <div class='container'>
                 <h2>Settings</h2>
-                <label>Ban List</label><select>
-                    <option value='0' selected>...</option>
-                    <option value='1'>...</option>
-                    <option value='2'>...</option>
-                </select>
-                <label>Card Pool</label><select>
+                <label>Ranked</label><input type='radio' name='ranked' value='R'/>Yes<input type='radio' name='ranked' value='U' checked />No<br />
+                <label>Ban List</label><select id='creategamebanlist'>
+                    <option value='0' selected>2013.9.1(TCG)</option>
+                    <option value='1'>2013.9.1(OCG)</option>
+                    <option value='2'>2013.3.1</option>
+                    <option value='3'>2012.9.1</option>
+                    <option value='4'>2012.3.1</option>
+                    <option value='5'>2011.9.1</option>
+                    <option value='6'>Traditional</option>
+                    <option value='7'>Unlimited</option>
+                    <option value='8'>Mega-Banned</option>
+                    <option value='9'>TBC</option>
+                </select><br />
+                <label>Card Pool</label><select id='creategamecardpool'>
                     <option value='0'>OCG</option>
                     <option value='1'>TCG</option>
                     <option value='2' selected>OCG/TCG</option>
-                </select>
-                <label>Duel Mode</label><select>
+                    <option value='3' selected>Anime</option>
+                    
+                </select><br />
+                <label>Duel Mode</label><select id='creategameduelmode'>
                     <option value='0' selected>Single</option>
                     <option value='1'>Match</option>
                     <option value='2'>Tag</option>
-                </select>
-                <label>Time Limit</label><select>
+                    
+                </select><br />
+                <label>Time Limit</label><select id='creategametimelimit'>
                     <option value='0' selected>3 Minutes</option>
                     <option value='1'>5 Minutes</option>
                     
-                </select>
+                </select><br />
 
                 <h2>Additional Options</h2>
                 <label>Enable Priority</label><input type='checkbox' id='enableprio'><br />
                 <label>Disable Check Deck</label><input type='checkbox' id='discheckdeck'><br />
                 <label>Disable Shuffle Deck</label><input type='checkbox' id='disshuffledeck'><br />
                 <br />
-                <label>Lifepoints</label><input type='text' value='8000' /><br />
-                <label>Password</label><input type='text' id='creategamepassword' /><br />
+                <label>Lifepoints</label><input type='number' value='8000' id='creategamelp' min='1'/><br />
+                <label>Password</label><input type='text' id='creategamepassword' id='creategamepass' max='5'/><br />
                 <div class='button' id='creategameok'>OK</div>
-                <div class='button' id='creategamecancel'>cancel</div>
+                <div class='button' id='creategamecancel'>Cancel</div>
 
             </div>
         </section>
@@ -155,7 +166,7 @@
                    
                     <div class='lobby'>
                         <label>Forbidden List</label><span id='lobbyforbidden' class='major'>Current</span><br/>
-                        <label>Allowed Cards</label><span id='lobbyallowed' class='major'>TCG/OCG</span><br/>
+                        <label>Card Pool</label><span id='lobbycardpool' class='major'>TCG/OCG</span><br/>
                         <label>Mode</label><span id='lobbymode'>Single</span><br/>
                         <label>Time Limit</label><span id='lobbytime'>180s/Player</span><br/>
                         <label>Starting LP</label><span id='lobbystartlp'>8000/Player</span><br/>
@@ -243,7 +254,7 @@
             </div>
         </div>
         <footer class='superfooter'>
-            YGOPro, DevPro Online and our sister systems are not affliated with Konami.
+            YGOPro, DevPro Online and our sister systems are not affliated with Konami. Powered by Unity3D &amp; Lua.
         <footer>
         
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
