@@ -23,10 +23,10 @@
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
-        <div id="unityPlayer" style='height:200px'>
+        <div id="unityPlayer" style='height:1px'>
             <div class="missing">
                 <a href="http://unity3d.com/webplayer/" title="Unity Web Player. Install now!">
-                    <img alt="Unity Web Player. Install now!" src="http://webplayer.unity3d.com/installation/getunity.png" width="193" height="63" />
+                    <img alt="Unity Web Player. Install now!" src="http://webplayer.unity3d.com/installation/getunity.png" width="193" height="1" />
                 </a>
             </div>
         </div>
@@ -42,7 +42,7 @@
                 
             </ul>
             <nav class='lander-main'>
-                <div  class='downloadbutton'>Play Now</div>
+                <div  class='downloadbutton' style='display:none'>Play Now</div>
                 <ul class='hidden'>
                     <li>Mirror 1</li>
                     <li>Mirror 2</li>
@@ -126,14 +126,14 @@
                     <option value='0'>OCG</option>
                     <option value='1'>TCG</option>
                     <option value='2' selected>OCG/TCG</option>
-                    <option value='3' selected>Anime</option>
+                    <option value='3' >Anime</option>
                     
                 </select><br />
                 <label>Duel Mode</label><select id='creategameduelmode'>
                     <option value='0' selected>Single</option>
                     <option value='1'>Match</option>
                     <option value='2'>Tag</option>
-                    
+
                 </select><br />
                 <label>Time Limit</label><select id='creategametimelimit'>
                     <option value='0' selected>3 Minutes</option>
@@ -157,7 +157,7 @@
                 <div class='gamelobby'>
                     <h2>Game Lobby</h2>
                     <div id='lobbyplayers'>
-                            <input id='lobbyplayer1' placeholder='click to Join' /><span style='display:inline-block; width:33%; text-align:center'>VS</span><input id='lobbyplayer2' placeholder='click to Join' default='Player' />
+                            <div id='lobbyplayer0' placeholder='click to Join' /></div><span style='display:inline-block; width:33%; text-align:center'>VS</span><div id='lobbyplayer1' placeholder='click to Join' default='Player' /></div>
                         </div>
                         <div class='lobbycenter'>
                             
@@ -170,7 +170,7 @@
                         <label>Mode</label><span id='lobbymode'>Single</span><br/>
                         <label>Time Limit</label><span id='lobbytime'>180s/Player</span><br/>
                         <label>Starting LP</label><span id='lobbystartlp'>8000/Player</span><br/>
-                        <label>Cards Per Draw</label><span id='lobbycpd'>1</span><br/>
+                        
                         <select placeholder='select deck'>
                         <option value='1'>Default Deck</option>
                     </select>

@@ -101,11 +101,11 @@ $(document).ready(function() {
 		$('#creategame').toggle();
 		$('.game').toggle();
 		$('#lobbyforbidden').html($('#creategamebanlist option:selected').text());
-		$('#lobbycardpool').html($('#creategamebanlist option:selected').text());
-		$('#lobbymode').html($('#creategamebanlist option:selected').text());
-		$('#lobbytime').html($('#creategamebanlist option:selected').text());
-		$('#lobbytime').html($('#creategamebanlist option:selected').text());
-		$('#lobbytime').html($('#creategamebanlist option:selected').text());
+		$('#lobbycardpool').html($('#creategamecardpool option:selected').text());
+		$('#lobbymode').html($('#creategameduelmode option:selected').text());
+		$('#lobbytime').html($('#creategametimelimit option:selected').text());
+		$('#lobbystartlp').html($('#creategamelp').val()+"/Player");
+		
 	});
 });
 
@@ -190,18 +190,25 @@ function PosUpdate(pos){
 }
 function PlayerEnter(username, pos){
 	console.log('PlayerEnter: '+username+", "+pos)
+	$('#lobbyplayer'+pos).html(username);
 }
 function PlayerLeave(pos){
 	console.log('PlayerLeave: '+pos);
+	$('#lobbyplayer'+pos).html("");
 }
 function UpdatePlayer(pos, newpos){
 	console.log('UpdatePlayer: '+pos+' to :');
+	$('#lobbyplayer'+pos).html("");
+	$('#lobbyplayer'+newpos).html(username);
 }
 function PlayerReady(pos, ready){
 	console.log('PlayerReady: '+pos+' is :'+ready);	
+	$('#lobbyplayer'+pos).toggleClass('ready');
 }
 function IsLoaded(){
 	saftey = true;
+
+	$('.downloadbutton').toggle();
 }
 function messageUnity(functionName, message ){
 	u.getUnity().SendMessage("HubClient", functionName, message);
