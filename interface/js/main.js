@@ -1,4 +1,16 @@
+/* globals */
+var saftey = false;
+var Unityconsole = false
 var u = new UnityObject2();
+
+var cardIndex = {};
+var cardData; 
+
+var deckpositionx = 735
+var positions = {extra : {x : 25}}
+var shuffler, fix;
+
+/* create Unity object */
 u.observeProgress(function (progress) {
 	var $missingScreen = jQuery(progress.targetEl).find(".missing");
 	switch(progress.pluginStatus) {
@@ -25,61 +37,58 @@ u.observeProgress(function (progress) {
 	}
 });
 jQuery(function(){
-	u.initPlugin(jQuery("#unityPlayer")[0], "DevProWeb.unity3d");
+	u.initPlugin(jQuery("#unityPlayer")[0], "http://unity.devpro.org/DevProWeb.unity3d");
 
 });
-cardIndex = {};
-var cardData; 
-   $(document).ready(function() {
-     $.getJSON("http://ygopro.de/cardreader/index.php?folder=English&callback=?", function(data){
-         cardData = data;
-         for (var i = data.length - 1; i >= 0; i--) { /* this might be backwards? */
-         	l = "c"+data[i][0];
-         	cardIndex[l] = i;
-         	/* c80009998 would be cardData[cardIndex.c80009998] */
-         };
-      });
-   });
+$(document).ready(function() {
+	$.getJSON("http://ygopro.de/cardreader/index.php?folder=English&callback=?", function(data){
+		cardData = data;
+		for (var i = data.length - 1; i >= 0; i--) { /* this might be backwards? */
+			l = "c"+data[i][0];
+			cardIndex[l] = i;
+			/* c80009998 would be cardData[cardIndex.c80009998] */
+		};
+	});
+ $('.downloadbutton, #lobbycancel').on('click',function(){
+		if (saftey){
+			$('#intro').toggle();
+			$('.login').toggle();
+			$('header').toggle();
+		}else{
+			alert('just one moment, server connection system is loading.');
+		}
+	});
+	$('#loginbutton').on('click',function(){
+			u.getUnity().SendMessage("HubClient", "Login",  "{'Username' : '"+($('#username').val())+"', 'Password' : '"+($('#password').val())+"', 'UID' : 'Unity'}");
+		});
+	$('#lobbylock, #majorpopup').on('click',function(){
+		$('#majorpopup').toggle();
+		$
+	});
+	$('#lobbystart').on('click',function(){
+		$('.game').toggle();
+		$('.field').toggle();
+	});
+	$('.card').on('click',function(){
+		complete(deckpositionx);
+	});
+	$('body').keypress(function( event ) {
+	if ( event.which == 96 ) {
+		if (Unityconsole){
+			$('#unityPlayer').css('height', 'auto');
+			Unityconsole = false;
+		}else{
+			$('#unityPlayer').css('height', '1px');
+			Unityconsole = true;
+		}
+	}
+	});
+});
 
 
 
 
-function messageUnity(functionName, message ){
-	u.getUnity().SendMessage("HubClient", functionName, message);
-}
-$('.downloadbutton, #lobbycancel').on('click',function(){
-	$('#intro').toggle();
-	$('.login').toggle();
-	$('header').toggle();
-});
-$('#loginbutton').on('click',function(){
-	u.getUnity().SendMessage("HubClient", "Login",  "{'Username' : '"+($('#username').val())+"', 'Password' : '"+($('#password').val())+"', 'UID' : 'Unity'}");
-	
-});
-$('#lobbylock, #majorpopup').on('click',function(){
-	$('#majorpopup').toggle();
-	$
-});
-$('#lobbystart').on('click',function(){
-	$('.game').toggle();
-	$('.field').toggle();
-});
-$('.card').on('click',function(){
-	complete(deckpositionx);
-});
-deckpositionx = 735
-Unityconsole = false
-$('body').keypress(function( event ) {
-  if ( event.which == 96 ) {
-     if (Unityconsole){
-     	$('#unityPlayer').css('height', 'auto');
-     	Unityconsole = false;
-     }else{
-     	$('#unityPlayer').css('height', '1px');
-     	Unityconsole = true;
-     }
-  }
-});
+// Animation functions
 function clearposition(card){
 	$('#'+card).removeClass('deck');
 	$('#'+card).removeClass('hand');
@@ -87,20 +96,9 @@ function clearposition(card){
 	$('#'+card).removeClass('head');
 	cardmargin(deck);
 }
-
-
-
-
-
-
-
-
 function position(card, position){
 	$('#'+card).addClass('deckpositionx');
 }
-
-
-
 function cardmargin(x){
 	$('.card').each(function(i){
 		decklocationx = (i/2) + x;
@@ -110,21 +108,17 @@ function cardmargin(x){
 	});
 }
 function shuffle(){
+	$($(".card.deck").get().reverse()).each(function(i){
+		cache =  $(this).css('left');
+		spatical = Math.floor((Math.random()*150)-75);
+		console.log(spatical);
 
-		$($(".card.deck").get().reverse()).each(function(i){
-			cache =  $(this).css('left');
-			spatical = Math.floor((Math.random()*150)-75);
-			console.log(spatical);
-
-			$(this).css( 'left' , '-='+spatical+'px');
-			
-			
-		});
-		fix = setTimeout(function(){cardmargin(deckpositionx);},50);
+		$(this).css( 'left' , '-='+spatical+'px');
 		
+		
+	});
+	fix = setTimeout(function(){cardmargin(deckpositionx);},50);
 }
-cardmargin(deckpositionx);
-var shuffler, fix;
 function complete(x){
 var started = Date.now();
 
@@ -147,8 +141,44 @@ var started = Date.now();
   }, 100); // every 100 milliseconds
 }
 
-positions = {extra : {x : 25}}
+
+// initiation code
+cardmargin(deckpositionx);
+
+
 
 function MessageBrowser(message){
 	console.log(message);
+}
+function MessagePopUp(message){
+    }
+function LoginAccept(username){
+	if ($('#username').val() == username){
+		$('.login').toggle();
+		$('#launcher').toggle();
+	}
+}
+function SetRoomInfo (info){
+	eval("info = "+info);
+}
+function PosUpdate(pos){
+	console.log('PosUpdate: '+pos);
+}
+function PlayerEnter(username, pos){
+	console.log('PlayerEnter: '+username+", "+pos)
+}
+function PlayerLeave(pos){
+	console.log('PlayerLeave: '+pos);
+}
+function UpdatePlayer(pos, newpos){
+	console.log('UpdatePlayer: '+pos+' to :');
+}
+function PlayerReady(pos, ready){
+	console.log('PlayerReady: '+pos+' is :'+ready);	
+}
+function IsLoaded(){
+	saftey = true;
+}
+function messageUnity(functionName, message ){
+	u.getUnity().SendMessage("HubClient", functionName, message);
 }
