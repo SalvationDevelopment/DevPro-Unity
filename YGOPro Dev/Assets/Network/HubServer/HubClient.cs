@@ -39,6 +39,7 @@ namespace DevPro.Network
             catch (Exception)
             {
 				Debug.Log("Failed to connect.");
+				BrowserMessages.MessagePopUp("Unable to connect to server.");
                 return false;
             }
         }

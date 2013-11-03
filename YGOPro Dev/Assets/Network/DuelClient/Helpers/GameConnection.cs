@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using DevPro.Game.Network.Enums;
+using DevPro.Network;
 using UnityEngine;
 
 namespace DevPro.Game.Network.Helpers
@@ -35,6 +36,7 @@ namespace DevPro.Game.Network.Helpers
 			catch
 			{
 				Debug.Log ("Failed to connect to Duel Server.");
+				BrowserMessages.MessagePopUp("Failed to connect to game.");
 				return;
 			}
             IsConnected = true;

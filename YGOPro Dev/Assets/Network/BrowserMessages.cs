@@ -8,6 +8,11 @@ namespace DevPro.Network
 {
 	public static class BrowserMessages
 	{
+		public static void IsLoaded()
+		{
+			Application.ExternalCall("IsLoaded");	
+		}
+		
 		public static void MessagePopUp(string message)
 		{
 			Application.ExternalCall("MessagePopUp", message);

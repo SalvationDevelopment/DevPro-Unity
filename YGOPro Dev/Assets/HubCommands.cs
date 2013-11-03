@@ -16,6 +16,7 @@ public class HubCommands : MonoBehaviour
 	void Start () 
 	{
 		m_client = new HubClient();
+		BrowserMessages.IsLoaded();
 	}
 	
 	// Update is called once per frame
@@ -91,6 +92,7 @@ public class HubCommands : MonoBehaviour
 				teamRank = login.TeamRank
 			};
 			ServerDetails.LoginKey = login.LoginKey;
+			BrowserMessages.LoginAccept(login.Username);
 			break;
 		case DevClientPackets.LoginFailed:
 		case DevClientPackets.RegisterFailed:
