@@ -49,7 +49,7 @@ $(document).ready(function() {
 			/* c80009998 would be cardData[cardIndex.c80009998] */
 		};
 	});
- $('.downloadbutton, #lobbycancel').on('click',function(){
+	$('.downloadbutton, #lobbycancel').on('click',function(){
 		if (saftey){
 			$('#intro').toggle();
 			$('.login').toggle();
@@ -82,6 +82,30 @@ $(document).ready(function() {
 			Unityconsole = true;
 		}
 	}
+	});
+	$('#creategamebutton').on('click',function(){
+		$('#launcher').toggle();
+		$('#creategame').toggle();
+	});
+	$('#creategameok').on('click',function(){
+		string 	= ""+$('#creategamecardpool').val()+$('#creategameduelmode').val()+$('#creategametimelimit').val();
+		prio 	= isChecked('#enableprio')		? ("F") : ("O");
+		checkd 	= isChecked('#discheckdeck')	? ("F") : ("O");
+		shuf 	= isChecked('#disshuffledeck')	? ("F") : ("O");
+		rp 		= ($('#creategamepassword').val().length > 0 ) ? ("L") : ("");
+		stnds	= ","+$('#creategamebanlist').val()+',5,1,'+$('input:radio[name=ranked]:checked').val()+rp+',';
+		pass 	= $('#creategamepassword').val() || randomString(5);
+		string	= string+prio+checkd+shuf+$('#creategamelp').val()+stnds+pass;
+		console.log(string);
+		u.getUnity().SendMessage("GameClient", 'CreateGame',string);
+		$('#creategame').toggle();
+		$('.game').toggle();
+		$('#lobbyforbidden').html($('#creategamebanlist option:selected').text());
+		$('#lobbycardpool').html($('#creategamecardpool option:selected').text());
+		$('#lobbymode').html($('#creategameduelmode option:selected').text());
+		$('#lobbytime').html($('#creategametimelimit option:selected').text());
+		$('#lobbystartlp').html($('#creategamelp').val()+"/Player");
+		
 	});
 });
 
@@ -166,18 +190,25 @@ function PosUpdate(pos){
 }
 function PlayerEnter(username, pos){
 	console.log('PlayerEnter: '+username+", "+pos)
+	$('#lobbyplayer'+pos).html(username);
 }
 function PlayerLeave(pos){
 	console.log('PlayerLeave: '+pos);
+	$('#lobbyplayer'+pos).html("");
 }
 function UpdatePlayer(pos, newpos){
 	console.log('UpdatePlayer: '+pos+' to :');
+	$('#lobbyplayer'+pos).html("");
+	$('#lobbyplayer'+newpos).html(username);
 }
 function PlayerReady(pos, ready){
 	console.log('PlayerReady: '+pos+' is :'+ready);	
+	$('#lobbyplayer'+pos).toggleClass('ready');
 }
 function IsLoaded(){
 	saftey = true;
+
+	$('.downloadbutton').toggle();
 }
 function messageUnity(functionName, message ){
 	u.getUnity().SendMessage("HubClient", functionName, message);
