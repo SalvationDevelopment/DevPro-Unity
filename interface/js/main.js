@@ -1,12 +1,12 @@
-/* globals */
+/* globals $ */
 var saftey = false;
-var Unityconsole = false
+var Unityconsole = false;
 var u = new UnityObject2();
 
 var cardIndex = {};
 var cardData; 
 
-var deckpositionx = 735
+var deckpositionx = 735;
 var positions = {extra : {x : 25}}
 var shuffler, fix;
 
