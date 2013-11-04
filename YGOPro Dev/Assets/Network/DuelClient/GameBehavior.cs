@@ -15,8 +15,10 @@ namespace DevPro.Game
         private IDictionary<StocMessage, Action<GameServerPacket>> m_packets;
         private IDictionary<GameMessage, Action<GameServerPacket>> m_messages;
 
-        private Room m_room;
+        public Room m_room { get; private set; }
         private Duel m_duel;
+		
+		public bool IsTag { get; private set; }
 		
 		public GameBehavior(GameClient game)
         {
@@ -121,6 +123,8 @@ namespace DevPro.Game
 			roomInfo.drawcount = packet.ReadByte();
 			roomInfo.timer = packet.ReadInt16();
 			
+			IsTag = roomInfo.mode == 2;
+			
 			BrowserMessages.RoomInfo(roomInfo);
 			
         }
@@ -189,9 +193,9 @@ namespace DevPro.Game
 
         private void OnTimeLimit(GameServerPacket packet)
         {
-//            int player = GetLocalPlayer(packet.ReadByte());
-//            if (player == 0)
-//                Connection.Send(CtosMessage.TimeConfirm);
+            int player = GetLocalPlayer(packet.ReadByte());
+            if (player == 0)
+                Connection.Send(CtosMessage.TimeConfirm);
         }
 
         private void OnReplay(GameServerPacket packet)

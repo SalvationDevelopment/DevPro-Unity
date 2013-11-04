@@ -6,12 +6,14 @@ using DevPro.Game.Network.Enums;
 using DevPro.Game;
 using DevPro.Network;
 using DevPro.Network.Data;
+using Pathfinding.Serialization.JsonFx;
 
 public class GameClient : MonoBehaviour {
 	
 	public const short Version = 0x1320;
 	public GameConnection Connection { get; private set; }
 	private GameBehavior m_behavior;
+	private Deck Deck;
 	
 	// Update is called once per frame
 	void Update () 
@@ -55,6 +57,46 @@ public class GameClient : MonoBehaviour {
 			BrowserMessages.MessagePopUp("No servers are currently available.");
 		}
 	
+	}
+	
+	public void UpdateDeck(string data)
+	{
+		Deck = JsonReader.Deserialize<Deck>(data);
+	}
+	
+	public void SetReady(bool ready)
+	{
+		if(Deck == null)
+		{
+			BrowserMessages.MessagePopUp("Deck information required.");
+			return;	
+		}
+		
+		if(ready)
+		{
+			//send deck information here
+			GameClientPacket deck = new GameClientPacket(CtosMessage.UpdateDeck);
+            deck.Write(Deck.main.Count + Deck.extra.Count);
+            deck.Write(Deck.side.Count);
+            foreach (int card in Deck.main)
+                deck.Write(card);
+            foreach (int card in Deck.extra)
+                deck.Write(card);
+            foreach (int card in Deck.side)
+                deck.Write(card);
+            Connection.Send(deck);
+		}
+		
+		Connection.Send(ready ? CtosMessage.HsReady: CtosMessage.HsNotReady);
+	}
+	
+	public void StartDuel()
+	{            
+		if (m_behavior.m_room.IsHost && 
+			(!m_behavior.IsTag ? m_behavior.m_room.IsReady[0] && m_behavior.m_room.IsReady[1]:
+			m_behavior.m_room.IsReady[0] && m_behavior.m_room.IsReady[1] 
+				&& m_behavior.m_room.IsReady[2] && m_behavior.m_room.IsReady[3]))
+			Connection.Send(CtosMessage.HsStart);	
 	}
 	
 
