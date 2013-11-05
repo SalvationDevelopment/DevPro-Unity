@@ -95,6 +95,7 @@ $(document).ready(function () {
         var selecteddeck    = $("#selectdeck").val();
         var tovaliditycheck = (decklist[selecteddeck].data);
         u.getUnity().SendMessage("GameClient", 'UpdateDeck', tovaliditycheck);
+        u.getUnity().SendMessage("GameClient", 'SetReady', 1);
         
     });
     $('.card').on('click', function () {
@@ -213,7 +214,9 @@ function MessageBrowser(message) {
     console.log(message);
 }
 
-function MessagePopUp(message) {}
+function MessagePopUp(message) {
+console.log(message);
+}
 
 function LoginAccept(username) {
     if ($('#username').val() == username) {
