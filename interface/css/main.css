@@ -97,11 +97,12 @@ font-size: 140px;}
 .lobby h2 {font-size: 2em; width:100%;}
 .game {background:rgba(0,0,0,.65); height: 100%; min-height: 40px; width: 100%}
 .gamelobby {width: 580px;margin: 0 auto;padding: 20px;border: 1px solid white; box-shadow:0 0 30px black,inset 0 0 2px #fff; background:rgba(0,0,0,.75); overflow: auto}
-.lobby {width: 50%;margin: 30px auto; height:200px; font-size: .8em;}
+.lobby {width: 60%;margin: 30px auto; height:200px; font-size: .8em;}
 .button {background:rgba(5,200,0,.5);  width:86px; display: block; width:86px; cursor: pointer;
                  color:#fff; margin:20px 0;padding:5px; text-align: center;box-shadow:0 0 20px black,inset 0 0 2px #fff; display: inline-block; margin-bottom: 10px}
-.game label {width:150px; padding:0px 30px 0px 0; display: inline-block; width:50%;}
+.game label {width:150px; padding:0px 30px 0px 0; display: inline-block; }
 .game input {display: inline-block; margin-bottom: 10px;  height:1.8em; width:33.33%; text-align: center}
+
 
 #lobbycancel {float:right;}
 .game span {text-align: right; width:50%; display: inline-block;}
@@ -110,7 +111,10 @@ font-size: 140px;}
 .lobbycenter {margin:0 auto; width:33%;}
 .game select {width: 100%; display: inline-block; margin-top:30px;}
 #lobbyspectate {width: 50%;margin: 0 auto;display: block;}
-
+#lobbyplayer0,#lobbyplayer1 {
+width: 33%;
+display: inline-block;
+}
 #majorpopup {position: absolute; z-index: 99999999999; width:100%; height: 100%; top:0; background:rgba(0,0,0,.95);}
 .message {width:300px;  margin:25% auto; color:white; text-align: center; border: 1px solid white; padding:20px;}
 .message:before {content:'!'; font-size: 130px; position:absolute; left:25%; width:50%; text-align:center;color:#fff;top:30%;}
@@ -159,7 +163,7 @@ font-size: 140px;}
 .login h3 {text-align: center; margin-bottom: 30px;}
 #loginbutton {margin:30px 110px; margin-bottom:10px;}
 
-#creategame .container {width:350px; margin:100px auto;box-shadow:0 0 20px black,inset 0 0 2px #fff;background:rgba(0,0,0,.85); padding:20px; border-radius: 20px;}
+#creategame .container {width:360px; margin:100px auto;box-shadow:0 0 20px black,inset 0 0 2px #fff;background:rgba(0,0,0,.85); padding:20px; border-radius: 20px;}
 #creategame label  {width:175px; padding:0px 30px 10px 0; display: inline-block;}
 #creategame input, #creategame select, #creategame option {width:135px; padding:0px 30px 0px 0; display: inline-block; color:#444;}
 #creategame select, #creategame option {padding:0;}
