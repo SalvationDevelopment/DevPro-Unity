@@ -6,22 +6,30 @@ var u = new UnityObject2();
 var cardIndex = {};
 var cardData;
 var deckData;
+var decklistData;
+var decklist = [];
 var deckpositionx = 735;
+var currenterror;
 var positions = {
     extra: {
         x: 25
     }
 };
 var shuffler, fix;
+function deck(filename, main, side, extra){
+//    if (typeof name  !== "string"){console.log('name must be a string'); return false}
+//    if (typeof main  !== "array") {console.log('main must be a array'); return false}
+//    if (typeof side  !== "array") {console.log('side must be a array'); return false}
+//    if (typeof extra !== "array") {console.log('extra must be a array'); return false}
+    name = filename.substring(0, (filename.length -4));
+    this.name   = name;
+    this.main   = main;
+    this.side   = side;
+    this.extra  = extra;
+    this.data   = JSON.stringify({ main : this.main, side : this.side, extra : this.extra })
+    
+}
 
-$.ajax({                                                                                                                                                                                                        
-    type: 'GET',                                                                                                                                                                                                 
-    url: 'http://ygopro.de/deckreader/all.php?username=benblub&callback=myCallbackFn',                                                                                                                                              
-    dataType: 'jsonp',                                                                                                                                                                                                
-    success: function(data) { console.log(data); },                                                                                                                                                                                       
-    error: function(er) { console.log('Uh Oh!'); console.log(er)},
-    jsonp: 'jsonp'                                                                                                                                                
-});
 
 /* create Unity object */
 u.observeProgress(function (progress) {
@@ -83,6 +91,12 @@ $(document).ready(function () {
         $('.game').toggle();
         $('.field').toggle();
     });
+    $("#lobbylock").on("click",function(){
+        var selecteddeck    = $("#selectdeck").val();
+        var tovaliditycheck = (decklist[selecteddeck].data);
+        u.getUnity().SendMessage("GameClient", 'UpdateDeck', tovaliditycheck);
+        
+    });
     $('.card').on('click', function () {
         complete(deckpositionx);
     });
@@ -111,7 +125,7 @@ $(document).ready(function () {
         stnds = "," + $('#creategamebanlist').val() + ',5,1,' + $('input:radio[name=ranked]:checked').val() + rp + ',';
         pass = $('#creategamepassword').val() || randomString(5);
         compl = string + prio + checkd + shuf + $('#creategamelp').val() + stnds + pass;
-        console.log(string);
+        console.log(compl);
         u.getUnity().SendMessage("GameClient", 'CreateGame', compl);
         $('#creategame').toggle();
         $('.game').toggle();
@@ -205,7 +219,33 @@ function LoginAccept(username) {
     if ($('#username').val() == username) {
         $('.login').toggle();
         $('#launcher').toggle();
-        
+        $.ajax({
+            type: 'GET',
+            url: 'http://ygopro.de/deckreader/all.php?username=benblub&callback=',
+            dataType: 'jsonp',
+            success: function (data) {
+                decklistData = data;
+
+                for (var i = 0; i < decklistData.decknames.length; i++) {
+                    decklist.push(
+                        new deck(decklistData.decknames[i],
+                            decklistData.Maindeck[i],
+                            decklistData.Sidedeck[i],
+                            decklistData.extradeck[i]))
+
+                }
+                console.log(decklist);
+                for (var i = 0; i < decklist.length; i++) {
+                    $("#selectdeck").append('<option value="' + i + '">' + decklist[i].name + '</option>');
+                }
+            },
+            error: function (er) {
+                console.log('Uh Oh!');
+                console.log(currenterror = er)
+            },
+
+        });
+
     }
 }
 
