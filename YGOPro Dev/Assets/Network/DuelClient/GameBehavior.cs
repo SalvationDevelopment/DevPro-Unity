@@ -63,6 +63,7 @@ namespace DevPro.Game
             m_packets.Add(StocMessage.TimeLimit, OnTimeLimit);
             m_packets.Add(StocMessage.Replay, OnReplay);
             m_packets.Add(StocMessage.DuelEnd, OnDuelEnd);
+			m_packets.Add(StocMessage.ErrorMsg, OnError);
 
             m_messages.Add(GameMessage.Start, OnStart);
             m_messages.Add(GameMessage.Win, OnWin);
@@ -878,6 +879,24 @@ namespace DevPro.Game
                 //reply += (int)races[i];
             //Connection.Send(CtosMessage.Response, reply);
         }
+		
+		private void OnError(GameServerPacket packet)
+		{
+			int error = packet.ReadByte();
+			
+			switch(error)
+			{
+			case 2: //Deck Error
+				// C++ padding, skip it
+                    for (int i = 0; i < 3; i++)
+                        packet.ReadByte();
+                    int cardid = packet.ReadInt32();
+				
+				break;
+			case 3: //Side Error
+				break;
+			}
+		}
 	}
 }
 

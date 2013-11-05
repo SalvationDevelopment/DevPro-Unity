@@ -56,6 +56,16 @@ namespace DevPro.Network
 			Application.ExternalCall("PlayerReady",pos,ready);
 		}
 		
+		public static void DeckError(int card)
+		{
+			Application.ExternalCall("DeckError",card);
+		}
+		
+		public static void SideError()
+		{
+			Application.ExternalCall("SideError");
+		}
+		
 #endregion
 #region Duel
 		

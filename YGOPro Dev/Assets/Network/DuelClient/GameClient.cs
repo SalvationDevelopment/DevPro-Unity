@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Net;
 using System.Collections;
 using DevPro.Game.Network.Helpers;
@@ -64,7 +65,7 @@ public class GameClient : MonoBehaviour {
 		Deck = JsonReader.Deserialize<Deck>(data);
 	}
 	
-	public void SetReady(bool ready)
+	public void SetReady(int ready)
 	{
 		if(Deck == null)
 		{
@@ -72,7 +73,7 @@ public class GameClient : MonoBehaviour {
 			return;	
 		}
 		
-		if(ready)
+		if(Convert.ToBoolean(ready))
 		{
 			//send deck information here
 			GameClientPacket deck = new GameClientPacket(CtosMessage.UpdateDeck);
@@ -87,7 +88,7 @@ public class GameClient : MonoBehaviour {
             Connection.Send(deck);
 		}
 		
-		Connection.Send(ready ? CtosMessage.HsReady: CtosMessage.HsNotReady);
+		Connection.Send(Convert.ToBoolean(ready) ? CtosMessage.HsReady: CtosMessage.HsNotReady);
 	}
 	
 	public void StartDuel()

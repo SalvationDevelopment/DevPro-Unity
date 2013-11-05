@@ -1,6 +1,40 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\HubCommands.cs">
+    <Files>
+      <File FileName="Assets\HubCommands.cs" Line="121" Column="4" />
+      <File FileName="Assets\Network\DuelClient\GameClient.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\DuelClient\ClientCard.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\DuelClient\Room.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\HubServer\MessageReceived.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\DuelClient\MainPhaseAction.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\DuelClient\MainPhase.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\DuelClient\Duel.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\DuelClient\ClientField.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\DuelClient\BattlePhaseAction.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\DuelClient\BattlePhase.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\DuelClient\Helpers\GameServerPacket.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\HubServer\ServerDetails.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\HubServer\HubClient.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\HubServer\Data\UserData.cs" Line="1" Column="1" />
+      <File FileName="Assets\Console.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\DuelClient\Helpers\GameConnection.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\HubServer\Data\ServerInfo.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\HubServer\Data\LoginData.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\HubServer\Data\LoginRequest.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\HubServer\Data\ChannelData.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\HubServer\Data\ChannelUsers.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\HubServer\Data\ChatMessage.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\HubServer\Data\LogoutData.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\HubServer\Data\PacketCommand.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\HubServer\Data\RoomInfos.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\HubServer\Data\SearchRequest.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\BrowserMessages.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\DuelClient\GameBehavior.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\DuelClient\Enums\PlayerChange.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\DuelClient\RoomInfo.cs" Line="1" Column="1" />
+      <File FileName="Assets\Network\DuelClient\Deck.cs" Line="1" Column="1" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
@@ -10,13 +44,12 @@
               <Node name="Network" expanded="True">
                 <Node name="DuelClient" expanded="True">
                   <Node name="Enums" expanded="True" />
-                  <Node name="Helpers" expanded="True" />
-                  <Node name="RoomInfo.cs" selected="True" />
                 </Node>
                 <Node name="HubServer" expanded="True">
                   <Node name="Data" expanded="True" />
                 </Node>
               </Node>
+              <Node name="HubCommands.cs" selected="True" />
             </Node>
           </Node>
         </State>
