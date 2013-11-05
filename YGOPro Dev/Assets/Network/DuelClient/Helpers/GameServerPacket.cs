@@ -60,6 +60,11 @@ namespace DevPro.Game.Network.Helpers
         {
             return m_reader.ReadUnicode(len);
         }
+		
+		public string ReadUnicode()
+		{
+			return m_reader.ReadUnicode(ReadToEnd());
+		}
 
         public long GetPosition()
         {

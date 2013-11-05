@@ -63,6 +63,7 @@ namespace DevPro.Game
             m_packets.Add(StocMessage.TimeLimit, OnTimeLimit);
             m_packets.Add(StocMessage.Replay, OnReplay);
             m_packets.Add(StocMessage.DuelEnd, OnDuelEnd);
+			m_packets.Add(StocMessage.Chat, OnPlayerMessage);
 			m_packets.Add(StocMessage.ErrorMsg, OnError);
 
             m_messages.Add(GameMessage.Start, OnStart);
@@ -879,6 +880,13 @@ namespace DevPro.Game
                 //reply += (int)races[i];
             //Connection.Send(CtosMessage.Response, reply);
         }
+		
+		private void OnPlayerMessage(GameServerPacket packet)
+		{
+			int player = packet.ReadInt16();
+			string message = packet.ReadUnicode();
+            BrowserMessages.PlayerMessage(player,message);
+		}
 		
 		private void OnError(GameServerPacket packet)
 		{

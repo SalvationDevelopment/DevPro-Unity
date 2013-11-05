@@ -22,5 +22,12 @@ namespace DevPro.Game.Network.Helpers
             text = text.Substring(0, text.IndexOf('\0'));
             return text;
         }
+		
+		public static string ReadUnicode(this BinaryReader reader, byte[] unicode)
+        {
+            string text = Encoding.Unicode.GetString(unicode);
+            text = text.Substring(0, text.IndexOf('\0'));
+            return text;
+        }
     }
 }

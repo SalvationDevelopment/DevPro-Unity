@@ -66,6 +66,11 @@ namespace DevPro.Network
 			Application.ExternalCall("SideError");
 		}
 		
+		public static void PlayerMessage(int player,string message)
+		{
+			Application.ExternalCall("PlayerMessage",player,message);
+		}
+		
 #endregion
 #region Duel
 		
