@@ -3,8 +3,11 @@
 
 # TEAM
 
-    <name> -- <role> -- <twitter>
-
+    Buttys          Unity Programming
+    Tenkei          Network Logic
+    AccessDenied    Interface
+    Benblub         External System & Storage
+    
 # THANKS
 
     <name>
@@ -13,3 +16,4 @@
 
     HTML5, CSS3
     jQuery, Modernizr
+    C#, Unity
