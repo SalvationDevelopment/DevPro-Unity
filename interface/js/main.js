@@ -34,6 +34,7 @@ function deck(filename, main, side, extra){
 
 /* create Unity object */
 u.observeProgress(function (progress) {
+        
     var $missingScreen = jQuery(progress.targetEl).find(".missing");
     switch (progress.pluginStatus) {
     case "unsupported":
@@ -60,8 +61,9 @@ u.observeProgress(function (progress) {
 });
 jQuery(function () {
     u.initPlugin(jQuery("#unityPlayer")[0], "http://unity.devpro.org/DevProWeb.unity3d");
-
+    
 });
+
 $(document).ready(function () {
     $.getJSON("http://ygopro.de/cardreader/index.php?folder=English&callback=?", function (data) {
         cardData = data;
@@ -71,7 +73,9 @@ $(document).ready(function () {
             /* c80009998 would be cardData[cardIndex.c80009998] */
         }
     });
+    
     $('.downloadbutton, #lobbycancel').on('click', function () {
+        $("#jquery_jplayer_1").jPlayer("stop",0)
         if (saftey) {
             $('#intro').toggle();
             $('.login').toggle();
@@ -79,11 +83,13 @@ $(document).ready(function () {
             $('body').css({'background' : 'url(http://ygopro.de/img/bg_black.png)'});
         } else {
             alert('just one moment, server connection system is loading.');
+            
         }
     });
     $('#loginbutton').on('click', function () {
         u.getUnity().SendMessage("HubClient", "Login", "{'Username' : '" + ($('#username').val()) + "', 'Password' : '" + ($('#password').val()) + "', 'UID' : 'Unity'}");
     });
+    $("#jquery_jplayer_1").jPlayer("play",0);
     $('#lobbylock, #majorpopup').on('click', function () {
         $('#majorpopup').toggle();
 
@@ -101,13 +107,7 @@ $(document).ready(function () {
     });
     $('body').keypress(function (event) {
         if (event.which == 96) {
-            if (Unityconsole) {
-                $('#unityPlayer').css('height', 'auto');
-                Unityconsole = false;
-            } else {
-                $('#unityPlayer').css('height', '1px');
-                Unityconsole = true;
-            }
+            toggleConsole();
         }
     });
     $('#creategamebutton').on('click', function () {
@@ -263,6 +263,15 @@ function LoginAccept(username) {
     }
 }
 
+function toggleConsole(){
+    if (Unityconsole) {
+        $('#unityPlayer').css('height', '25%');
+        Unityconsole = false;
+    } else {
+        $('#unityPlayer').css('height', '1px');
+        Unityconsole = true;
+    }
+}
 function SetRoomInfo(info) {
     info = JSON.parse(info);
 }
@@ -313,6 +322,8 @@ function IsLoaded() {
     saftey = true;
     $('.downloadbutton').toggle();
     $('.originloading').toggle();
+    toggleConsole();
+    $("#jquery_jplayer_1").jPlayer("play",0)
 }
 
 function messageUnity(functionName, message) {
