@@ -1,6 +1,6 @@
 using System;
 
-namespace DevPro.Game
+namespace DevPro.Game.Data
 {
 	public class RoomInfo
 	{

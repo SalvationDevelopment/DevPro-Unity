@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DevPro.Game
+namespace DevPro.Game.Data
 {
 	public class Deck
 	{

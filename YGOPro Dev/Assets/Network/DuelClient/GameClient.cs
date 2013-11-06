@@ -5,6 +5,7 @@ using System.Collections;
 using DevPro.Game.Network.Helpers;
 using DevPro.Game.Network.Enums;
 using DevPro.Game;
+using DevPro.Game.Data;
 using DevPro.Network;
 using DevPro.Network.Data;
 using Pathfinding.Serialization.JsonFx;

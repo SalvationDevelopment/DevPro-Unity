@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using DevPro.Game;
+using DevPro.Game.Data;
 using DevPro.Network.Data;
 using Pathfinding.Serialization.JsonFx;
 
@@ -81,6 +82,52 @@ namespace DevPro.Network
 		{
 			Application.ExternalCall("SelectFirstPlayer");
 		}
+		
+		public static void SendStartDuel(DuelStart data)
+		{
+			Application.ExternalCall("StartDuel",JsonWriter.Serialize(data));
+		}
+		
+		public static void DrawCard(int player, int count)
+		{
+			Application.ExternalCall("DrawCard",player,count);
+		}
+		
+		public static void ShuffleDeck(int player)
+		{
+			Application.ExternalCall("ShuffleDeck",player);
+		}
+		
+		public static void ShuffleHand(int player,int[] newIDOrder)
+		{
+			Application.ExternalCall("ShuffleHand",player,JsonWriter.Serialize(newIDOrder));	
+		}
+		
+		public static void NewTurn(int player)
+		{
+			Application.ExternalCall("NewTurn",player);
+		}
+		
+		public static void NewPhase(int phase)
+		{
+			Application.ExternalCall("NewPhase",phase);
+		}
+		
+		public static void PlayerDamage(int player, int total)
+		{
+			Application.ExternalCall("DamageLifePoints",player, total);
+		}
+		
+		public static void PlayerRecover(int player, int total)
+		{
+			Application.ExternalCall("RecoverLifePoints",player, total);
+		}
+		
+		public static void UpdateLifePoints(int player, int lifepoints)
+		{
+			Application.ExternalCall("UpdateLifePoints",player, lifepoints);
+		}
+		
 #endregion
 	}
 }

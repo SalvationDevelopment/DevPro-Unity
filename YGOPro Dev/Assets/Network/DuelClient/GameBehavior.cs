@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DevPro.Game.Data;
 using DevPro.Game.Network.Enums;
 using DevPro.Game.Network.Helpers;
 using DevPro.Network;
@@ -16,7 +17,6 @@ namespace DevPro.Game
         private IDictionary<GameMessage, Action<GameServerPacket>> m_messages;
 
         public Room m_room { get; private set; }
-        private Duel m_duel;
 		
 		public bool IsTag { get; private set; }
 		
@@ -30,12 +30,11 @@ namespace DevPro.Game
             RegisterPackets();
 
             m_room = new Room();
-            m_duel = new Duel();
         }
 
         public int GetLocalPlayer(int player)
         {
-            return m_duel.IsFirst ? player : 1 - player;
+            return m_room.IsFirst ? player : 1 - player;
         }
 		
 		public void OnPacket(GameServerPacket packet)
@@ -229,16 +228,21 @@ namespace DevPro.Game
 
         private void OnStart(GameServerPacket packet)
         {
-//            int type = packet.ReadByte();
-//            m_duel.IsFirst = (type & 0xF) == 0;
-//            m_duel.LifePoints[GetLocalPlayer(0)] = packet.ReadInt32();
-//            m_duel.LifePoints[GetLocalPlayer(1)] = packet.ReadInt32();
-//            int deck = packet.ReadInt16();
-//            int extra = packet.ReadInt16();
-//            m_duel.Fields[GetLocalPlayer(0)].Init(deck, extra);
-//            deck = packet.ReadInt16();
-//            extra = packet.ReadInt16();
-//            m_duel.Fields[GetLocalPlayer(1)].Init(deck, extra);
+			DuelStart data = new DuelStart();
+			
+			int type = packet.ReadByte();
+			m_room.IsFirst = (type & 0xF) == 0;
+			data.IsFirst = m_room.IsFirst;
+			
+			data.LifePoints = new int[2];
+            data.LifePoints[GetLocalPlayer(0)] = packet.ReadInt32();
+            data.LifePoints[GetLocalPlayer(1)] = packet.ReadInt32();
+            data.PlayerOneDeckSize = packet.ReadInt16();
+            data.PlayerOneExtraSize = packet.ReadInt16();
+            data.PlayerTwoDeckSize = packet.ReadInt16();
+            data.PlayerTwoExtraSize = packet.ReadInt16();
+			
+			BrowserMessages.SendStartDuel(data);
         }
 
         private void OnWin(GameServerPacket packet)
@@ -251,64 +255,62 @@ namespace DevPro.Game
 
         private void OnDraw(GameServerPacket packet)
         {
-//            int player = GetLocalPlayer(packet.ReadByte());
-//            int count = packet.ReadByte();
-//
-//            for (int i = 0; i < count; ++i)
-//            {
-//                m_duel.Fields[player].Deck.RemoveAt(m_duel.Fields[player].Deck.Count - 1);
-//                m_duel.Fields[player].Hand.Add(new ClientCard(0, CardLocation.Hand));
-//            }
+            int player = GetLocalPlayer(packet.ReadByte());
+            int count = packet.ReadByte();
+			
+			BrowserMessages.DrawCard(player,count);
         }
 
         private void OnShuffleDeck(GameServerPacket packet)
         {
-            // Looks like this isn't necessary.
-
-            //int player = GetLocalPlayer(packet.ReadByte());
-            //foreach (ClientCard card in m_duel.Fields[player].Deck)
-            //    card.SetId(0);
+            int player = GetLocalPlayer(packet.ReadByte());
+			BrowserMessages.ShuffleDeck(player);
         }
 
         private void OnShuffleHand(GameServerPacket packet)
         {
-//            int player = GetLocalPlayer(packet.ReadByte());
-//            packet.ReadByte();
-//            foreach (ClientCard card in m_duel.Fields[player].Hand)
-//                card.SetId(packet.ReadInt32());
+            int player = GetLocalPlayer(packet.ReadByte());
+            int count = packet.ReadByte();
+			List<int> cardList = new List<int>();
+			for (int i = 0; i < count; ++i)
+				cardList.Add(packet.ReadInt32());
+			
+			BrowserMessages.ShuffleHand(player,cardList.ToArray());
         }
 
         private void OnNewTurn(GameServerPacket packet)
         {
-//            m_duel.Turn++;
-//            m_duel.Player = GetLocalPlayer(packet.ReadByte());
-//            //m_ai.OnNewTurn();
+            int player = GetLocalPlayer(packet.ReadByte());
+			BrowserMessages.NewTurn(player);
         }
 
         private void OnNewPhase(GameServerPacket packet)
         {
-//            m_duel.Phase = (Phase)packet.ReadByte();
-//            m_ai.OnNewPhase();
+            Phase phase = (Phase)packet.ReadByte();
+			BrowserMessages.NewPhase((int)phase);
         }
 
         private void OnDamage(GameServerPacket packet)
         {
-//            int player = GetLocalPlayer(packet.ReadByte());
-//            int final = m_duel.LifePoints[player] - packet.ReadInt32();
-//            if (final < 0) final = 0;
-//            m_duel.LifePoints[player] = final;
+            int player = GetLocalPlayer(packet.ReadByte());
+            int total = packet.ReadInt32();
+			BrowserMessages.PlayerDamage(player,total);
         }
 
         private void OnRecover(GameServerPacket packet)
         {
-//            int player = GetLocalPlayer(packet.ReadByte());
-//            m_duel.LifePoints[player] += packet.ReadInt32();
+            int player = GetLocalPlayer(packet.ReadByte());
+            int total = packet.ReadInt32();
+			
+			BrowserMessages.PlayerRecover(player,total);
         }
 
         private void OnLpUpdate(GameServerPacket packet)
         {
-//            int player = GetLocalPlayer(packet.ReadByte());
-//            m_duel.LifePoints[player] = packet.ReadInt32();
+            int player = GetLocalPlayer(packet.ReadByte());
+            int count = packet.ReadInt32();
+			
+			BrowserMessages.UpdateLifePoints(player,count);
         }
 
         private void OnMove(GameServerPacket packet)
@@ -365,7 +367,7 @@ namespace DevPro.Game
             //Code me paul!!
             //This was my best guess after reading the ygopro code
             //AutoChain??
-            //Connection.Send(CtosMessage.Response,-1);
+            Connection.Send(CtosMessage.Response,-1);
         }
 
         private void OnUpdateCard(GameServerPacket packet)
@@ -472,8 +474,8 @@ namespace DevPro.Game
 //            Connection.Send(CtosMessage.Response, m_ai.OnSelectBattleCmd(battle).ToValue());
         }
 
-        private void InternalOnSelectCard(GameServerPacket packet, Func<IList<ClientCard>, int, int, bool, IList<ClientCard>> func)
-        {
+ //       private void InternalOnSelectCard(GameServerPacket packet, Func<IList<ClientCard>, int, int, bool, IList<ClientCard>> func)
+//        {
 //            packet.ReadByte(); // player
 //            bool cancelable = packet.ReadByte() != 0;
 //            int min = packet.ReadByte();
@@ -523,7 +525,7 @@ namespace DevPro.Game
 //            GameClientPacket reply = new GameClientPacket(CtosMessage.Response);
 //            reply.Write(result);
 //            Connection.Send(reply);
-        }
+//        }
 
         private void OnSelectCard(GameServerPacket packet)
         {
