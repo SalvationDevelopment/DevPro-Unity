@@ -89,7 +89,7 @@ aside {width:50%; float:left; padding: 0 20px;}
 
 article {width:50%; float:left; text-align: justify; padding:20px; height:300px; margin-bottom: 100px;}
 .container footer {float:left; text-align: center; width:100%;}
-.superfooter {background:black; color:white; font-weight: 200; height:3em; line-height: 3em; text-align:center;position: fixed;bottom: 0; width: 100%}
+.superfooter {background:black; color:white; font-weight: 200; height:3em; line-height: 3em; text-align:center;position: fixed;bottom: 0; width: 100%; z-index:10; border-top:1px solid white;}
 .iconic {background: green; width:80%; height:80%; margin:10% auto; color: white;
 text-align: center;
 font-size: 140px;}
@@ -188,6 +188,12 @@ display: inline-block;
 #creategame select, #creategame option {padding:0;}
 #creategamecancel {float:right;}
 #creategame input[type="radio"] {width:25px;}
+
+#messagerbox {
+    position:fixed; width:100%; height:0; background:rgba(0,0,0,.5); bottom:0; z-index: 9; overflow:scroll; border-top:1px solid black; color: #ddd;
+    padding-bottom:3em;
+}
+#messagerbox .close {position:fixed; top:0; right:20px; width:200px; height:2em; }
 /* =========================================
 =================================
    Media Queries

@@ -163,6 +163,9 @@ $(document).ready(function () {
         u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', 1);
         
     });
+    $('#messagerbox .close').on('click',function(){
+        $('#messagerbox').css('height','0px');
+    });
 });
 
 
@@ -331,7 +334,12 @@ function PlayerReady(pos, ready) {
     }
 
 }function PlayerMessage(player, message){
-    console.log(player+": "+message);
+    
+    playername = $('#lobbyplayer' + player).html();
+    $('#messagerbox').css('height','150px');
+    $('#messagerbox ul').append('<li>'+playername+": "+message+'</li>');
+    $('#messagerbox ul').scrollTop($(document).height());
+    console.log(playername+" :"+message);
 }
 
 function IsLoaded() {
