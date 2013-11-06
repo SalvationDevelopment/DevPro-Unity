@@ -9,7 +9,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>DevPro Online</title>
+    <title>DevPro Online Version 0.0.0.48</title>
     <link rel="shortcut icon" href="/favicon.ico" />
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
@@ -27,10 +27,10 @@
     <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
-    <div id="unityPlayer" style="height:100%; position: fixed; top 0; width:100%">
+    <div id="unityPlayer" style="height:63px; position: fixed; top 0; width:100%">
         <div class="missing">
             <a href="http://unity3d.com/webplayer/" title="Unity Web Player. Install now!">
-                <img alt="Unity Web Player. Install now!" src="http://webplayer.unity3d.com/installation/getunity.png" width="193" height="1" />
+                <img alt="Unity Web Player. Install now!" src="http://webplayer.unity3d.com/installation/getunity.png" width="193" height="63px" />
             </a>
         </div>
     </div>
@@ -57,7 +57,8 @@
                 <li>Magnet Link</li>
             </ul>
         </nav>
-        <div class='originloading' style='text-align:center; margin-top:'>Loading...<br><span style='font-size:.5em; text-align:center'>2e99c08188a23d546d391da83bcc93f9ac4872d5</span></div>
+        <div class='originloading' style='text-align:center; margin-top:'>Loading Unity...<br>
+        </div><div style='font-size:.5em; text-align:center; padding-top:20px;'>Version 0 : Production 0 : Revision 0  : Commit 48</div>
     </header>
     <footer id='messagerbox'>
         <div class='close'>close</div>
@@ -345,7 +346,7 @@
         swfPath: "/js",
         supplied: "mp3",
         volume: 0.15,
-      });
+      }).jPlayer("play");
     $("#jquery_jplayer_1").jPlayer("play",0)
     });
 

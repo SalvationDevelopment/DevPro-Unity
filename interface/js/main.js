@@ -72,6 +72,7 @@ $(document).ready(function () {
             cardIndex[l] = i;
             /* c80009998 would be cardData[cardIndex.c80009998] */
         }
+        
     });
     
     $('.downloadbutton, #lobbycancel').on('click', function () {
@@ -89,7 +90,7 @@ $(document).ready(function () {
     $('#loginbutton').on('click', function () {
         u.getUnity().SendMessage("HubClient", "Login", "{'Username' : '" + ($('#username').val()) + "', 'Password' : '" + ($('#password').val()) + "', 'UID' : 'Unity'}");
     });
-    $("#jquery_jplayer_1").jPlayer("play",0);
+    
     $('#lobbylock, #majorpopup').on('click', function () {
         $('#majorpopup').toggle();
 
@@ -166,7 +167,9 @@ $(document).ready(function () {
     $('#messagerbox .close').on('click',function(){
         $('#messagerbox').css('height','0px');
     });
+    $("#jquery_jplayer_1").jPlayer("play",0);
 });
+
 
 
 
@@ -334,11 +337,14 @@ function PlayerReady(pos, ready) {
     }
 
 }function PlayerMessage(player, message){
-    
-    playername = $('#lobbyplayer' + player).html();
+    if (player){
+        playername = $('#lobbyplayer' + player).html();
+    }else{
+                playername = 'Spectator'
+    }
     $('#messagerbox').css('height','150px');
     $('#messagerbox ul').append('<li>'+playername+": "+message+'</li>');
-    $('#messagerbox ul').scrollTop($(document).height());
+    $('#messagerbox ul, #messagerbox').animate({ scrollTop: $('#messagerbox ul').height() }, "fast");
     console.log(playername+" :"+message);
 }
 
