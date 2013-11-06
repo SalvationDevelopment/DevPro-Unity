@@ -99,6 +99,18 @@ public class GameClient : MonoBehaviour {
 				&& m_behavior.m_room.IsReady[2] && m_behavior.m_room.IsReady[3]))
 			Connection.Send(CtosMessage.HsStart);	
 	}
+	//value must be between 1-3
+	public void SelectRPS(int selected)
+	{
+		if(selected > 0 && selected < 4)
+			Connection.Send(CtosMessage.HandResult, (byte)selected);
+	}
+	//1 means to go first
+	public void SelectFirstPlayer(int first)
+	{
+		if(first == 0 || first == 1)
+			Connection.Send(CtosMessage.TpResult,(byte)first);
+	}
 	
 
 }

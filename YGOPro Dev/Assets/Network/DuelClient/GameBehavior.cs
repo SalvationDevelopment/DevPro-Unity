@@ -184,13 +184,12 @@ namespace DevPro.Game
 
         private void OnSelectHand(GameServerPacket packet)
         {
-            //Connection.Send(CtosMessage.HandResult, (byte)Program.Rand.Next(1, 4));
+			BrowserMessages.SelectRPS();
         }
 
         private void OnSelectTp(GameServerPacket packet)
         {
-            //bool start = m_ai.OnSelectHand();
-            //Connection.Send(CtosMessage.TpResult, (byte)(start ? 1 : 0));
+			BrowserMessages.SelectFirstPlayer();
         }
 
         private void OnTimeLimit(GameServerPacket packet)
@@ -899,9 +898,10 @@ namespace DevPro.Game
                     for (int i = 0; i < 3; i++)
                         packet.ReadByte();
                     int cardid = packet.ReadInt32();
-				
+				BrowserMessages.DeckError(cardid);
 				break;
 			case 3: //Side Error
+				BrowserMessages.SideError();
 				break;
 			}
 		}

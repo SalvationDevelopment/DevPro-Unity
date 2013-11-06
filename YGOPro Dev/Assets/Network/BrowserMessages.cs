@@ -73,7 +73,14 @@ namespace DevPro.Network
 		
 #endregion
 #region Duel
-		
+		public static void SelectRPS()
+		{
+			Application.ExternalCall("SelectRPS");
+		}
+		public static void SelectFirstPlayer()
+		{
+			Application.ExternalCall("SelectFirstPlayer");
+		}
 #endregion
 	}
 }
