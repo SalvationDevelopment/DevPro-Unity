@@ -98,8 +98,11 @@ font-size: 140px;}
 .game {background:rgba(0,0,0,.65); height: 100%; min-height: 40px; width: 100%}
 .gamelobby {width: 580px;margin: 0 auto;padding: 20px;border: 1px solid white; box-shadow:0 0 30px black,inset 0 0 2px #fff; background:rgba(0,0,0,.75); overflow: auto}
 .lobby {width: 60%;margin: 30px auto; height:200px; font-size: .8em;}
-.button {background:rgba(5,200,0,.5);  width:86px; display: block; width:86px; cursor: pointer;
-                 color:#fff; margin:20px 0;padding:5px; text-align: center;box-shadow:0 0 20px black,inset 0 0 2px #fff; display: inline-block; margin-bottom: 10px}
+.button {background:rgba(50,100,0,.50);  width:86px; display: block; width:86px; cursor: pointer;
+                 color:#fff; margin:20px 0;padding:5px; text-align: center;box-shadow:0 0 20px black,inset 0 0 2px #fff; display: inline-block; margin-bottom: 10px;
+    border-width:1px;
+-webkit-animation: colorRotate 6s linear 0s infinite;
+}
 .game label {width:150px; padding:0px 30px 0px 0; display: inline-block; }
 .game input {display: inline-block; margin-bottom: 10px;  height:1.8em; width:33.33%; text-align: center}
 
@@ -159,6 +162,18 @@ display: inline-block;
 .button.ready1 {display:inline-block; background: yellow}
 .button.ready2 {display:inline-block;}
 
+#rps, #selectduelist {
+     width: 100%;
+     height:100%;
+     background:rgba(0,0,0,.8);
+     z-index:100;
+    position:fixed;
+    top:0;
+    color:white;
+    
+}
+#rps .container, #selectduelist .container { width:1000px; margin:0 auto; height:1000px;}
+.rps {width:23%; border:1px solid white;  height:46%; padding:50px; text-align:center;float:left;color:white; background:black; margin: 0 5%;}
 
 .login, #launcher, #creategame { width:100%; height: 100%; background:rgba(0,0,0,.85); color:white;}
 .loginscreen{ width:350px; margin:300px auto;box-shadow:0 0 20px black,inset 0 0 2px #fff;background:rgba(0,0,0,.85); padding:20px; border-radius: 20px;}
@@ -319,5 +334,28 @@ display: inline-block;
     h2,
     h3 {
         page-break-after: avoid;
+    }
+}
+@-webkit-keyframes colorRotate {
+    from {
+        border-color: rgb(255, 0, 0);
+    }
+    16.6% {
+        border-color: rgb(255, 255, 0);
+    }
+    33.3% {
+        border-color: rgb(0, 255, 0);
+    }
+    50% {
+        border-color: rgb(0, 255, 255);
+    }
+    66.6% {
+        border-color: rgb(0, 0, 255);
+    }
+    83.3% {
+        border-color: rgb(255, 0, 255);
+    }
+    to {
+        border-color: rgb(255, 0, 0);
     }
 }

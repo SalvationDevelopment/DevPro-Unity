@@ -148,6 +148,21 @@ $(document).ready(function () {
 
 
     });
+    $('.rps').on("click",function(){
+        $('#rps').toggle();
+        u.getUnity().SendMessage("GameClient", 'SelectRPS', $(this).data('value'));
+        
+    });
+    $('#igofirst').on("click",function(){
+        $('#selectduelist').toggle();
+        u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', 0);
+        
+    });
+    $('#igofirst').on("click",function(){
+        $('#opponentfirst').toggle();
+        u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', 1);
+        
+    });
 });
 
 
@@ -311,6 +326,7 @@ function PlayerReady(pos, ready) {
             u.getUnity().SendMessage("GameClient", 'StartDuel', '');
             $('.game').toggle();
             $('.field').toggle();
+            
         });
     }
 
@@ -332,9 +348,11 @@ function messageUnity(functionName, message) {
 function DeckError(card){
     MessagePopUp(cardIndex(card).name +" is not legal for this game format" );
 }
-function SelectRPS(){
-    u.getUnity().SendMessage("GameClient", 'SelectRPS',Math.floor((Math.random()*3)+1));
+function SelectRPS(value){
+    $('#rps').toggle();
+    
 }
-function SelectFirstPlayer(){
-    u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', Math.floor((Math.random()*1)+0));
+function SelectFirstPlayer(value){
+    $('#selectduelist').toggle();
+    
 }
