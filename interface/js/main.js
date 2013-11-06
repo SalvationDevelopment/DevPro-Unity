@@ -3,6 +3,7 @@ var saftey = false;
 var Unityconsole = false;
 var u = new UnityObject2();
 
+var playerStart = [0,0];
 var cardIndex = {};
 var cardData;
 var deckData;
@@ -33,6 +34,7 @@ function deck(filename, main, side, extra){
 
 /* create Unity object */
 u.observeProgress(function (progress) {
+        
     var $missingScreen = jQuery(progress.targetEl).find(".missing");
     switch (progress.pluginStatus) {
     case "unsupported":
@@ -59,8 +61,9 @@ u.observeProgress(function (progress) {
 });
 jQuery(function () {
     u.initPlugin(jQuery("#unityPlayer")[0], "http://unity.devpro.org/DevProWeb.unity3d");
-
+    
 });
+
 $(document).ready(function () {
     $.getJSON("http://ygopro.de/cardreader/index.php?folder=English&callback=?", function (data) {
         cardData = data;
@@ -69,8 +72,11 @@ $(document).ready(function () {
             cardIndex[l] = i;
             /* c80009998 would be cardData[cardIndex.c80009998] */
         }
+        
     });
+    
     $('.downloadbutton, #lobbycancel').on('click', function () {
+        $("#jquery_jplayer_1").jPlayer("stop",0)
         if (saftey) {
             $('#intro').toggle();
             $('.login').toggle();
@@ -78,19 +84,18 @@ $(document).ready(function () {
             $('body').css({'background' : 'url(http://ygopro.de/img/bg_black.png)'});
         } else {
             alert('just one moment, server connection system is loading.');
+            
         }
     });
     $('#loginbutton').on('click', function () {
         u.getUnity().SendMessage("HubClient", "Login", "{'Username' : '" + ($('#username').val()) + "', 'Password' : '" + ($('#password').val()) + "', 'UID' : 'Unity'}");
     });
+    
     $('#lobbylock, #majorpopup').on('click', function () {
         $('#majorpopup').toggle();
 
     });
-    $('#lobbystart').on('click', function () {
-        $('.game').toggle();
-        $('.field').toggle();
-    });
+    
     $("#lobbylock").on("click",function(){
         var selecteddeck    = $("#selectdeck").val();
         var tovaliditycheck = (decklist[selecteddeck].data);
@@ -103,13 +108,7 @@ $(document).ready(function () {
     });
     $('body').keypress(function (event) {
         if (event.which == 96) {
-            if (Unityconsole) {
-                $('#unityPlayer').css('height', 'auto');
-                Unityconsole = false;
-            } else {
-                $('#unityPlayer').css('height', '1px');
-                Unityconsole = true;
-            }
+            toggleConsole();
         }
     });
     $('#creategamebutton').on('click', function () {
@@ -127,6 +126,18 @@ $(document).ready(function () {
         pass = $('#creategamepassword').val() || randomString(5);
         compl = string + prio + checkd + shuf + $('#creategamelp').val() + stnds + pass;
         console.log(compl);
+
+
+        if ( $('#creategamecardpool').val() == 2 && $('input:radio[name=ranked]:checked').val() == 'R'){
+            MessagePopUp('OCG/TCG is not a valid mode for ranked, please select a different mode for ranked play');
+            return false;
+        }
+        if (prio+checkd+shuf !== "OOO" && $('input:radio[name=ranked]:checked').val() == 'R'){
+            MessagePopUp('You may not cheet on DevPro');
+            return false;
+        }
+
+
         u.getUnity().SendMessage("GameClient", 'CreateGame', compl);
         $('#creategame').toggle();
         $('.game').toggle();
@@ -136,8 +147,29 @@ $(document).ready(function () {
         $('#lobbytime').html($('#creategametimelimit option:selected').text());
         $('#lobbystartlp').html($('#creategamelp').val() + "/Player");
 
+
     });
+    $('.rps').on("click",function(){
+        $('#rps').toggle();
+        u.getUnity().SendMessage("GameClient", 'SelectRPS', $(this).data('value'));
+        
+    });
+    $('#igofirst').on("click",function(){
+        $('#selectduelist').toggle();
+        u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', 0);
+        
+    });
+    $('#igofirst').on("click",function(){
+        $('#opponentfirst').toggle();
+        u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', 1);
+        
+    });
+    $('#messagerbox .close').on('click',function(){
+        $('#messagerbox').css('height','0px');
+    });
+    $("#jquery_jplayer_1").jPlayer("play",0);
 });
+
 
 
 
@@ -252,6 +284,15 @@ function LoginAccept(username) {
     }
 }
 
+function toggleConsole(){
+    if (Unityconsole) {
+        $('#unityPlayer').css('height', '25%');
+        Unityconsole = false;
+    } else {
+        $('#unityPlayer').css('height', '1px');
+        Unityconsole = true;
+    }
+}
 function SetRoomInfo(info) {
     info = JSON.parse(info);
 }
@@ -268,6 +309,7 @@ function PlayerEnter(username, pos) {
 function PlayerLeave(pos) {
     console.log('PlayerLeave: ' + pos);
     $('#lobbyplayer' + pos).html("");
+    $('#lobbystart').attr('class', 'button ready0')
 }
 
 function UpdatePlayer(pos, newpos) {
@@ -278,16 +320,53 @@ function UpdatePlayer(pos, newpos) {
 }
 
 function PlayerReady(pos, ready) {
+    ready = (ready) ? 1 : 0;
     console.log('PlayerReady: ' + pos + ' is :' + ready);
+    playerStart[pos] = ready
+    state = playerStart[0]+playerStart[1];
     $('#lobbyplayer' + pos).toggleClass('ready');
+    console.log('button ready'+state)
+    $('#lobbystart').attr('class', 'button ready'+state)
+    if (state === 2){
+        $('.button.ready2').on('click', function () {
+            u.getUnity().SendMessage("GameClient", 'StartDuel', '');
+            $('.game').toggle();
+            $('.field').toggle();
+            
+        });
+    }
+
+}function PlayerMessage(player, message){
+    if (player){
+        playername = $('#lobbyplayer' + player).html();
+    }else{
+                playername = 'Spectator'
+    }
+    $('#messagerbox').css('height','150px');
+    $('#messagerbox ul').append('<li>'+playername+": "+message+'</li>');
+    $('#messagerbox ul, #messagerbox').animate({ scrollTop: $('#messagerbox ul').height() }, "fast");
+    console.log(playername+" :"+message);
 }
 
 function IsLoaded() {
     saftey = true;
     $('.downloadbutton').toggle();
     $('.originloading').toggle();
+    toggleConsole();
+    $("#jquery_jplayer_1").jPlayer("play",0)
 }
 
 function messageUnity(functionName, message) {
     u.getUnity().SendMessage("HubClient", functionName, message);
+}
+function DeckError(card){
+    MessagePopUp(cardIndex(card).name +" is not legal for this game format" );
+}
+function SelectRPS(value){
+    $('#rps').toggle();
+    
+}
+function SelectFirstPlayer(value){
+    $('#selectduelist').toggle();
+    
 }
