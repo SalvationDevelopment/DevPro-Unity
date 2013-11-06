@@ -3,6 +3,7 @@ var saftey = false;
 var Unityconsole = false;
 var u = new UnityObject2();
 
+var playerStart = [0,0];
 var cardIndex = {};
 var cardData;
 var deckData;
@@ -87,10 +88,7 @@ $(document).ready(function () {
         $('#majorpopup').toggle();
 
     });
-    $('#lobbystart').on('click', function () {
-        $('.game').toggle();
-        $('.field').toggle();
-    });
+    
     $("#lobbylock").on("click",function(){
         var selecteddeck    = $("#selectdeck").val();
         var tovaliditycheck = (decklist[selecteddeck].data);
@@ -127,6 +125,18 @@ $(document).ready(function () {
         pass = $('#creategamepassword').val() || randomString(5);
         compl = string + prio + checkd + shuf + $('#creategamelp').val() + stnds + pass;
         console.log(compl);
+
+
+        if ( $('#creategamecardpool').val() == 2 && $('input:radio[name=ranked]:checked').val() == 'R'){
+            MessagePopUp('OCG/TCG is not a valid mode for ranked, please select a different mode for ranked play');
+            return false;
+        }
+        if (prio+checkd+shuf !== "OOO" && $('input:radio[name=ranked]:checked').val() == 'R'){
+            MessagePopUp('You may not cheet on DevPro');
+            return false;
+        }
+
+
         u.getUnity().SendMessage("GameClient", 'CreateGame', compl);
         $('#creategame').toggle();
         $('.game').toggle();
@@ -135,6 +145,7 @@ $(document).ready(function () {
         $('#lobbymode').html($('#creategameduelmode option:selected').text());
         $('#lobbytime').html($('#creategametimelimit option:selected').text());
         $('#lobbystartlp').html($('#creategamelp').val() + "/Player");
+
 
     });
 });
@@ -268,6 +279,7 @@ function PlayerEnter(username, pos) {
 function PlayerLeave(pos) {
     console.log('PlayerLeave: ' + pos);
     $('#lobbyplayer' + pos).html("");
+    $('#lobbystart').attr('class', 'button ready0')
 }
 
 function UpdatePlayer(pos, newpos) {
@@ -278,8 +290,23 @@ function UpdatePlayer(pos, newpos) {
 }
 
 function PlayerReady(pos, ready) {
+    ready = (ready) ? 1 : 0;
     console.log('PlayerReady: ' + pos + ' is :' + ready);
+    playerStart[pos] = ready
+    state = playerStart[0]+playerStart[1];
     $('#lobbyplayer' + pos).toggleClass('ready');
+    console.log('button ready'+state)
+    $('#lobbystart').attr('class', 'button ready'+state)
+    if (state === 2){
+        $('.button.ready2').on('click', function () {
+            u.getUnity().SendMessage("GameClient", 'StartDuel', '');
+            $('.game').toggle();
+            $('.field').toggle();
+        });
+    }
+
+}function PlayerMessage(player, message){
+    console.log(player+": "+message);
 }
 
 function IsLoaded() {
@@ -290,4 +317,13 @@ function IsLoaded() {
 
 function messageUnity(functionName, message) {
     u.getUnity().SendMessage("HubClient", functionName, message);
+}
+function DeckError(card){
+    MessagePopUp(cardIndex(card).name +" is not legal for this game format" );
+}
+function SelectRPS(){
+    u.getUnity().SendMessage("GameClient", 'SelectRPS',Math.floor((Math.random()*3)+1));
+}
+function SelectFirstPlayer(){
+    u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', Math.floor((Math.random()*1)+0));
 }
