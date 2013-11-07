@@ -9,7 +9,10 @@ var deckData;
 var decklistData;
 var decklist = [];
 var currenterror;
+var player1StartLP;
+var player2StartLP;
 var i = 0; // counter for forLoops.
+var duelData;
 
 function deck(filename, main, side, extra) {
     //    if (typeof name  !== "string"){console.log('name must be a string'); return false}
@@ -235,13 +238,11 @@ function PlayerEnter(username, pos) {
 }
 
 function PlayerLeave(pos) {
-    console.log('PlayerLeave: ' + pos);
     $('#lobbyplayer' + pos).html("");
     $('#lobbystart').attr('class', 'button ready0');
 }
 
 function UpdatePlayer(pos, newpos) {
-    console.log('UpdatePlayer: ' + pos + ' to :');
     var UpdatePlayerposscache = $('#lobbyplayer' + pos).html();
     $('#lobbyplayer' + pos).html("");
     $('#lobbyplayer' + newpos).html(UpdatePlayerposscache);
@@ -249,7 +250,6 @@ function UpdatePlayer(pos, newpos) {
 
 function PlayerReady(pos, ready) {
     ready = (ready) ? 1 : 0;
-    console.log('PlayerReady: ' + pos + ' is :' + ready);
     playerStart[pos] = ready;
     var state = playerStart[0] + playerStart[1];
     $('#lobbyplayer' + pos).toggleClass('ready');
@@ -306,3 +306,34 @@ function SelectFirstPlayer(value) {
     $('#selectduelist').toggle();
 
 }
+function StartDuel(data){
+    var duelData = JSON.parse(data);
+    console.log(data);
+    duelData = JSON.parse(data);
+    //StartDuel = {"LifePoints":[8000,8000],"IsFirst":false,"PlayerOneDeckSize":40,"PlayerOneExtraSize":14,"PlayerTwoDeckSize":40,"PlayerTwoExtraSize":15}
+    player1StartLP = duelData.LifePoints[0];
+    player2StartLP = duelData.LifePoints[1];
+    $('#player1lp').html("div class='width' style='width:"+(duelData.LifePoints[0]/player1StartLP)+"'></div>"+duelData.LifePoints[0]+"</div>");
+    $('#player2lp').html("div class='width' style='width:"+(duelData.LifePoints[1]/player2StartLP)+"'></div>"+duelData.LifePoints[1]+"</div>");
+    
+    for(i = 0; duelData.PlayerOneDeckSize; i++){
+        $('player1deck').append('<div class="card deck"><div class="back"></div><div class="front"></div></div>');
+    }
+    for(i = 0; duelData.PlayerTwoDeckSize; i++){
+        $('player2deck').append('<div class="card deck"><div class="back"></div><div class="front"></div></div>');
+    }
+    for(i = 0; duelData.PlayerOneExtraSize; i++){
+        $('player1extradeck').append('<div class="card deck"><div class="back"></div><div class="front"></div></div>');
+    }
+    for(i = 0; duelData.PlayerTwoExtraSize; i++){
+        $('player2extradeck').append('<div class="card deck"><div class="back"></div><div class="front"></div></div>');
+    }
+    
+    
+}
+function UpdateCards(player, location, data){
+    console.log(data);
+    var update = JSON.parse(data);
+    
+}
+    
