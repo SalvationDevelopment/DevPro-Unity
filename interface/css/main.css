@@ -127,7 +127,7 @@ display: inline-block;
 .info-controls{float:left;}
 .info-image {height:294px; padding:20px; width: 198px; background:brown;}
 .gameplayarea{ width:1000px; height:1000px; margin   : 0 auto; }
-.fieldimage {width:85%; height:85%;  -webkit-transform: rotate3d(1,0,0,45deg); margin:0 auto; background-image: url(../img/field.png); background-size: 100% 100%;}
+.fieldimage {width:85%; height:85%;  -webkit-transform: rotate3d(1,0,0,45deg); margin:0 auto; background-image: url(../img/bg.jpg); background-size: 100% 100%;}
 .card { -webkit-transform-style: preserve-3d; width:83px; height:124px; background:blue; position:absolute; -z-index: 3; bottom:5px; right: 5px;  -webkit-transition: all 500ms;}
 .card.deck { -webkit-transition: left 15ms;}
 
@@ -142,7 +142,7 @@ display: inline-block;
 .card .front {
   background:black;
 }
-.card .back {background-image:url(http://images1.wikia.nocookie.net/__cb20100726082135/yugioh/images/thumb/e/e5/Back-EN.png/330px-Back-EN.png);
+.card .back {background-image:url('../img/cover.jpg');
     background-size: 100% 100%;
     -webkit-transform: rotate3d(0,1,0, 180deg );
 
@@ -194,6 +194,8 @@ display: inline-block;
     padding-bottom:3em;
 }
 #messagerbox .close {position:fixed; top:0; right:20px; width:200px; height:2em; }
+
+#phases{position:fixed; top:25%; height:50%; width:0; }
 /* =========================================
 =================================
    Media Queries
