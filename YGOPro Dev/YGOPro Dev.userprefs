@@ -9,10 +9,9 @@
             <Node name="Assets" expanded="True">
               <Node name="Network" expanded="True">
                 <Node name="DuelClient" expanded="True">
-                  <Node name="Enums" expanded="True">
-                    <Node name="GameMessage.cs" selected="True" />
+                  <Node name="Data" expanded="True">
+                    <Node name="MainPhase.cs" selected="True" />
                   </Node>
-                  <Node name="Helpers" expanded="True" />
                 </Node>
                 <Node name="HubServer" expanded="True">
                   <Node name="Data" expanded="True" />

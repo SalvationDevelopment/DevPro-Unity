@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using DevPro.Game;
 using DevPro.Game.Data;
@@ -98,9 +99,9 @@ namespace DevPro.Network
 			Application.ExternalCall("ShuffleDeck",player);
 		}
 		
-		public static void ShuffleHand(int player,int[] newIDOrder)
+		public static void ShuffleHand(int player,IList<CardData> newHandOrder)
 		{
-			Application.ExternalCall("ShuffleHand",player,JsonWriter.Serialize(newIDOrder));	
+			Application.ExternalCall("ShuffleHand",player,JsonWriter.Serialize(newHandOrder));	
 		}
 		
 		public static void NewTurn(int player)
@@ -126,6 +127,28 @@ namespace DevPro.Network
 		public static void UpdateLifePoints(int player, int lifepoints)
 		{
 			Application.ExternalCall("UpdateLifePoints",player, lifepoints);
+		}
+		
+		public static void UpdateCard(int player,int location,int index,CardData data)
+		{
+			Application.ExternalCall("UpdateCard",player, location, index, JsonWriter.Serialize(data));
+		}
+		
+		public static void UpdateCards(int player, int location,IList<CardData> data)
+		{
+			Application.ExternalCall("UpdateCards",player, location, JsonWriter.Serialize(data));
+		}
+		
+		public static void MoveCard(int player,int location, int index,
+			int moveplayer, int movelocation,int movezone,int moveposition)
+		{
+			Application.ExternalCall("MoveCard",player, location, index,
+				moveplayer, movelocation, movezone, moveposition);
+		}
+		
+		public static void ChangeCardPosition(int player, int location,int index, int newposition)
+		{
+			Application.ExternalCall("ChangePosition",player, location, index, newposition);
 		}
 		
 #endregion

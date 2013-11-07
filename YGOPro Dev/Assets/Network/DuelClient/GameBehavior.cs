@@ -17,6 +17,7 @@ namespace DevPro.Game
         private IDictionary<GameMessage, Action<GameServerPacket>> m_messages;
 
         public Room m_room { get; private set; }
+		private Duel m_duel;
 		
 		public bool IsTag { get; private set; }
 		
@@ -30,11 +31,12 @@ namespace DevPro.Game
             RegisterPackets();
 
             m_room = new Room();
+			m_duel = new Duel();
         }
 
         public int GetLocalPlayer(int player)
         {
-            return m_room.IsFirst ? player : 1 - player;
+            return m_duel.IsFirst ? player : 1 - player;
         }
 		
 		public void OnPacket(GameServerPacket packet)
@@ -231,16 +233,18 @@ namespace DevPro.Game
 			DuelStart data = new DuelStart();
 			
 			int type = packet.ReadByte();
-			m_room.IsFirst = (type & 0xF) == 0;
-			data.IsFirst = m_room.IsFirst;
+			m_duel.IsFirst = (type & 0xF) == 0;
+			data.IsFirst = m_duel.IsFirst;
 			
-			data.LifePoints = new int[2];
-            data.LifePoints[GetLocalPlayer(0)] = packet.ReadInt32();
-            data.LifePoints[GetLocalPlayer(1)] = packet.ReadInt32();
+            m_duel.LifePoints[GetLocalPlayer(0)] = packet.ReadInt32();
+            m_duel.LifePoints[GetLocalPlayer(1)] = packet.ReadInt32();
+			data.LifePoints = m_duel.LifePoints;
             data.PlayerOneDeckSize = packet.ReadInt16();
             data.PlayerOneExtraSize = packet.ReadInt16();
+			m_duel.Fields[GetLocalPlayer(0)].Init(data.PlayerOneDeckSize, data.PlayerOneExtraSize);
             data.PlayerTwoDeckSize = packet.ReadInt16();
             data.PlayerTwoExtraSize = packet.ReadInt16();
+			m_duel.Fields[GetLocalPlayer(1)].Init(data.PlayerTwoDeckSize, data.PlayerTwoExtraSize);
 			
 			BrowserMessages.SendStartDuel(data);
         }
@@ -258,6 +262,12 @@ namespace DevPro.Game
             int player = GetLocalPlayer(packet.ReadByte());
             int count = packet.ReadByte();
 			
+			for (int i = 0; i < count; ++i)
+            {
+                m_duel.Fields[player].Deck.RemoveAt(m_duel.Fields[player].Deck.Count - 1);
+                m_duel.Fields[player].Hand.Add(new CardData() {Id = 0, Location = (int)CardLocation.Hand, Position = 0 });
+            }
+			
 			BrowserMessages.DrawCard(player,count);
         }
 
@@ -270,12 +280,11 @@ namespace DevPro.Game
         private void OnShuffleHand(GameServerPacket packet)
         {
             int player = GetLocalPlayer(packet.ReadByte());
-            int count = packet.ReadByte();
-			List<int> cardList = new List<int>();
-			for (int i = 0; i < count; ++i)
-				cardList.Add(packet.ReadInt32());
+            packet.ReadByte(); // count not required
+            foreach (CardData card in m_duel.Fields[player].Hand)
+                card.Id = packet.ReadInt32();
 			
-			BrowserMessages.ShuffleHand(player,cardList.ToArray());
+			BrowserMessages.ShuffleHand(player,m_duel.Fields[player].Hand);
         }
 
         private void OnNewTurn(GameServerPacket packet)
@@ -315,34 +324,38 @@ namespace DevPro.Game
 
         private void OnMove(GameServerPacket packet)
         {
-//            int cardId = packet.ReadInt32();
-//            int pc = GetLocalPlayer(packet.ReadByte());
-//            int pl = packet.ReadByte();
-//            int ps = packet.ReadSByte();
-//            packet.ReadSByte(); // pp
-//            int cc = GetLocalPlayer(packet.ReadByte());
-//            int cl = packet.ReadByte();
-//            int cs = packet.ReadSByte();
-//            int cp = packet.ReadSByte();
-//            packet.ReadInt32(); // reason
-//
-//            ClientCard card = m_duel.GetCard(pc, (CardLocation)pl, ps);
-//
-//            m_duel.RemoveCard((CardLocation)pl, card, pc, ps);
-//            m_duel.AddCard((CardLocation)cl, cardId, cc, cs, cp);
+            int cardId = packet.ReadInt32();
+            int pc = GetLocalPlayer(packet.ReadByte());
+            int pl = packet.ReadByte();
+            int ps = packet.ReadSByte();
+            packet.ReadSByte(); // pp
+            int cc = GetLocalPlayer(packet.ReadByte());
+            int cl = packet.ReadByte();
+            int cs = packet.ReadSByte();
+            int cp = packet.ReadSByte();
+            packet.ReadInt32(); // reason
+
+            CardData card = m_duel.GetCard(pc, (CardLocation)pl, ps);
+
+            m_duel.RemoveCard((CardLocation)pl, card, pc, ps);
+            m_duel.AddCard((CardLocation)cl, cardId, cc, cs, cp);
+			
+			BrowserMessages.MoveCard(pc,(int)pl,ps,cc,(int)cl,cs,cp);
         }
 
         private void OnPosChange(GameServerPacket packet)
         {
-//            packet.ReadInt32(); // card id
-//            int pc = GetLocalPlayer(packet.ReadByte());
-//            int pl = packet.ReadByte();
-//            int ps = packet.ReadSByte();
-//            packet.ReadSByte(); // pp
-//            int cp = packet.ReadSByte();
-//            ClientCard card = m_duel.GetCard(pc, (CardLocation)pl, ps);
-//            if (card != null)
-//                card.Position = cp;
+            packet.ReadInt32(); // card id
+            int pc = GetLocalPlayer(packet.ReadByte());
+            int pl = packet.ReadByte();
+            int ps = packet.ReadSByte();
+            packet.ReadSByte(); // pp
+            int cp = packet.ReadSByte();
+            CardData card = m_duel.GetCard(pc, (CardLocation)pl, ps);
+            if (card != null)
+                card.Position = cp;
+			
+			BrowserMessages.ChangeCardPosition(pc,(int)pl,ps,cp);
         }
 
         private void OnChaining(GameServerPacket packet)
@@ -372,59 +385,62 @@ namespace DevPro.Game
 
         private void OnUpdateCard(GameServerPacket packet)
         {
-//            int player = GetLocalPlayer(packet.ReadByte());
-//            int loc = packet.ReadByte();
-//            int seq = packet.ReadByte();
-//
-//            packet.ReadInt32(); // ???
-//
-//            ClientCard card = m_duel.GetCard(player, (CardLocation)loc, seq);
-//            if (card == null) return;
-//
-//            card.Update(packet,m_duel);
+            int player = GetLocalPlayer(packet.ReadByte());
+            int loc = packet.ReadByte();
+            int index = packet.ReadByte();
+
+            packet.ReadInt32(); // ???
+			
+			CardData card = new CardData();
+			
+			card.Update(packet,m_duel);
+			
+			BrowserMessages.UpdateCard(player,loc,index,card);
         }
 
         private void OnUpdateData(GameServerPacket packet)
         {
-//            int player = GetLocalPlayer(packet.ReadByte());
-//            CardLocation loc = (CardLocation)packet.ReadByte();
-//
-//            IList<ClientCard> cards = null;
-//            switch (loc)
-//            {
-//                case CardLocation.Hand:
-//                    cards = m_duel.Fields[player].Hand;
-//                    break;
-//                case CardLocation.MonsterZone:
-//                    cards = m_duel.Fields[player].MonsterZone;
-//                    break;
-//                case CardLocation.SpellZone:
-//                    cards = m_duel.Fields[player].SpellZone;
-//                    break;
-//                case CardLocation.Grave:
-//                    cards = m_duel.Fields[player].Graveyard;
-//                    break;
-//                case CardLocation.Removed:
-//                    cards = m_duel.Fields[player].Banished;
-//                    break;
-//                case CardLocation.Deck:
-//                    cards = m_duel.Fields[player].Deck;
-//                    break;
-//                case CardLocation.Extra:
-//                    cards = m_duel.Fields[player].ExtraDeck;
-//                    break;
-//            }
-//            if (cards != null)
-//            {
-//                foreach (ClientCard card in cards)
-//                {
-//                    int len = packet.ReadInt32();
-//                    if (len < 8) continue;
-//                    long pos = packet.GetPosition();
-//                    card.Update(packet,m_duel);
-//                    packet.SetPosition(pos + len - 4);
-//                }
-//            }
+            int player = GetLocalPlayer(packet.ReadByte());
+            CardLocation loc = (CardLocation)packet.ReadByte();
+
+            IList<CardData> cards = null;
+            switch (loc)
+            {
+                case CardLocation.Hand:
+                    cards = m_duel.Fields[player].Hand;
+                    break;
+                case CardLocation.MonsterZone:
+                    cards = m_duel.Fields[player].MonsterZone;
+                    break;
+                case CardLocation.SpellZone:
+                    cards = m_duel.Fields[player].SpellZone;
+                    break;
+                case CardLocation.Grave:
+                    cards = m_duel.Fields[player].Graveyard;
+                    break;
+                case CardLocation.Removed:
+                    cards = m_duel.Fields[player].Banished;
+                    break;
+                case CardLocation.Deck:
+                    cards = m_duel.Fields[player].Deck;
+                    break;
+                case CardLocation.Extra:
+                    cards = m_duel.Fields[player].ExtraDeck;
+                    break;
+            }
+            if (cards != null)
+            {
+                foreach (CardData card in cards)
+                {
+                    int len = packet.ReadInt32();
+                    if (len < 8) continue;
+                    long pos = packet.GetPosition();
+                    card.Update(packet,m_duel);
+                    packet.SetPosition(pos + len - 4);
+                }
+            }
+			
+			BrowserMessages.UpdateCards(player,(int)loc,cards);
         }
 
         private void OnSelectBattleCmd(GameServerPacket packet)
