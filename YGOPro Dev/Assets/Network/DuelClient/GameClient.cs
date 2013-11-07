@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Net;
-using System.Collections;
+using System.Collections.Generic;
 using DevPro.Game.Network.Helpers;
 using DevPro.Game.Network.Enums;
 using DevPro.Game;
@@ -112,6 +112,44 @@ public class GameClient : MonoBehaviour {
 		if(first == 0 || first == 1)
 			Connection.Send(CtosMessage.TpResult,(byte)first);
 	}
-	
+	//return an empty array to cancel selection
+	public void SelectCardsReply(string data)
+	{
+		if(m_behavior.CardSelection == null)
+			return;
+		    IList<CardData> selected = JsonReader.Deserialize<IList<CardData>>(data);
 
+            if (selected.Count == 0 && m_behavior.CardSelection.Cancelable)
+            {
+                Connection.Send(CtosMessage.Response, -1);
+                return;
+            }
+
+            byte[] result = new byte[selected.Count + 1];
+            result[0] = (byte)selected.Count;
+            for (int i = 0; i < selected.Count; ++i)
+            {
+                int id = 0;
+                for (int j = 0; j < m_behavior.CardSelection.Cards.Count; ++j)
+                {
+                    if (m_behavior.CardSelection.Cards[j] == null) continue;
+                    if (m_behavior.CardSelection.Cards[j].Equals(selected[i]))
+                    {
+                        id = j;
+                        break;
+                    }
+                }
+                result[i + 1] = (byte)id;
+            }
+
+            GameClientPacket reply = new GameClientPacket(CtosMessage.Response);
+            reply.Write(result);
+            Connection.Send(reply);
+	}
+	
+	public void SendYn(int result)
+	{
+		bool accept = Convert.ToBoolean(result);
+		Connection.Send(CtosMessage.Response, accept ? 1:0);
+	}
 }

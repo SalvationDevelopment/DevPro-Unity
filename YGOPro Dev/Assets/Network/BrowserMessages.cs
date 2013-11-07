@@ -75,6 +75,17 @@ namespace DevPro.Network
 		
 #endregion
 #region Duel
+		//if the result is 2 the game is a draw
+		public static void OnWin(int result)
+		{
+			Application.ExternalCall("OnWin",result);
+		}
+		
+		public static void OnDuelEnd()
+		{
+			Application.ExternalCall("DuelEnd");
+		}
+		
 		public static void SelectRPS()
 		{
 			Application.ExternalCall("SelectRPS");
@@ -151,6 +162,20 @@ namespace DevPro.Network
 			Application.ExternalCall("ChangePosition",player, location, index, newposition);
 		}
 		
+		public static void SelectCards(IList<CardData> cards, int min, int max, int cancelable)
+		{
+			Application.ExternalCall("SelectCards",cards, min, max, cancelable);
+		}
+		
+		public static void ActivateCardEffect(int cardid)
+		{
+			Application.ExternalCall("ActivateCardEffect",cardid);
+		}
+		
+		public static void SelectYn(int desc)
+		{
+			Application.ExternalCall("SelectYn",desc);
+		}
 #endregion
 	}
 }

@@ -21,6 +21,8 @@ namespace DevPro.Game
 		
 		public bool IsTag { get; private set; }
 		
+		public SelectedCards CardSelection { get; private set; }
+		
 		public GameBehavior(GameClient game)
         {
             Game = game;
@@ -106,9 +108,7 @@ namespace DevPro.Game
         }
 
         private void OnJoinGame(GameServerPacket packet)
-        {
-			//read packet
-			
+        {			
 			RoomInfo roomInfo = new RoomInfo();
 			
 			roomInfo.banlist = packet.ReadUInt32();
@@ -221,11 +221,22 @@ namespace DevPro.Game
             //}
             
             //Connection.Close();
+        }        
+		
+		private void OnWin(GameServerPacket packet)
+        {
+            int result = packet.ReadByte();
+			
+			if(result != 2)
+				result = GetLocalPlayer(result);
+			
+			BrowserMessages.OnWin(result);
         }
         
         private void OnDuelEnd(GameServerPacket packet)
         {
-            //Connection.Close();
+			BrowserMessages.OnDuelEnd();
+            Connection.Close();
         }
 
         private void OnStart(GameServerPacket packet)
@@ -249,13 +260,7 @@ namespace DevPro.Game
 			BrowserMessages.SendStartDuel(data);
         }
 
-        private void OnWin(GameServerPacket packet)
-        {
-            //int result = GetLocalPlayer(packet.ReadByte());
 
-            //string otherName = m_room.Names[0] == Program.Config.Username ? m_room.Names[1] : m_room.Names[0];
-            //string textResult = (result == 2 ? "Draw" : result == 0 ? "Win" : "Lose");
-        }
 
         private void OnDraw(GameServerPacket packet)
         {
@@ -377,8 +382,6 @@ namespace DevPro.Game
 
         private void OnChainSorting(GameServerPacket packet)
         {
-            //Code me paul!!
-            //This was my best guess after reading the ygopro code
             //AutoChain??
             Connection.Send(CtosMessage.Response,-1);
         }
@@ -490,62 +493,36 @@ namespace DevPro.Game
 //            Connection.Send(CtosMessage.Response, m_ai.OnSelectBattleCmd(battle).ToValue());
         }
 
- //       private void InternalOnSelectCard(GameServerPacket packet, Func<IList<ClientCard>, int, int, bool, IList<ClientCard>> func)
-//        {
-//            packet.ReadByte(); // player
-//            bool cancelable = packet.ReadByte() != 0;
-//            int min = packet.ReadByte();
-//            int max = packet.ReadByte();
-//
-//            IList<ClientCard> cards = new List<ClientCard>();
-//            int count = packet.ReadByte();
-//            for (int i = 0; i < count; ++i)
-//            {
-//                int id = packet.ReadInt32();
-//                int player = GetLocalPlayer(packet.ReadByte());
-//                CardLocation loc = (CardLocation)packet.ReadByte();
-//                int seq = packet.ReadByte();
-//                packet.ReadByte(); // pos
-//                ClientCard card = m_duel.GetCard(player, loc, seq);
-//                if (card == null) continue;
-//                if (card.Id == 0)
-//                    card.SetId(id);
-//                cards.Add(card);
-//            }
-//
-//            IList<ClientCard> selected = func(cards, min, max, cancelable);
-//
-//            if (selected.Count == 0 && cancelable)
-//            {
-//                Connection.Send(CtosMessage.Response, -1);
-//                return;
-//            }
-//
-//            byte[] result = new byte[selected.Count + 1];
-//            result[0] = (byte)selected.Count;
-//            for (int i = 0; i < selected.Count; ++i)
-//            {
-//                int id = 0;
-//                for (int j = 0; j < count; ++j)
-//                {
-//                    if (cards[j] == null) continue;
-//                    if (cards[j].Equals(selected[i]))
-//                    {
-//                        id = j;
-//                        break;
-//                    }
-//                }
-//                result[i + 1] = (byte)id;
-//            }
-//
-//            GameClientPacket reply = new GameClientPacket(CtosMessage.Response);
-//            reply.Write(result);
-//            Connection.Send(reply);
-//        }
+        private void InternalOnSelectCard(GameServerPacket packet)
+        {
+			CardSelection = new SelectedCards();
+			
+            packet.ReadByte(); // player
+            CardSelection.Cancelable = packet.ReadByte() != 0;
+            int min = packet.ReadByte();
+            int max = packet.ReadByte();
+
+            int count = packet.ReadByte();
+            for (int i = 0; i < count; ++i)
+            {
+                int id = packet.ReadInt32();
+                int player = GetLocalPlayer(packet.ReadByte());
+                CardLocation loc = (CardLocation)packet.ReadByte();
+                int seq = packet.ReadByte();
+                packet.ReadByte(); // pos
+                CardData card = m_duel.GetCard(player, loc, seq);
+                if (card == null) continue;
+                if (card.Id == 0)
+                    card.Id = id;
+                CardSelection.Cards.Add(card);
+            }
+			
+			BrowserMessages.SelectCards(CardSelection.Cards,min,max,Convert.ToInt32(CardSelection.Cancelable));
+        }
 
         private void OnSelectCard(GameServerPacket packet)
         {
-            //InternalOnSelectCard(packet, m_ai.OnSelectCard);
+            InternalOnSelectCard(packet);
         }
 
         private void OnSelectChain(GameServerPacket packet)
@@ -622,25 +599,25 @@ namespace DevPro.Game
 
         private void OnSelectEffectYn(GameServerPacket packet)
         {
-//            packet.ReadByte(); // player
-//
-//            int cardId = packet.ReadInt32();
-//            int player = GetLocalPlayer(packet.ReadByte());
-//            CardLocation loc = (CardLocation)packet.ReadByte();
-//            int seq = packet.ReadByte();
-//            packet.ReadByte();
-//
-//            ClientCard card = m_duel.GetCard(player, loc, seq);
-//            if (card == null)
-//            {
-//                Connection.Send(CtosMessage.Response, 0);
-//                return;
-//            }
-//
-//            if (card.Id == 0) card.SetId(cardId);
+            packet.ReadByte(); // player
 
-            //int reply = m_ai.OnSelectEffectYn(card) ? (1) : (0);
-            //Connection.Send(CtosMessage.Response, reply);
+            int cardId = packet.ReadInt32();
+            int player = GetLocalPlayer(packet.ReadByte());
+            CardLocation loc = (CardLocation)packet.ReadByte();
+            int seq = packet.ReadByte();
+            packet.ReadByte();
+
+            CardData card = m_duel.GetCard(player, loc, seq);
+            if (card == null)
+            {
+                Connection.Send(CtosMessage.Response, 0);
+                return;
+            }
+
+            if (card.Id == 0) 
+				card.Id = cardId;
+			
+			BrowserMessages.ActivateCardEffect(cardId);
         }
 
         private void OnSelectIdleCmd(GameServerPacket packet)
@@ -838,9 +815,8 @@ namespace DevPro.Game
 
         private void OnSelectYesNo(GameServerPacket packet)
         {
-//            packet.ReadByte(); // player
-//            int reply = m_ai.OnSelectYesNo(packet.ReadInt32()) ? (1) : (0);
-//            Connection.Send(CtosMessage.Response, reply);
+            packet.ReadByte(); // player
+			BrowserMessages.SelectYn(packet.ReadInt32());
         }
 
         private void OnAnnounceAttrib(GameServerPacket packet)

@@ -10,7 +10,7 @@
               <Node name="Network" expanded="True">
                 <Node name="DuelClient" expanded="True">
                   <Node name="Data" expanded="True">
-                    <Node name="MainPhase.cs" selected="True" />
+                    <Node name="Duel.cs" selected="True" />
                   </Node>
                 </Node>
                 <Node name="HubServer" expanded="True">
