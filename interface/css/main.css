@@ -127,7 +127,7 @@ display: inline-block;
 .info-controls{float:left;}
 .info-image {height:294px; padding:20px; width: 198px; background:brown;}
 .gameplayarea{ width:1000px; height:1000px; margin   : 0 auto; }
-.fieldimage {width:85%; height:85%;  -webkit-transform: rotate3d(1,0,0,45deg); margin:0 auto; background-image: url(../img/bg.jpg); background-size: 100% 100%;}
+.fieldimage {width:85%; height:85%;  -webkit-transform: rotate3d(1,0,0,45deg); margin:0 auto; background-image: url(../img/field.png); background-size: 100% 100%;}
 .card { -webkit-transform-style: preserve-3d; width:83px; height:124px; background:blue; position:absolute; -z-index: 3; bottom:5px; right: 5px;  -webkit-transition: all 500ms;}
 .card.deck { -webkit-transition: left 15ms;}
 

@@ -1,4 +1,8 @@
-/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout */
+/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout,cardmargin */
+/* DEAR GOD ACCESSDENIED LEARN TO USE A FOR LOOP!
+for (i = 0; i < size; i++) {
+}
+*/
 var saftey = false;
 var Unityconsole = false;
 var u = new UnityObject2();
@@ -308,32 +312,47 @@ function SelectFirstPlayer(value) {
 }
 function StartDuel(data){
     var duelData = JSON.parse(data);
-    console.log(data);
-    duelData = JSON.parse(data);
     //StartDuel = {"LifePoints":[8000,8000],"IsFirst":false,"PlayerOneDeckSize":40,"PlayerOneExtraSize":14,"PlayerTwoDeckSize":40,"PlayerTwoExtraSize":15}
     player1StartLP = duelData.LifePoints[0];
     player2StartLP = duelData.LifePoints[1];
+    
     $('#player1lp').html("div class='width' style='width:"+(duelData.LifePoints[0]/player1StartLP)+"'></div>"+duelData.LifePoints[0]+"</div>");
     $('#player2lp').html("div class='width' style='width:"+(duelData.LifePoints[1]/player2StartLP)+"'></div>"+duelData.LifePoints[1]+"</div>");
     
-    for(i = 0; duelData.PlayerOneDeckSize; i++){
-        $('player1deck').append('<div class="card deck"><div class="back"></div><div class="front"></div></div>');
-    }
-    for(i = 0; duelData.PlayerTwoDeckSize; i++){
-        $('player2deck').append('<div class="card deck"><div class="back"></div><div class="front"></div></div>');
-    }
-    for(i = 0; duelData.PlayerOneExtraSize; i++){
-        $('player1extradeck').append('<div class="card deck"><div class="back"></div><div class="front"></div></div>');
-    }
-    for(i = 0; duelData.PlayerTwoExtraSize; i++){
-        $('player2extradeck').append('<div class="card deck"><div class="back"></div><div class="front"></div></div>');
-    }
-    
-    
+    DOMWriter(duelData.PlayerOneDeckSize, 'deck', '#player1deck');
+    DOMWriter(duelData.PlayerTwoDeckSize, 'deck', '#player1deck');
+    DOMWriter(duelData.PlayerOneExtraSize, 'exta', '#player2extradeck');
+    DOMWriter(duelData.PlayerTwoExtraSize, 'exta', '#player2extradeck');
+    cardmargin();
 }
+function DOMWriter(size, theclass, thelocation){
+    var card = [];
+    var string = '<div class="card '+theclass+'"><div class="back"></div><div class="front"></div></div>';
+    
+    for (var cdRomThrownAtHead = 0; i < size; i++) {
+        card.push(string);
+    }
+    card = card.concat();
+    card = card.toString();
+    console.log(card);
+    $(thelocation).html(card);
+}
+
 function UpdateCards(player, location, data){
-    console.log(data);
+    
     var update = JSON.parse(data);
-    
+    console.log(update);
 }
-    
+function DrawCard(vari1, vari2, vari3, vari4 ){
+    console.log(vari1, vari2, vari3, vari4);
+}
+function NewPhase(phase){
+    console.log(phase);
+}
+function NewTurn(turn){
+    console.log(turn);
+}
+function MoveCard(data){
+    console.log(data)
+}
+
