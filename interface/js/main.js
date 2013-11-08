@@ -355,4 +355,31 @@ function NewTurn(turn){
 function MoveCard(data){
     console.log(data)
 }
-
+function OnWin(result){
+    console.log("Function OnWin: "+result);
+}
+function SelectCards(cards, min, max, cancelable){
+    var debugObject {cards : cards, min : min, max, max, cancelable, cancelable}
+    console.log('Function SelectCards:'+JSON.stringify(debugObject));
+}
+function OnDuelEnd(){
+    console.log('Duel has ended.')
+}
+function SelectYn(description){
+    console.log("Function SelectYn :"+description)
+}
+function IdleCommands(main){
+    var debugObject = JSON.Strigify(main);
+    console.log(debugObject);
+}
+function SelectPosition(positions){
+    var debugObject = JSON.Strigify(positions);
+    console.log(debugObject);
+}
+function SelectOption(options){
+    var debugObject = JSON.Strigify(positions);
+    console.log(debugObject);
+}
+function AnnounceCard(){
+    console.log('AnnounceCard');
+}
