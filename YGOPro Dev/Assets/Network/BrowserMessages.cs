@@ -125,6 +125,11 @@ namespace DevPro.Network
 			Application.ExternalCall("NewPhase",phase);
 		}
 		
+		public static void IdleCommands(MainPhase main)
+		{
+			Application.ExternalCall("IdleCommands",JsonWriter.Serialize(main));
+		}
+		
 		public static void PlayerDamage(int player, int total)
 		{
 			Application.ExternalCall("DamageLifePoints",player, total);
@@ -175,6 +180,21 @@ namespace DevPro.Network
 		public static void SelectYn(int desc)
 		{
 			Application.ExternalCall("SelectYn",desc);
+		}
+		
+		public static void SelectPosition(IList<int> positions)
+		{
+			Application.ExternalCall("SelectPosition",JsonWriter.Serialize(positions));
+		}
+		
+		public static void SelectOption(IList<int> options)
+		{
+			Application.ExternalCall("SelectOption",JsonWriter.Serialize(options));
+		}
+		
+		public static void AnnounceCard()
+		{
+			Application.ExternalCall("AnnounceCard");
 		}
 #endregion
 	}

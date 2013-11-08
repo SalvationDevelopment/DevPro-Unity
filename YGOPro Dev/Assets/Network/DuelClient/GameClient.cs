@@ -152,4 +152,25 @@ public class GameClient : MonoBehaviour {
 		bool accept = Convert.ToBoolean(result);
 		Connection.Send(CtosMessage.Response, accept ? 1:0);
 	}
+	
+	public void SendPosition(int pos)
+	{
+		Connection.Send(CtosMessage.Response, pos);	
+	}
+	
+	public void SendAnnounceCard(int cardid)
+	{
+		Connection.Send(CtosMessage.Response, cardid);
+	}
+	
+	public void SendOption(int option)
+	{
+		Connection.Send(CtosMessage.Response, option);	
+	}
+	
+	public void MainPhaseAction(string data)
+	{
+		MainPhaseAction action = JsonReader.Deserialize<MainPhaseAction>(data);
+		Connection.Send(CtosMessage.Response, action.ToValue());
+	}
 }

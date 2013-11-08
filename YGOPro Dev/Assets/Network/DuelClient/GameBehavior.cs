@@ -622,76 +622,76 @@ namespace DevPro.Game
 
         private void OnSelectIdleCmd(GameServerPacket packet)
         {
-//            packet.ReadByte(); // player
-//
-//            m_duel.MainPhase = new MainPhase();
-//            MainPhase main = m_duel.MainPhase;
-//            int count;
-//            for (int k = 0; k < 5; k++)
-//            {
-//                count = packet.ReadByte();
-//                for (int i = 0; i < count; ++i)
-//                {
-//                    packet.ReadInt32(); // card id
-//                    int con = GetLocalPlayer(packet.ReadByte());
-//                    CardLocation loc = (CardLocation)packet.ReadByte();
-//                    int seq = packet.ReadByte();
-//                    ClientCard card = m_duel.GetCard(con, loc, seq);
-//                    if (card == null) continue;
-//                    card.ActionIndex[k] = i;
-//                    switch (k)
-//                    {
-//                        case 0:
-//                            main.SummonableCards.Add(card);
-//                            break;
-//                        case 1:
-//                            main.SpecialSummonableCards.Add(card);
-//                            break;
-//                        case 2:
-//                            main.ReposableCards.Add(card);
-//                            break;
-//                        case 3:
-//                            main.MonsterSetableCards.Add(card);
-//                            break;
-//                        case 4:
-//                            main.SpellSetableCards.Add(card);
-//                            break;
-//                    }
-//                }
-//            }
-//            count = packet.ReadByte();
-//            for (int i = 0; i < count; ++i)
-//            {
-//                packet.ReadInt32(); // card id
-//                int con = GetLocalPlayer(packet.ReadByte());
-//                CardLocation loc = (CardLocation)packet.ReadByte();
-//                int seq = packet.ReadByte();
-//                int desc = packet.ReadInt32();
-//
-//                ClientCard card = m_duel.GetCard(con, loc, seq);
-//                if (card == null) continue;
-//                card.ActionIndex[5] = i;
-//                if (card.ActionActivateIndex.ContainsKey(desc))
-//                    card.ActionActivateIndex.Remove(desc);
-//                card.ActionActivateIndex.Add(desc, i);
-//                main.ActivableCards.Add(card);
-//                main.ActivableDescs.Add(desc);
-//            }
-//
-//            main.CanBattlePhase = packet.ReadByte() != 0;
-//            main.CanEndPhase = packet.ReadByte() != 0;
+            packet.ReadByte(); // player
 
-            //Connection.Send(CtosMessage.Response, m_ai.OnSelectIdleCmd(main).ToValue());
+            m_duel.MainPhase = new MainPhase();
+            MainPhase main = m_duel.MainPhase;
+            int count;
+            for (int k = 0; k < 5; k++)
+            {
+                count = packet.ReadByte();
+                for (int i = 0; i < count; ++i)
+                {
+                    packet.ReadInt32(); // card id
+                    int con = GetLocalPlayer(packet.ReadByte());
+                    CardLocation loc = (CardLocation)packet.ReadByte();
+                    int seq = packet.ReadByte();
+                    CardData card = m_duel.GetCard(con, loc, seq);
+                    if (card == null) continue;
+                    card.ActionIndex[k] = i;
+                    switch (k)
+                    {
+                        case 0:
+                            main.SummonableCards.Add(card);
+                            break;
+                        case 1:
+                            main.SpecialSummonableCards.Add(card);
+                            break;
+                        case 2:
+                            main.ReposableCards.Add(card);
+                            break;
+                        case 3:
+                            main.MonsterSetableCards.Add(card);
+                            break;
+                        case 4:
+                            main.SpellSetableCards.Add(card);
+                            break;
+                    }
+                }
+            }
+            count = packet.ReadByte();
+            for (int i = 0; i < count; ++i)
+            {
+                packet.ReadInt32(); // card id
+                int con = GetLocalPlayer(packet.ReadByte());
+                CardLocation loc = (CardLocation)packet.ReadByte();
+                int seq = packet.ReadByte();
+                int desc = packet.ReadInt32();
+
+                CardData card = m_duel.GetCard(con, loc, seq);
+                if (card == null) continue;
+                card.ActionIndex[5] = i;
+                if (card.ActionActivateIndex.ContainsKey(desc))
+                    card.ActionActivateIndex.Remove(desc);
+                card.ActionActivateIndex.Add(desc, i);
+                main.ActivableCards.Add(card);
+                main.ActivableDescs.Add(desc);
+            }
+
+            main.CanBattlePhase = packet.ReadByte() != 0;
+            main.CanEndPhase = packet.ReadByte() != 0;
+
+            BrowserMessages.IdleCommands(main);
         }
 
         private void OnSelectOption(GameServerPacket packet)
         {
-//            IList<int> options = new List<int>();
-//            packet.ReadByte(); // player
-//            int count = packet.ReadByte();
-//            for (int i = 0; i < count; ++i)
-//                options.Add(packet.ReadInt32());
-            //Connection.Send(CtosMessage.Response, m_ai.OnSelectOption(options));
+            IList<int> options = new List<int>();
+            packet.ReadByte(); // player
+            int count = packet.ReadByte();
+            for (int i = 0; i < count; ++i)
+                options.Add(packet.ReadInt32());
+			BrowserMessages.SelectOption(options);
         }
 
         private void OnSelectPlace(GameServerPacket packet)
@@ -738,24 +738,25 @@ namespace DevPro.Game
 
         private void OnSelectPosition(GameServerPacket packet)
         {
-//            packet.ReadByte(); // player
-//            int cardId = packet.ReadInt32();
-//            int pos = packet.ReadByte();
-//            if (pos == 0x1 || pos == 0x2 || pos == 0x4 || pos == 0x8)
-//            {
-//                Connection.Send(CtosMessage.Response, pos);
-//                return;
-//            }
-//            IList<CardPosition> positions = new List<CardPosition>();
-//            if ((pos & (int)CardPosition.FaceUpAttack) != 0)
-//                positions.Add(CardPosition.FaceUpAttack);
-//            if ((pos & (int)CardPosition.FaceDownAttack) != 0)
-//                positions.Add(CardPosition.FaceDownAttack);
-//            if ((pos & (int)CardPosition.FaceUpDefence) != 0)
-//                positions.Add(CardPosition.FaceUpDefence);
-//            if ((pos & (int)CardPosition.FaceDownDefence) != 0)
-//                positions.Add(CardPosition.FaceDownDefence);
-            //Connection.Send(CtosMessage.Response, (int)m_ai.OnSelectPosition(cardId, positions));
+            packet.ReadByte(); // player
+            int cardId = packet.ReadInt32();
+            int pos = packet.ReadByte();
+            if (pos == 0x1 || pos == 0x2 || pos == 0x4 || pos == 0x8)
+            {
+                Connection.Send(CtosMessage.Response, pos);
+                return;
+            }
+            IList<int> positions = new List<int>();
+            if ((pos & (int)CardPosition.FaceUpAttack) != 0)
+                positions.Add((int)CardPosition.FaceUpAttack);
+            if ((pos & (int)CardPosition.FaceDownAttack) != 0)
+                positions.Add((int)CardPosition.FaceDownAttack);
+            if ((pos & (int)CardPosition.FaceUpDefence) != 0)
+                positions.Add((int)CardPosition.FaceUpDefence);
+            if ((pos & (int)CardPosition.FaceDownDefence) != 0)
+                positions.Add((int)CardPosition.FaceDownDefence);
+			
+			BrowserMessages.SelectPosition(positions);
         }
 
         private void OnSelectSum(GameServerPacket packet)
@@ -810,7 +811,7 @@ namespace DevPro.Game
 
         private void OnSelectTribute(GameServerPacket packet)
         {
-            //InternalOnSelectCard(packet, m_ai.OnSelectTribute);
+            InternalOnSelectCard(packet);
         }
 
         private void OnSelectYesNo(GameServerPacket packet)
@@ -841,7 +842,7 @@ namespace DevPro.Game
 
         private void OnAnnounceCard(GameServerPacket packet)
         {
-            //Connection.Send(CtosMessage.Response, m_ai.OnAnnounceCard());
+            BrowserMessages.AnnounceCard();
         }
 
         private void OnAnnounceNumber(GameServerPacket packet)

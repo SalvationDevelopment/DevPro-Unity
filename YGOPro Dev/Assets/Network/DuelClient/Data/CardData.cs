@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DevPro.Game.Network.Helpers;
 using DevPro.Game.Network.Enums;
 
@@ -21,6 +22,15 @@ namespace DevPro.Game.Data
         public int BaseDefence { get; set; }
         public int Owner { get; set; }
         public int Controller { get; set; }
+		
+		public int[] ActionIndex { get; set; }
+		public IDictionary<int, int> ActionActivateIndex { get; private set; }
+		
+		public CardData()
+		{
+			ActionIndex = new int[16];
+			ActionActivateIndex = new Dictionary<int, int>();
+		}
 		
 		public void Update(GameServerPacket packet, Duel duel)
         {
