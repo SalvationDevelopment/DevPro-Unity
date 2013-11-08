@@ -196,6 +196,8 @@ display: inline-block;
 #messagerbox .close {position:fixed; top:0; right:20px; width:200px; height:2em; }
 
 #phases{position:fixed; top:25%; height:50%; width:0; }
+.card {display:none} 
+.card.real {display:block}
 /* =========================================
 =================================
    Media Queries
