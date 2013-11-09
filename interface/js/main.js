@@ -1,4 +1,4 @@
-/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout,cardmargin */
+/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout,shuffle */
 /* DEAR GOD ACCESSDENIED LEARN TO USE A FOR LOOP!
 for (i = 0; i < size; i++) {
 }
@@ -181,7 +181,7 @@ function MessageBrowser(message) {
 }
 
 function MessagePopUp(message) {
-    console.log(message);
+    alert(message);
 }
 
 function LoginAccept(username) {
@@ -312,30 +312,21 @@ function SelectFirstPlayer(value) {
 }
 function StartDuel(data){
     var duelData = JSON.parse(data);
-    //StartDuel = {"LifePoints":[8000,8000],"IsFirst":false,"PlayerOneDeckSize":40,"PlayerOneExtraSize":14,"PlayerTwoDeckSize":40,"PlayerTwoExtraSize":15}
+    console.log(duelData);
     player1StartLP = duelData.LifePoints[0];
     player2StartLP = duelData.LifePoints[1];
     
     $('#player1lp').html("div class='width' style='width:"+(duelData.LifePoints[0]/player1StartLP)+"'></div>"+duelData.LifePoints[0]+"</div>");
     $('#player2lp').html("div class='width' style='width:"+(duelData.LifePoints[1]/player2StartLP)+"'></div>"+duelData.LifePoints[1]+"</div>");
     
-    DOMWriter(duelData.PlayerOneDeckSize, 'deck', '#player1deck');
-    DOMWriter(duelData.PlayerTwoDeckSize, 'deck', '#player1deck');
-    DOMWriter(duelData.PlayerOneExtraSize, 'exta', '#player2extradeck');
-    DOMWriter(duelData.PlayerTwoExtraSize, 'exta', '#player2extradeck');
-    cardmargin();
+    var a = new DOMWriter(duelData.PlayerOneDeckSize, 'deck', '#player1deck');
+    var b = new DOMWriter(duelData.PlayerTwoDeckSize, 'deck', '#player1deck');
+    var c = new DOMWriter(duelData.PlayerOneExtraSize, 'exta', '#player2extradeck');
+    var d = new DOMWriter(duelData.PlayerTwoExtraSize, 'exta', '#player2extradeck');
+    shuffle();
 }
 function DOMWriter(size, theclass, thelocation){
-    var card = [];
-    var string = '<div class="card '+theclass+'"><div class="back"></div><div class="front"></div></div>';
-    
-    for (var cdRomThrownAtHead = 0; i < size; i++) {
-        card.push(string);
-    }
-    card = card.concat();
-    card = card.toString();
-    console.log(card);
-    $(thelocation).html(card);
+    $(thelocation+" ."+theclass).slice(0,size).addclass('real');
 }
 
 function UpdateCards(player, location, data){
@@ -353,6 +344,34 @@ function NewTurn(turn){
     console.log(turn);
 }
 function MoveCard(data){
-    console.log(data)
+    console.log(data);
 }
-
+function OnWin(result){
+    console.log("Function OnWin: "+result);
+}
+function SelectCards(cards, min, max, cancelable){
+    var debugObject = {cards : cards, min : min, max : max, cancelable : cancelable};
+    console.log('Function SelectCards:'+JSON.stringify(debugObject));
+}
+function OnDuelEnd(){
+    console.log('Duel has ended.');
+}
+function SelectYn(description){
+    console.log("Function SelectYn :"+description);
+}
+function IdleCommands(main){
+    var debugObject = JSON.Strigify(main);
+    console.log(debugObject);
+}
+function SelectPosition(positions){
+    var debugObject = JSON.Strigify(positions);
+    console.log(debugObject);
+}
+function SelectOption(options){
+    var debugObject = JSON.Strigify(options);
+    console.log(debugObject);
+}
+function AnnounceCard(){
+    //Select a card from all known cards.
+    console.log('AnnounceCard');
+}
