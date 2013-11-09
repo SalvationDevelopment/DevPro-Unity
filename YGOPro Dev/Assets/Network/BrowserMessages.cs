@@ -130,6 +130,11 @@ namespace DevPro.Network
 			Application.ExternalCall("IdleCommands",JsonWriter.Serialize(main));
 		}
 		
+		public static void BattleCommands(BattlePhase battle)
+		{
+			Application.ExternalCall("BattleCommands",JsonWriter.Serialize(battle));
+		}
+		
 		public static void PlayerDamage(int player, int total)
 		{
 			Application.ExternalCall("DamageLifePoints",player, total);
@@ -167,7 +172,7 @@ namespace DevPro.Network
 			Application.ExternalCall("ChangePosition",player, location, index, newposition);
 		}
 		
-		public static void SelectCards(IList<CardData> cards, int min, int max, int cancelable)
+		public static void SelectCards(IList<CardPos> cards, int min, int max, int cancelable)
 		{
 			Application.ExternalCall("SelectCards",cards, min, max, cancelable);
 		}
@@ -195,6 +200,31 @@ namespace DevPro.Network
 		public static void AnnounceCard()
 		{
 			Application.ExternalCall("AnnounceCard");
+		}
+		
+		public static void AnnounceAttribute(int count, IList<int> attributes)
+		{
+			Application.ExternalCall("AnnounceAttribute",count,JsonWriter.Serialize(attributes));
+		}
+		
+		public static void AnnounceNumber(IList<int> numbers)
+		{
+			Application.ExternalCall("AnnounceNumber",JsonWriter.Serialize(numbers));
+		}
+		
+		public static void AnnounceRace(int count, IList<int> races)
+		{
+			Application.ExternalCall("AnnounceRace", count, JsonWriter.Serialize(races));	
+		}
+		
+		public static void SelectSyncoMaterial(int sum,int min,int max,IList<CardPos> cards)
+		{
+			Application.ExternalCall("SelectSyncoMaterial", sum, min, max, JsonWriter.Serialize(cards));
+		}
+		
+		public static void OnChaining(IList<CardPos> cards, IList<int> desc, bool forced)
+		{
+			Application.ExternalCall("OnChaining", JsonWriter.Serialize(cards), JsonWriter.Serialize(desc),Convert.ToInt32(forced));
 		}
 #endregion
 	}

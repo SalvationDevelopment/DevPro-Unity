@@ -163,6 +163,29 @@ public class GameClient : MonoBehaviour {
 		Connection.Send(CtosMessage.Response, cardid);
 	}
 	
+	public void SendAnnounceAttributes(string data)
+	{
+		IList<int> attributes = JsonReader.Deserialize<List<int>>(data);
+		int reply = 0;
+		for (int i = 0; i < attributes.Count; ++i)
+			reply += (int)attributes[i];
+		Connection.Send(CtosMessage.Response, reply);	
+	}
+	
+	public void SendAnnounceNumber(int number)
+	{
+		Connection.Send(CtosMessage.Response, number);	
+	}
+	
+	public void SendAnnounceRace(string data)
+	{
+		IList<int> races = JsonReader.Deserialize<List<int>>(data);
+		int reply = 0;
+		for (int i = 0; i < races.Count; ++i)
+			reply += races[i];
+		Connection.Send(CtosMessage.Response, reply);	
+	}
+	
 	public void SendOption(int option)
 	{
 		Connection.Send(CtosMessage.Response, option);	
@@ -173,4 +196,43 @@ public class GameClient : MonoBehaviour {
 		MainPhaseAction action = JsonReader.Deserialize<MainPhaseAction>(data);
 		Connection.Send(CtosMessage.Response, action.ToValue());
 	}
+	
+	public void BattlePhaseAction(string data)
+	{
+		BattlePhaseAction action = JsonReader.Deserialize<BattlePhaseAction>(data);
+		Connection.Send(CtosMessage.Response, action.ToValue());
+	}
+	
+	public void SyncroMaterialSelection(string data)
+	{
+		IList<CardData> selected = JsonReader.Deserialize<List<CardData>>(data);
+
+		byte[] result = new byte[selected.Count + 1];
+		result[0] = (byte)selected.Count;
+		for (int i = 0; i < selected.Count; ++i)
+		{
+			int id = 0;
+			for (int j = 0; j < m_behavior.CardSelection.Cards.Count; ++j)
+			{
+				if (m_behavior.CardSelection.Cards[j] == null) continue;
+				if (m_behavior.CardSelection.Cards[j].Equals(selected[i]))
+				{
+					id = j;
+					break;
+				}
+			}
+			result[i + 1] = (byte)id;
+		}
+
+		GameClientPacket reply = new GameClientPacket(CtosMessage.Response);
+		reply.Write(result);
+		Connection.Send(reply);	
+	}
+	
+	public void SendOnChain(int chain)
+	{
+		Connection.Send(CtosMessage.Response, chain);	
+	}
+	
+
 }

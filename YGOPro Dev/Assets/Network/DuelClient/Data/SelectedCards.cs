@@ -4,7 +4,7 @@ namespace DevPro.Game.Data
 {
 	public class SelectedCards
 	{
-		public IList<CardData> Cards = new List<CardData>();
+		public IList<CardPos> Cards = new List<CardPos>();
 		public bool Cancelable;
 	}
 }

@@ -22,6 +22,7 @@ namespace DevPro.Game
             Fields = new ClientField[2];
             Fields[0] = new ClientField();
             Fields[1] = new ClientField();
+			
         }
 
         public CardData GetCard(int player, CardLocation loc, int index)
