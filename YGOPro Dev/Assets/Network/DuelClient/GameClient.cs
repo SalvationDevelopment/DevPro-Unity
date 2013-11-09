@@ -117,34 +117,39 @@ public class GameClient : MonoBehaviour {
 	{
 		if(m_behavior.CardSelection == null)
 			return;
-		    IList<CardData> selected = JsonReader.Deserialize<IList<CardData>>(data);
+		
+		IList<CardPos> selectedInfo = JsonReader.Deserialize<List<CardPos>>(data);
+		IList<CardData> selected = new List<CardData>();
+		
+		foreach(CardPos info in selectedInfo)
+			selected.Add(m_behavior.m_duel.GetCard(info.Player,(CardLocation)info.Loc,info.Index));
 
-            if (selected.Count == 0 && m_behavior.CardSelection.Cancelable)
-            {
-                Connection.Send(CtosMessage.Response, -1);
-                return;
-            }
+		if (selected.Count == 0 && m_behavior.CardSelection.Cancelable)
+		{
+			Connection.Send(CtosMessage.Response, -1);
+			return;
+		}
 
-            byte[] result = new byte[selected.Count + 1];
-            result[0] = (byte)selected.Count;
-            for (int i = 0; i < selected.Count; ++i)
-            {
-                int id = 0;
-                for (int j = 0; j < m_behavior.CardSelection.Cards.Count; ++j)
-                {
-                    if (m_behavior.CardSelection.Cards[j] == null) continue;
-                    if (m_behavior.CardSelection.Cards[j].Equals(selected[i]))
-                    {
-                        id = j;
-                        break;
-                    }
-                }
-                result[i + 1] = (byte)id;
-            }
+		byte[] result = new byte[selected.Count + 1];
+		result[0] = (byte)selected.Count;
+		for (int i = 0; i < selected.Count; ++i)
+		{
+			int id = 0;
+			for (int j = 0; j < m_behavior.CardSelection.Cards.Count; ++j)
+			{
+				if (m_behavior.CardSelection.Cards[j] == null) continue;
+				if (m_behavior.CardSelection.Cards[j].Equals(selected[i]))
+				{
+					id = j;
+					break;
+				}
+			}
+			result[i + 1] = (byte)id;
+		}
 
-            GameClientPacket reply = new GameClientPacket(CtosMessage.Response);
-            reply.Write(result);
-            Connection.Send(reply);
+		GameClientPacket reply = new GameClientPacket(CtosMessage.Response);
+		reply.Write(result);
+		Connection.Send(reply);
 	}
 	
 	public void SendYn(int result)
@@ -205,7 +210,11 @@ public class GameClient : MonoBehaviour {
 	
 	public void SyncroMaterialSelection(string data)
 	{
-		IList<CardData> selected = JsonReader.Deserialize<List<CardData>>(data);
+		IList<CardPos> selectedInfo = JsonReader.Deserialize<List<CardPos>>(data);
+		IList<CardData> selected = new List<CardData>();
+		
+		foreach(CardPos info in selectedInfo)
+			selected.Add(m_behavior.m_duel.GetCard(info.Player,(CardLocation)info.Loc,info.Index));
 
 		byte[] result = new byte[selected.Count + 1];
 		result[0] = (byte)selected.Count;

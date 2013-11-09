@@ -17,7 +17,7 @@ namespace DevPro.Game
         private IDictionary<GameMessage, Action<GameServerPacket>> m_messages;
 
         public Room m_room { get; private set; }
-		private Duel m_duel;
+		public Duel m_duel { get; private set; }
 		
 		public bool IsTag { get; private set; }
 		
