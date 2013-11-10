@@ -468,7 +468,7 @@ namespace DevPro.Game
                 if (card != null)
                 {
                     card.ActionIndex[0] = i;
-                    battle.ActivableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
+                    battle.ActivableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq, Card = card });
                     battle.ActivableDescs.Add(desc);
                 }
             }
@@ -486,7 +486,7 @@ namespace DevPro.Game
                 if (card != null)
                 {
                     card.ActionIndex[1] = i;
-                    battle.AttackableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
+                    battle.AttackableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq, Card = card });
                 }
             }
 
@@ -513,7 +513,7 @@ namespace DevPro.Game
                 CardLocation loc = (CardLocation)packet.ReadByte();
                 int seq = packet.ReadByte();
                 packet.ReadByte(); // pos
-                CardPos card = new CardPos() { Player = player, Loc = (int)loc, Index = seq };
+                CardPos card = new CardPos() { Player = player, Loc = (int)loc, Index = seq, Card = m_duel.GetCard(player,loc,seq) };
                 CardSelection.Cards.Add(card);
             }
 			
@@ -544,7 +544,7 @@ namespace DevPro.Game
                 CardLocation loc = (CardLocation)packet.ReadByte();
                 int seq = packet.ReadByte();
                 int desc = packet.ReadInt32();
-                cards.Add(new CardPos() { Player = con, Loc = (int)loc, Index = seq });
+                cards.Add(new CardPos() { Player = con, Loc = (int)loc, Index = seq, Card = m_duel.GetCard(con,loc,seq)});
                 descs.Add(desc);
             }
 
@@ -642,19 +642,19 @@ namespace DevPro.Game
                     switch (k)
                     {
                         case 0:
-                            main.SummonableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
+                            main.SummonableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq, Card = card });
                             break;
                         case 1:
-                            main.SpecialSummonableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
+                            main.SpecialSummonableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq, Card = card });
                             break;
                         case 2:
-                            main.ReposableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
+                            main.ReposableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq, Card = card });
                             break;
                         case 3:
-                            main.MonsterSetableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
+                            main.MonsterSetableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq, Card = card });
                             break;
                         case 4:
-                            main.SpellSetableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
+                            main.SpellSetableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq, Card = card });
                             break;
                     }
                 }
@@ -674,7 +674,7 @@ namespace DevPro.Game
                 if (card.ActionActivateIndex.ContainsKey(desc))
                     card.ActionActivateIndex.Remove(desc);
                 card.ActionActivateIndex.Add(desc, i);
-                main.ActivableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
+                main.ActivableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq, Card = card });
                 main.ActivableDescs.Add(desc);
             }
 
@@ -777,8 +777,8 @@ namespace DevPro.Game
                 int player = GetLocalPlayer(packet.ReadByte());
                 CardLocation loc = (CardLocation)packet.ReadByte();
                 int seq = packet.ReadByte();
-                CardPos card = new CardPos() { Player = player, Loc = (int)loc, Index = seq };
-                CardSelection.Cards.Add(card);
+                CardData card = m_duel.GetCard(player,loc,seq); 
+                CardSelection.Cards.Add(new CardPos() { Player = player, Loc = (int)loc, Index = seq, Card = card });
                 packet.ReadInt32();
             }
 			
