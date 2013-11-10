@@ -4,16 +4,16 @@ namespace DevPro.Game.Data
 {
     public class BattlePhase
     {
-        public IList<CardData> AttackableCards { get; set; }
-        public IList<CardData> ActivableCards { get; set; }
+        public IList<CardPos> AttackableCards { get; set; }
+        public IList<CardPos> ActivableCards { get; set; }
         public IList<int> ActivableDescs { get; set; }
         public bool CanMainPhaseTwo { get; set; }
         public bool CanEndPhase { get; set; }
 
         public void Init()
         {
-            AttackableCards = new List<CardData>();
-            ActivableCards = new List<CardData>();
+            AttackableCards = new List<CardPos>();
+            ActivableCards = new List<CardPos>();
             ActivableDescs = new List<int>();
         }
     }

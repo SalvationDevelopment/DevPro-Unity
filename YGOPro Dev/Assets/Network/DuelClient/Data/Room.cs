@@ -11,5 +11,15 @@ namespace DevPro.Game.Data
             Names = new string[8];
             IsReady = new bool[8];
         }
+		
+		public bool Ready(string username)
+		{
+			for(int i = 0; i < Names.Length; i++)
+			{
+				if(Names[i] == username)
+					return IsReady[i];
+			}
+			return false;
+		}
     }
 }

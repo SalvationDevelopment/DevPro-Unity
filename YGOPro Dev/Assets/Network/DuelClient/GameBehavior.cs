@@ -185,11 +185,13 @@ namespace DevPro.Game
 
         private void OnSelectHand(GameServerPacket packet)
         {
+			Game.RPS = true;
 			BrowserMessages.SelectRPS();
         }
 
         private void OnSelectTp(GameServerPacket packet)
         {
+			Game.FirstSelect = true;
 			BrowserMessages.SelectFirstPlayer();
         }
 
@@ -466,7 +468,7 @@ namespace DevPro.Game
                 if (card != null)
                 {
                     card.ActionIndex[0] = i;
-                    battle.ActivableCards.Add(card);
+                    battle.ActivableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
                     battle.ActivableDescs.Add(desc);
                 }
             }
@@ -484,7 +486,7 @@ namespace DevPro.Game
                 if (card != null)
                 {
                     card.ActionIndex[1] = i;
-                    battle.AttackableCards.Add(m_duel.GetCard(con, loc, seq));
+                    battle.AttackableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
                 }
             }
 
@@ -506,7 +508,7 @@ namespace DevPro.Game
             int count = packet.ReadByte();
             for (int i = 0; i < count; ++i)
             {
-                int id = packet.ReadInt32();
+                packet.ReadInt32(); //id
                 int player = GetLocalPlayer(packet.ReadByte());
                 CardLocation loc = (CardLocation)packet.ReadByte();
                 int seq = packet.ReadByte();
@@ -640,19 +642,19 @@ namespace DevPro.Game
                     switch (k)
                     {
                         case 0:
-                            main.SummonableCards.Add(card);
+                            main.SummonableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
                             break;
                         case 1:
-                            main.SpecialSummonableCards.Add(card);
+                            main.SpecialSummonableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
                             break;
                         case 2:
-                            main.ReposableCards.Add(card);
+                            main.ReposableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
                             break;
                         case 3:
-                            main.MonsterSetableCards.Add(card);
+                            main.MonsterSetableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
                             break;
                         case 4:
-                            main.SpellSetableCards.Add(card);
+                            main.SpellSetableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
                             break;
                     }
                 }
@@ -672,7 +674,7 @@ namespace DevPro.Game
                 if (card.ActionActivateIndex.ContainsKey(desc))
                     card.ActionActivateIndex.Remove(desc);
                 card.ActionActivateIndex.Add(desc, i);
-                main.ActivableCards.Add(card);
+                main.ActivableCards.Add(new CardPos(){ Player = con, Loc = (int)loc, Index = seq });
                 main.ActivableDescs.Add(desc);
             }
 
@@ -737,7 +739,7 @@ namespace DevPro.Game
         private void OnSelectPosition(GameServerPacket packet)
         {
             packet.ReadByte(); // player
-            int cardId = packet.ReadInt32();
+            packet.ReadInt32(); //cardid
             int pos = packet.ReadByte();
             if (pos == 0x1 || pos == 0x2 || pos == 0x4 || pos == 0x8)
             {
@@ -771,7 +773,7 @@ namespace DevPro.Game
             int count = packet.ReadByte();
             for (int i = 0; i < count; ++i)
             {
-                int cardId = packet.ReadInt32();
+                packet.ReadInt32(); //cardid
                 int player = GetLocalPlayer(packet.ReadByte());
                 CardLocation loc = (CardLocation)packet.ReadByte();
                 int seq = packet.ReadByte();

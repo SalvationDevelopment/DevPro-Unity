@@ -32,32 +32,6 @@ public class HubCommands : MonoBehaviour
 		}
 	}
 	
-	void OnGUI()
-	{
-		if(GUI.Button(new Rect(Screen.width - 150, 15,100,30),"Login"))
-		{
-			if(ServerDetails.User == null)
-			{
-				Connect();
-				m_client.SendPacket(DevServerPackets.Login,JsonWriter.Serialize(
-				new LoginRequest() { Username = "Unity", Password = EncodePassword("nuts"), UID = "Unity" }));
-			}
-		}
-		
-		if(GUI.Button(new Rect(Screen.width - 150, 50,100,30),"Create Game"))
-		{
-			if(ServerDetails.User == null)
-				return;
-			
-			var gameclient = GameObject.Find("GameClient");
-			if(gameclient != null)
-			{
-				gameclient.SendMessage("CreateGame","200OOO8000,0,5,1,U,V34OG");
-				Debug.Log("Game Created");
-			}
-		}
-	}
-	
 	void Connect() 
 	{
 		if(!m_client.Connected())

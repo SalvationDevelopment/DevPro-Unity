@@ -32,7 +32,7 @@ public class Console : MonoBehaviour
 	List<ConsoleMessage> entries = new List<ConsoleMessage>();
 	Vector2 scrollPos;
 	bool show;
-	bool collapse;
+	bool collapse = true;
 
 	// Visual elements:
 
@@ -53,7 +53,7 @@ public class Console : MonoBehaviour
 
 	void OnGUI ()
 	{
-		GUILayout.Window(123456, new Rect(margin, margin, Screen.width - 200, Screen.height - margin), ConsoleWindow, "Console");
+		GUILayout.Window(123456, new Rect(margin, margin, Screen.width /2, Screen.height - margin), ConsoleWindow, "Console");
 	}
 
 	/// <summary>
@@ -108,7 +108,7 @@ public class Console : MonoBehaviour
 			collapse = GUILayout.Toggle(collapse, collapseLabel, GUILayout.ExpandWidth(false));
 
 		GUILayout.EndHorizontal();
-		//scrollPos.y = 9999;//autoscroll
+		scrollPos.y = Mathf.Infinity;//autoscroll
 		// Set the window to be draggable by the top title bar
 		GUI.DragWindow(new Rect(0, 0, 10000, 20));
 	}

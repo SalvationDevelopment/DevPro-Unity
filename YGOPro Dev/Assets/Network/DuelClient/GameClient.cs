@@ -17,6 +17,15 @@ public class GameClient : MonoBehaviour {
 	private GameBehavior m_behavior;
 	private Deck Deck;
 	
+	public bool LobbyButtons = true;
+	public bool RPS;
+	public bool FirstSelect;
+	
+	void Start()
+	{
+		m_behavior = new GameBehavior(this);	
+	}
+	
 	// Update is called once per frame
 	void Update () 
 	{
@@ -28,6 +37,201 @@ public class GameClient : MonoBehaviour {
 				Debug.Log ("GamePacket: " +(StocMessage)packet.Content[0]);
 				m_behavior.OnPacket(packet);
 			}
+		}
+	}
+	
+	void OnGUI()
+	{
+		if(LobbyButtons)
+		{
+			var hubclient = GameObject.Find("HubClient");
+			if(GUI.Button(new Rect(Screen.width /2 + 50, 15,100,30),"Login"))
+			{
+				if(ServerDetails.User == null)
+				{
+					hubclient.SendMessage("Login",
+					JsonWriter.Serialize(new LoginRequest() { Username = "Unity", Password = "nuts", UID = "Unity" }));
+				}
+			}
+		
+			if(GUI.Button(new Rect(Screen.width /2 + 155, 15,100,30),"Create Game"))
+			{
+				if(ServerDetails.User == null)
+					return;
+			
+					CreateGame("200OOO8000,0,5,1,U,V34OG");
+					Debug.Log("Game Created");
+			}
+		
+			if(GUI.Button(new Rect(Screen.width /2 + 260, 15,100,30),
+			ServerDetails.User == null ? "Not Ready": m_behavior.m_room.Ready(ServerDetails.User.username) ? "Ready": "Not Ready"))
+			{
+				if(ServerDetails.User == null) return;
+			
+				UpdateDeck(JsonWriter.Serialize(
+				new Deck(){ 
+					main = new List<int>()
+					{ 
+						98777036,98777036,61468779,62950604,62950604,62950604,98358303,
+						98358303,98358303,21454943,21454943,21454943,85087012,25343017,
+						25343017,99070951,99070951,99070951,52430902,52430902,23434538,
+						36484016,36484016,36484016,37520316,53129443,5318639,5318639,
+						67723438,67723438,67723438,44095762,44095762,53582587,82633308,
+						59718521,59718521,84749824,5288597,5288597
+					},
+					extra = new List<int>()
+					{
+						40101111,99916754,95526884,80321197,70780151,45815891,45379225,
+						73580471,2956282,43385557,33198837,26593852,7582066,15028680,95992081
+					},
+					side = new List<int>()
+				
+				}));
+			
+				SetReady(m_behavior.m_room.Ready(ServerDetails.User.username) ? 0: 1);
+			}
+		
+			if(GUI.Button(new Rect(Screen.width /2 + 365, 15,100,30),"Start Duel"))
+			{
+				if(m_behavior.m_room.IsHost)
+					StartDuel();
+			}
+		}
+		if(RPS)
+		{
+			if(GUI.Button(new Rect(Screen.width /2 + (Screen.width /4) - 150, Screen.height /2,100,30),"Rock"))
+			{
+				SelectRPS(1);
+			}
+			if(GUI.Button(new Rect(Screen.width /2 + (Screen.width /4) - 45, Screen.height /2,100,30),"Paper"))
+			{
+				SelectRPS(2);
+			}
+			if(GUI.Button(new Rect(Screen.width /2 + (Screen.width /4) + 60, Screen.height /2,100,30),"Scissors"))
+			{
+				SelectRPS(3);
+			}
+		}
+		
+		if(FirstSelect)
+		{
+			if(GUI.Button(new Rect(Screen.width /2 + (Screen.width /4) - 95, Screen.height /2,100,30),"First"))
+			{
+				SelectFirstPlayer(1);
+			}
+			if(GUI.Button(new Rect(Screen.width /2 + (Screen.width /4) + 10, Screen.height /2,100,30),"Second"))
+			{
+				SelectFirstPlayer(0);
+			}
+		}
+		
+		GUI.Box(new Rect(Screen.width /2 + 25,50,Screen.width /2 - 30,Screen.height /2 - 55),"Player 2 Info");
+		
+		GUI.Box(new Rect(Screen.width /2 + 25,Screen.height /2 + 35,Screen.width /2 - 30,Screen.height /2 - 55),"Player 1 Info");
+		
+		//player 2 info
+		GUI.Label(new Rect(Screen.width /2 + 30, 195,300,30), "Card Info");
+		
+		GUI.Button(new Rect(Screen.width /2 + 25,Screen.height /2 - 40,85,30),
+			"Deck: " + m_behavior.m_duel.Fields[1].Deck.Count);
+		GUI.Button(new Rect(Screen.width /2 + 25 +(1 * 90), Screen.height /2 - 40,85,30),
+			"Grave: " + m_behavior.m_duel.Fields[1].Graveyard.Count);
+		GUI.Button(new Rect(Screen.width /2 + 25 +(2 * 90),Screen.height /2 - 40,85,30),
+			"Removed: " + m_behavior.m_duel.Fields[1].Banished.Count);
+		GUI.Button(new Rect(Screen.width /2 + 25 +(3 * 90),Screen.height /2 - 40,85,30),
+			"Extra: " + m_behavior.m_duel.Fields[1].ExtraDeck.Count);
+		GUI.Button(new Rect(Screen.width /2 + 25 +(4 * 90),Screen.height /2 - 40,85,30),
+			"Hand: " + m_behavior.m_duel.Fields[1].Hand.Count);
+		
+		GUI.Label(new Rect(Screen.width /2 + 30, 75,300,30), "Monster Zone");
+		
+		for(int i = 0; i < m_behavior.m_duel.Fields[1].MonsterZone.Length; i++)
+		{
+			Rect loc = new Rect(Screen.width /2 + 25 +(i * 90), 100,85,30);
+			string name;
+			
+			if(m_behavior.m_duel.Fields[1].MonsterZone[i] == null)
+				name = "Empty";
+			else
+			{
+				if(m_behavior.m_duel.Fields[1].MonsterZone[i].Id == 0)
+					name = "Unknown";
+				else
+					name = m_behavior.m_duel.Fields[1].MonsterZone[i].Id.ToString();
+			}
+			GUI.Button(loc,name);
+		}
+		
+		GUI.Label(new Rect(Screen.width /2 + 30, 140,300,30), "Spell/Trap Zone");
+		
+		for(int i = 0; i < m_behavior.m_duel.Fields[1].SpellZone.Length - 1; i++)
+		{
+			Rect loc = new Rect(Screen.width /2 + 25 +(i * 90), 165,85,30);
+			string name;
+			
+			if(m_behavior.m_duel.Fields[1].SpellZone[i] == null)
+				name = "Empty";
+			else
+			{
+				if(m_behavior.m_duel.Fields[1].SpellZone[i].Id == 0)
+					name = "Unknown";
+				else
+					name = m_behavior.m_duel.Fields[1].SpellZone[i].Id.ToString();
+			}
+			GUI.Button(loc,name);
+		}
+		
+		//player 1 info
+		
+		GUI.Label(new Rect(Screen.width /2 + 30, Screen.height /2 - 15 +195,300,30), "Card Info");
+		
+		GUI.Button(new Rect(Screen.width /2 + 25,Screen.height /2 - 15 + Screen.height /2 - 40,85,30),
+			"Deck: " + m_behavior.m_duel.Fields[0].Deck.Count);
+		GUI.Button(new Rect(Screen.width /2 + 25 +(1 * 90), Screen.height /2 - 15 +Screen.height /2 - 40,85,30),
+			"Grave: " + m_behavior.m_duel.Fields[0].Graveyard.Count);
+		GUI.Button(new Rect(Screen.width /2 + 25 +(2 * 90),Screen.height /2 - 15 +Screen.height /2 - 40,85,30),
+			"Removed: " + m_behavior.m_duel.Fields[0].Banished.Count);
+		GUI.Button(new Rect(Screen.width /2 + 25 +(3 * 90),Screen.height /2 - 15 +Screen.height /2 - 40,85,30),
+			"Extra: " + m_behavior.m_duel.Fields[0].ExtraDeck.Count);
+		GUI.Button(new Rect(Screen.width /2 + 25 +(4 * 90),Screen.height /2 - 15 +Screen.height /2 - 40,85,30),
+			"Hand: " + m_behavior.m_duel.Fields[0].Hand.Count);
+		
+		GUI.Label(new Rect(Screen.width /2 + 30, Screen.height /2 - 15 +75,300,30), "Monster Zone");
+		
+		for(int i = 0; i < m_behavior.m_duel.Fields[0].MonsterZone.Length; i++)
+		{
+			Rect loc = new Rect(Screen.width /2 + 25 +(i * 90),Screen.height /2 - 15 + 100,85,30);
+			string name;
+			
+			if(m_behavior.m_duel.Fields[0].MonsterZone[i] == null)
+				name = "Empty";
+			else
+			{
+				if(m_behavior.m_duel.Fields[0].MonsterZone[i].Id == 0)
+					name = "Unknown";
+				else
+					name = m_behavior.m_duel.Fields[0].MonsterZone[i].Id.ToString();
+			}
+			GUI.Button(loc,name);
+		}
+		
+		GUI.Label(new Rect(Screen.width /2 + 30,Screen.height /2 - 15 + 140,300,30), "Spell/Trap Zone");
+		
+		for(int i = 0; i < m_behavior.m_duel.Fields[0].SpellZone.Length - 1; i++)
+		{
+			Rect loc = new Rect(Screen.width /2 + 25 +(i * 90),Screen.height /2 - 15 + 165,85,30);
+			string name;
+			
+			if(m_behavior.m_duel.Fields[0].SpellZone[i] == null)
+				name = "Empty";
+			else
+			{
+				if(m_behavior.m_duel.Fields[0].SpellZone[i].Id == 0)
+					name = "Unknown";
+				else
+					name = m_behavior.m_duel.Fields[0].SpellZone[i].Id.ToString();
+			}
+			GUI.Button(loc,name);
 		}
 	}
 	
@@ -98,19 +302,28 @@ public class GameClient : MonoBehaviour {
 			(!m_behavior.IsTag ? m_behavior.m_room.IsReady[0] && m_behavior.m_room.IsReady[1]:
 			m_behavior.m_room.IsReady[0] && m_behavior.m_room.IsReady[1] 
 				&& m_behavior.m_room.IsReady[2] && m_behavior.m_room.IsReady[3]))
-			Connection.Send(CtosMessage.HsStart);	
+		{
+			Connection.Send(CtosMessage.HsStart);
+			LobbyButtons = false;
+		}
 	}
 	//value must be between 1-3
 	public void SelectRPS(int selected)
 	{
 		if(selected > 0 && selected < 4)
+		{
+			RPS = false;
 			Connection.Send(CtosMessage.HandResult, (byte)selected);
+		}
 	}
 	//1 means to go first
 	public void SelectFirstPlayer(int first)
 	{
 		if(first == 0 || first == 1)
+		{
+			FirstSelect = false;
 			Connection.Send(CtosMessage.TpResult,(byte)first);
+		}
 	}
 	//return an empty array to cancel selection
 	public void SelectCardsReply(string data)
