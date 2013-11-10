@@ -44,7 +44,7 @@ function shuffle() {
     $($(".card.deck").get().reverse()).each(function (i) {
         var cache = $(this).css('left');
         var spatical = Math.floor((Math.random() * 150) - 75);
-        console.log(spatical);
+       
 
         $(this).css('left', '-=' + spatical + 'px');
 

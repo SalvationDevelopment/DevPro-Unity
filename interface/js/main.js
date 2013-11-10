@@ -1,4 +1,4 @@
-/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout,shuffle */
+/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout,shuffle, cardplace, cardpositions, enumPhase */
 /* DEAR GOD ACCESSDENIED LEARN TO USE A FOR LOOP!
 for (i = 0; i < size; i++) {
 }
@@ -160,8 +160,8 @@ $(document).ready(function () {
         u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', 0);
 
     });
-    $('#igofirst').on("click", function () {
-        $('#opponentfirst').toggle();
+    $('#opponentfirst').on("click", function () {
+        $('#selectduelist').toggle();
         u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', 1);
 
     });
@@ -326,19 +326,42 @@ function StartDuel(data){
     shuffle();
 }
 function DOMWriter(size, theclass, thelocation){
-    $(thelocation+" ."+theclass).slice(0,size).addclass('real');
+    $(thelocation+" ."+theclass).slice(0,size).addClass('real');
 }
-
-function UpdateCards(player, location, data){
-    
+function UpdateCards( player, clocation, data){
     var update = JSON.parse(data);
-    console.log(update);
+    player =  'p'+player;
+    console.log("Updating Multiple Card Positions", update, player+ " ", cardplace[clocation]);
+    
+    for (var i = 0; update.length > 0; i++){
+        if (typeof update[i] === 'object'){
+            console.log(update[i]);
+            var owner = (update[i].Owner !== undefined) ? ('p'+update[i].Owner) : player;
+            
+            $('#player'+(player+1)+'deck div:eq('+i+')').css({
+                
+                "bottom" : cardpositions[owner][cardplace[clocation]].y_origin+"px",
+                "left"   : cardpositions[owner][cardplace[clocation]].x_origin+"px"
+            });
+        }
+    }
+        
+}
+function UpdateCard(index, player, clocation){
+            console.log("Updating Single Card Position", 'Player : '+player+" ", "Card : "+index,cardplace[clocation]);
+             player =  'p'+player;
+            $('#player'+player+'deck div:eq('+index+')').css({
+                
+                "bottom" : cardpositions[player][(cardplace[clocation])].y_origin+"px",
+                "left"   : cardpositions[player][(cardplace[clocation])].x_origin+"px"
+            });
+        
 }
 function DrawCard(vari1, vari2, vari3, vari4 ){
     console.log(vari1, vari2, vari3, vari4);
 }
 function NewPhase(phase){
-    console.log(phase);
+    console.log(enumPhase[phase]);
 }
 function NewTurn(turn){
     console.log(turn);
@@ -353,7 +376,7 @@ function SelectCards(cards, min, max, cancelable){
     var debugObject = {cards : cards, min : min, max : max, cancelable : cancelable};
     console.log('Function SelectCards:'+JSON.stringify(debugObject));
 }
-function OnDuelEnd(){
+function DuelEnd(){
     console.log('Duel has ended.');
 }
 function SelectYn(description){
