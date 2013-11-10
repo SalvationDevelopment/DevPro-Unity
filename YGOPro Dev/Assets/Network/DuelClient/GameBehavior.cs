@@ -508,13 +508,16 @@ namespace DevPro.Game
             int count = packet.ReadByte();
             for (int i = 0; i < count; ++i)
             {
-                packet.ReadInt32(); //id
+                int id = packet.ReadInt32(); //id
                 int player = GetLocalPlayer(packet.ReadByte());
                 CardLocation loc = (CardLocation)packet.ReadByte();
                 int seq = packet.ReadByte();
                 packet.ReadByte(); // pos
-                CardPos card = new CardPos() { Player = player, Loc = (int)loc, Index = seq, Card = m_duel.GetCard(player,loc,seq) };
-                CardSelection.Cards.Add(card);
+				CardData card = m_duel.GetCard(player, loc, seq);
+                if (card == null) continue;
+                if (card.Id == 0)
+                    card.Id = id;
+                CardSelection.Cards.Add(new CardPos() { Player = player, Loc = (int)loc, Index = seq, Card = card });
             }
 			
 			BrowserMessages.SelectCards(CardSelection.Cards,min,max,Convert.ToInt32(CardSelection.Cancelable));
