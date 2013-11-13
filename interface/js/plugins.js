@@ -1,3 +1,4 @@
+/* globals window, $ */
 // Avoid `console` errors in browsers that lack a console.
 (function() {
     var method;
@@ -23,14 +24,18 @@
 
 // Place any jQuery/helper plugins in here.
 function isChecked(id){
-    return ($(id).is(':checked'))
+    return ($(id).is(':checked'));
 }
 function randomString(len, charSet) {
     charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var randomString = '';
+    var randomstring = '';
     for (var i = 0; i < len; i++) {
         var randomPoz = Math.floor(Math.random() * charSet.length);
-        randomString += charSet.substring(randomPoz,randomPoz+1);
+        randomstring += charSet.substring(randomPoz,randomPoz+1);
     }
     return randomString;
+}
+function tetris(array){
+     var arr = array.filter(function(n){return n;});
+    return arr;
 }
