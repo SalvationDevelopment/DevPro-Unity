@@ -17,7 +17,7 @@ var player1StartLP;
 var player2StartLP;
 var i = 0; // counter for forLoops.
 var duelData;
-var duel = {Hand :[], Graveyard : [], MonsterZone : [undefined,undefined,undefined,undefined,undefined], SpellZone : [undefined,undefined,undefined,undefined,undefined,undefined], RemovedFromPlay : [], ExtraDeck : []};
+var duel = {};
 
 
 function deck(filename, main, side, extra) {
@@ -334,33 +334,18 @@ function UpdateCards( player, clocation, data){
     var update = JSON.parse(data);
     player =  'p'+player;
     console.log("Updating Multiple Card Positions", update, player+ " ", cardplace[clocation]);
-    
-    for (var i = 0; update.length > 0; i++){
-        if (typeof update[i] === 'object'){
-            console.log(update[i]);
-            var owner = (update[i].Owner !== undefined) ? ('p'+update[i].Owner) : player;
-            
-            $('#player'+(player+1)+'deck div:eq('+i+')').css({
-                
-                "bottom" : cardpositions[owner][cardplace[clocation]].y_origin+"px",
-                "left"   : cardpositions[owner][cardplace[clocation]].x_origin+"px"
-            });
-        }
-    }
-        
+    duel[cardplace[clocation] ]= update[i];
+
+  console.log(duel);      
 }
 function UpdateCard(index, player, clocation){
             console.log("Updating Single Card Position", 'Player : '+player+" ", "Card : "+index,cardplace[clocation]);
-             player =  'p'+player;
-            $('#player'+player+'deck div:eq('+index+')').css({
-                
-                "bottom" : cardpositions[player][(cardplace[clocation])].y_origin+"px",
-                "left"   : cardpositions[player][(cardplace[clocation])].x_origin+"px"
-            });
+            player =  'p'+player;
+           
         
 }
-function DrawCard(vari1, vari2, vari3, vari4 ){
-    console.log(vari1, vari2, vari3, vari4);
+function DrawCard(vari1, vari2){
+    console.log(vari1, vari2);
 }
 function NewPhase(phase){
     console.log(enumPhase[phase]);
@@ -368,8 +353,8 @@ function NewPhase(phase){
 function NewTurn(turn){
     console.log(turn);
 }
-function MoveCard(data){
-    console.log(data);
+function MoveCard(player, clocation, index,moveplayer, movelocation, movezone, moveposition){
+    console.log('Player : '+player+" ", cardplace[clocation], index, "Move Player : "+moveplayer, cardplace[movelocation], movezone, moveposition);
 }
 function OnWin(result){
     console.log("Function OnWin: "+result);

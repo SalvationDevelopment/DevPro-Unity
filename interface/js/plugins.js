@@ -33,7 +33,7 @@ function randomString(len, charSet) {
         var randomPoz = Math.floor(Math.random() * charSet.length);
         randomstring += charSet.substring(randomPoz,randomPoz+1);
     }
-    return randomString;
+    return randomstring;
 }
 function tetris(array){
      var arr = array.filter(function(n){return n;});
