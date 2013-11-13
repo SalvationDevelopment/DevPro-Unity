@@ -17,6 +17,8 @@ var player1StartLP;
 var player2StartLP;
 var i = 0; // counter for forLoops.
 var duelData;
+var duel = {Hand :[], Graveyard : [], MonsterZone : [undefined,undefined,undefined,undefined,undefined], SpellZone : [undefined,undefined,undefined,undefined,undefined,undefined], RemovedFromPlay : [], ExtraDeck : []};
+
 
 function deck(filename, main, side, extra) {
     //    if (typeof name  !== "string"){console.log('name must be a string'); return false}
@@ -253,7 +255,7 @@ function UpdatePlayer(pos, newpos) {
 }
 
 function PlayerReady(pos, ready) {
-    ready = (ready) ? 1 : 0;
+    ready = (ready) ? 1 : 0; 
     playerStart[pos] = ready;
     var state = playerStart[0] + playerStart[1];
     $('#lobbyplayer' + pos).toggleClass('ready');
