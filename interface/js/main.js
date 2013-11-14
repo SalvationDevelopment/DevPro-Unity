@@ -323,14 +323,18 @@ function StartDuel(data){
     $('#player1lp').html("div class='width' style='width:"+(duelData.LifePoints[0]/player1StartLP)+"'></div>"+duelData.LifePoints[0]+"</div>");
     $('#player2lp').html("div class='width' style='width:"+(duelData.LifePoints[1]/player2StartLP)+"'></div>"+duelData.LifePoints[1]+"</div>");
     
-    var a = new DOMWriter(duelData.PlayerOneDeckSize, 'deck', '#player1deck');
-    var b = new DOMWriter(duelData.PlayerTwoDeckSize, 'deck', '#player1deck');
-    var c = new DOMWriter(duelData.PlayerOneExtraSize, 'exta', '#player2extradeck');
-    var d = new DOMWriter(duelData.PlayerTwoExtraSize, 'exta', '#player2extradeck');
+    var a = new DOMWriter(duelData.PlayerOneDeckSize, 'Deck', 'p0');
+    var b = new DOMWriter(duelData.PlayerTwoDeckSize, 'Deck', 'p1');
+    var c = new DOMWriter(duelData.PlayerOneExtraSize, 'Extra', 'p0');
+    var d = new DOMWriter(duelData.PlayerTwoExtraSize, 'Extra', 'p1');
     shuffle();
 }
-function DOMWriter(size, theclass, thelocation){
-    $(thelocation+" ."+theclass).slice(0,size).addClass('real');
+function DOMWriter(size, movelocation, player){
+    for (i = 0; i < size; i++) {
+         animateState('none', 'unknown', i, player, movelocation, i, 'FaceDownAttack')
+        //animateState(player, clocation, index, moveplayer, movelocation, movezone, moveposition){
+    }
+    
 }
 function UpdateCards( player, clocation, data){
     var update = JSON.parse(data);
@@ -358,16 +362,16 @@ function UpdateCard(player, clocation, index, data){
         
 }
 function DrawCard(player, numberOfCards){
-    console.log("Player"+(player+1)+" drew "+numberOfCards+" card(s)");
+    console.log("p"+player+" drew "+numberOfCards+" card(s)");
 }
 function NewPhase(phase){
     console.log(enumPhase[phase]);
 }
 function NewTurn(turn){
-    console.log(turn);
+    console.log("It is now p"+turn+"'s turn.");
 }
 function MoveCard(player, clocation, index,moveplayer, movelocation, movezone, moveposition){
-    console.log('Player : '+player+" ", cardplace[clocation], index, "Move Player : "+moveplayer, cardplace[movelocation], movezone, moveposition);
+    console.log('p'+player+"'s' ", cardplace[clocation], index, "Moved to p"+moveplayer+"s", cardplace[movelocation], movezone, moveposition);
 }
 function OnWin(result){
     console.log("Function OnWin: "+result);
@@ -397,4 +401,10 @@ function SelectOption(options){
 function AnnounceCard(){
     //Select a card from all known cards.
     console.log('AnnounceCard');
+}
+function OnChaining(cards, desc,forced){
+    var cardIDs = JSON.stringify(cards);
+    var cardDescripts = JSON.stringify(desc);
+    console.log(cardIDs, cardDescripts);
+    
 }
