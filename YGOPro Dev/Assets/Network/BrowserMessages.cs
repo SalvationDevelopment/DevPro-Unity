@@ -20,9 +20,9 @@ namespace DevPro.Network
 			Application.ExternalCall("MessagePopUp", message);
 		}
 #region Launcher
-		public static void LoginAccept(string username)
+		public static void HubMessage(int type,string data)
 		{
-			Application.ExternalCall("LoginAccept",username);	
+			Application.ExternalCall("OnHubMessage",type,data);
 		}
 #endregion
 #region Lobby
