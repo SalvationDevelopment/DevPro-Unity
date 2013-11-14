@@ -17,7 +17,9 @@ var player1StartLP;
 var player2StartLP;
 var i = 0; // counter for forLoops.
 var duelData;
-var duel = {};
+var duel = {'p0' : { 'Deck':[], 'Hand':[], 'MonsterZone':[], 'SpellZone':[], 'Grave':[], 'Removed':[], 'Extra':[], 'Overlay':[],'Onfield':[] },
+                 'p1': {'Deck':[], 'Hand':[], 'MonsterZone':[], 'SpellZone':[], 'Grave':[], 'Removed':[], 'Extra':[], 'Overlay':[],'Onfield':[] }
+};
 
 
 function deck(filename, main, side, extra) {
@@ -68,7 +70,7 @@ u.observeProgress(function (progress) {
 });
 $(document).ready(function () {
     u.initPlugin(jQuery("#unityPlayer")[0], "http://unity.devpro.org/DevProWeb.unity3d");
-    $.getJSON("http://ygopro.de/cardreader/index.php?folder=English&callback=?", function (data) {
+    $.getJSON("http://unity.devpro.org/cardreader/?folder=English", function (data) {
         cardData = data;
         for (var i = data.length - 1; i >= 0; i--) { /* this might be backwards? */
             var l = "c" + data[i][0];
@@ -128,7 +130,7 @@ $(document).ready(function () {
         stnds = "," + $('#creategamebanlist').val() + ',5,1,' + $('input:radio[name=ranked]:checked').val() + rp + ',';
         pass = $('#creategamepassword').val() || randomString(5);
         compl = string + prio + checkd + shuf + $('#creategamelp').val() + stnds + pass;
-        console.log(compl);
+       // console.log(compl);
 
 
         if ($('#creategamecardpool').val() == 2 && $('input:radio[name=ranked]:checked').val() == 'R') {
@@ -205,7 +207,7 @@ function LoginAccept(username) {
                             decklistData.extradeck[i]));
 
                 }
-                console.log(decklist);
+                //console.log(decklist);
                 for ( i = 0; i < decklist.length; i++) {
                     $("#selectdeck").append('<option value="' + i + '">' + decklist[i].name + '</option>');
                 }
@@ -333,19 +335,30 @@ function DOMWriter(size, theclass, thelocation){
 function UpdateCards( player, clocation, data){
     var update = JSON.parse(data);
     player =  'p'+player;
-    console.log("Updating Multiple Card Positions", update, player+ " ", cardplace[clocation]);
-    duel[cardplace[clocation] ]= update[i];
-
-  console.log(duel);      
+    var place = cardplace[clocation];
+    console.log("Updating Multiple Card Positions for", player+ "'s", place);
+    try{
+     duel[player][place]= update;
+     //console.log(duel);
+    }catch(error){
+        console.log(error);
+        console.log(duel, player, place, update);      
+    }
+    
+    
+    
 }
-function UpdateCard(index, player, clocation){
-            console.log("Updating Single Card Position", 'Player : '+player+" ", "Card : "+index,cardplace[clocation]);
-            player =  'p'+player;
-           
+function UpdateCard(player, clocation, index, data){
+    var update = JSON.parse(data);
+    player =  'p'+player;    
+    console.log("Updating Single Card Position",update, player+" ", "Card : "+index, cardplace[clocation]);
+        
+        
+        duel[player][cardplace[clocation]][index] = update;
         
 }
-function DrawCard(vari1, vari2){
-    console.log(vari1, vari2);
+function DrawCard(player, numberOfCards){
+    console.log("Player"+(player+1)+" drew "+numberOfCards+" card(s)");
 }
 function NewPhase(phase){
     console.log(enumPhase[phase]);
@@ -370,8 +383,8 @@ function SelectYn(description){
     console.log("Function SelectYn :"+description);
 }
 function IdleCommands(main){
-    var debugObject = JSON.Strigify(main);
-    console.log(debugObject);
+    
+    console.log(main);
 }
 function SelectPosition(positions){
     var debugObject = JSON.Strigify(positions);
