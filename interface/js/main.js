@@ -17,6 +17,10 @@ var player1StartLP;
 var player2StartLP;
 var i = 0; // counter for forLoops.
 var duelData;
+var duel = {'p0' : { 'Deck':[], 'Hand':[], 'MonsterZone':[], 'SpellZone':[], 'Grave':[], 'Removed':[], 'Extra':[], 'Overlay':[],'Onfield':[] },
+                 'p1': {'Deck':[], 'Hand':[], 'MonsterZone':[], 'SpellZone':[], 'Grave':[], 'Removed':[], 'Extra':[], 'Overlay':[],'Onfield':[] }
+};
+
 
 function deck(filename, main, side, extra) {
     //    if (typeof name  !== "string"){console.log('name must be a string'); return false}
@@ -66,7 +70,7 @@ u.observeProgress(function (progress) {
 });
 $(document).ready(function () {
     u.initPlugin(jQuery("#unityPlayer")[0], "http://unity.devpro.org/DevProWeb.unity3d");
-    $.getJSON("http://ygopro.de/cardreader/index.php?folder=English&callback=?", function (data) {
+    $.getJSON("http://unity.devpro.org/cardreader/?folder=English", function (data) {
         cardData = data;
         for (var i = data.length - 1; i >= 0; i--) { /* this might be backwards? */
             var l = "c" + data[i][0];
@@ -126,7 +130,7 @@ $(document).ready(function () {
         stnds = "," + $('#creategamebanlist').val() + ',5,1,' + $('input:radio[name=ranked]:checked').val() + rp + ',';
         pass = $('#creategamepassword').val() || randomString(5);
         compl = string + prio + checkd + shuf + $('#creategamelp').val() + stnds + pass;
-        console.log(compl);
+       // console.log(compl);
 
 
         if ($('#creategamecardpool').val() == 2 && $('input:radio[name=ranked]:checked').val() == 'R') {
@@ -203,7 +207,7 @@ function LoginAccept(username) {
                             decklistData.extradeck[i]));
 
                 }
-                console.log(decklist);
+                //console.log(decklist);
                 for ( i = 0; i < decklist.length; i++) {
                     $("#selectdeck").append('<option value="' + i + '">' + decklist[i].name + '</option>');
                 }
@@ -253,7 +257,7 @@ function UpdatePlayer(pos, newpos) {
 }
 
 function PlayerReady(pos, ready) {
-    ready = (ready) ? 1 : 0;
+    ready = (ready) ? 1 : 0; 
     playerStart[pos] = ready;
     var state = playerStart[0] + playerStart[1];
     $('#lobbyplayer' + pos).toggleClass('ready');
@@ -331,34 +335,30 @@ function DOMWriter(size, theclass, thelocation){
 function UpdateCards( player, clocation, data){
     var update = JSON.parse(data);
     player =  'p'+player;
-    console.log("Updating Multiple Card Positions", update, player+ " ", cardplace[clocation]);
-    
-    for (var i = 0; update.length > 0; i++){
-        if (typeof update[i] === 'object'){
-            console.log(update[i]);
-            var owner = (update[i].Owner !== undefined) ? ('p'+update[i].Owner) : player;
-            
-            $('#player'+(player+1)+'deck div:eq('+i+')').css({
-                
-                "bottom" : cardpositions[owner][cardplace[clocation]].y_origin+"px",
-                "left"   : cardpositions[owner][cardplace[clocation]].x_origin+"px"
-            });
-        }
+    var place = cardplace[clocation];
+    console.log("Updating Multiple Card Positions for", player+ "'s", place);
+    try{
+     duel[player][place]= update;
+     //console.log(duel);
+    }catch(error){
+        console.log(error);
+        console.log(duel, player, place, update);      
     }
+    
+    
+    
+}
+function UpdateCard(player, clocation, index, data){
+    var update = JSON.parse(data);
+    player =  'p'+player;    
+    console.log("Updating Single Card Position",update, player+" ", "Card : "+index, cardplace[clocation]);
+        
+        
+        duel[player][cardplace[clocation]][index] = update;
         
 }
-function UpdateCard(index, player, clocation){
-            console.log("Updating Single Card Position", 'Player : '+player+" ", "Card : "+index,cardplace[clocation]);
-             player =  'p'+player;
-            $('#player'+player+'deck div:eq('+index+')').css({
-                
-                "bottom" : cardpositions[player][(cardplace[clocation])].y_origin+"px",
-                "left"   : cardpositions[player][(cardplace[clocation])].x_origin+"px"
-            });
-        
-}
-function DrawCard(vari1, vari2, vari3, vari4 ){
-    console.log(vari1, vari2, vari3, vari4);
+function DrawCard(player, numberOfCards){
+    console.log("Player"+(player+1)+" drew "+numberOfCards+" card(s)");
 }
 function NewPhase(phase){
     console.log(enumPhase[phase]);
@@ -366,8 +366,8 @@ function NewPhase(phase){
 function NewTurn(turn){
     console.log(turn);
 }
-function MoveCard(data){
-    console.log(data);
+function MoveCard(player, clocation, index,moveplayer, movelocation, movezone, moveposition){
+    console.log('Player : '+player+" ", cardplace[clocation], index, "Move Player : "+moveplayer, cardplace[movelocation], movezone, moveposition);
 }
 function OnWin(result){
     console.log("Function OnWin: "+result);
@@ -383,8 +383,8 @@ function SelectYn(description){
     console.log("Function SelectYn :"+description);
 }
 function IdleCommands(main){
-    var debugObject = JSON.Strigify(main);
-    console.log(debugObject);
+    
+    console.log(main);
 }
 function SelectPosition(positions){
     var debugObject = JSON.Strigify(positions);
