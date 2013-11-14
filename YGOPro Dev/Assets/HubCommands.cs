@@ -66,13 +66,6 @@ public class HubCommands : MonoBehaviour
 				teamRank = login.TeamRank
 			};
 			ServerDetails.LoginKey = login.LoginKey;
-			BrowserMessages.LoginAccept(login.Username);
-			break;
-		case DevClientPackets.LoginFailed:
-			BrowserMessages.MessagePopUp("Login Failed.");
-			break;
-		case DevClientPackets.RegisterFailed:
-			BrowserMessages.MessagePopUp("Register Failed.");
 			break;
 		case DevClientPackets.GameServers:
 			ServerInfo[] servers = JsonReader.Deserialize<ServerInfo[]>(data.GetString());
@@ -91,8 +84,8 @@ public class HubCommands : MonoBehaviour
 			if(ServerDetails.ServerList.ContainsKey(removeserver))
 				ServerDetails.ServerList.Remove(removeserver);
 			break;
-			
 		}
+		BrowserMessages.HubMessage((int)data.Packet,Encoding.UTF8.GetString(data.Raw));
 	}
 	
 	DateTime m_lastRegisterRequest  = new DateTime();
@@ -123,5 +116,19 @@ public class HubCommands : MonoBehaviour
 		m_client.SendPacket(DevServerPackets.Login,
 			JsonWriter.Serialize(loginRequest));
 		m_lastLoginRequest = DateTime.Now;
+	}
+	
+	public void SendMessage(string location,int command,string message, int isprivate)
+	{
+		m_client.SendPacket(DevServerPackets.ChatMessage, 
+                JsonWriter.Serialize(
+		new ChatMessage()
+		{ 
+			type = Convert.ToBoolean(isprivate) ?(int)MessageType.PrivateMessage : (int)MessageType.Message, 
+			command = command, 
+			channel = location, 
+			message = message,
+			from = ServerDetails.User
+		}));
 	}
 }
