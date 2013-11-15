@@ -1,4 +1,4 @@
-/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout,shuffle, cardplace, cardpositions, enumPhase */
+/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout,shuffle, cardplace, cardpositions, enumPhase, animateState */
 /* DEAR GOD ACCESSDENIED LEARN TO USE A FOR LOOP!
 for (i = 0; i < size; i++) {
 }
@@ -17,8 +17,33 @@ var player1StartLP;
 var player2StartLP;
 var i = 0; // counter for forLoops.
 var duelData;
-var duel = {'p0' : { 'Deck':[], 'Hand':[], 'MonsterZone':[], 'SpellZone':[], 'Grave':[], 'Removed':[], 'Extra':[], 'Overlay':[],'Onfield':[] },
-                 'p1': {'Deck':[], 'Hand':[], 'MonsterZone':[], 'SpellZone':[], 'Grave':[], 'Removed':[], 'Extra':[], 'Overlay':[],'Onfield':[] }
+var activeroom ='DevPro-English';
+var servermessagecount = 0;
+var serverlocations = [];
+
+var duel = {
+    'p0': {
+        'Deck': [],
+        'Hand': [],
+        'MonsterZone': [],
+        'SpellZone': [],
+        'Grave': [],
+        'Removed': [],
+        'Extra': [],
+        'Overlay': [],
+        'Onfield': []
+    },
+    'p1': {
+        'Deck': [],
+        'Hand': [],
+        'MonsterZone': [],
+        'SpellZone': [],
+        'Grave': [],
+        'Removed': [],
+        'Extra': [],
+        'Overlay': [],
+        'Onfield': []
+    }
 };
 
 
@@ -110,7 +135,7 @@ $(document).ready(function () {
         u.getUnity().SendMessage("GameClient", 'SetReady', 1);
 
     });
-    
+
     $('body').keypress(function (event) {
         if (event.which == 96) {
             toggleConsole();
@@ -130,7 +155,7 @@ $(document).ready(function () {
         stnds = "," + $('#creategamebanlist').val() + ',5,1,' + $('input:radio[name=ranked]:checked').val() + rp + ',';
         pass = $('#creategamepassword').val() || randomString(5);
         compl = string + prio + checkd + shuf + $('#creategamelp').val() + stnds + pass;
-       // console.log(compl);
+        // console.log(compl);
 
 
         if ($('#creategamecardpool').val() == 2 && $('input:radio[name=ranked]:checked').val() == 'R') {
@@ -176,6 +201,15 @@ $(document).ready(function () {
 });
 
 
+function joinroom(roomtojoin){
+        activeroom = roomtojoin;
+        
+         u.getUnity().SendMessage("HubClient", '', 9, roomtojoin);
+        $('#chatbox').append('<ul class="room active" id=room-'+roomtojoin+'></ul>');
+        $('#chatrooms').append('<li class="active" id=control-'+roomtojoin+'>'+roomtojoin+'</li>');
+        $('#chatbox ul, #chatrooms li').not('#'+roomtojoin).removeClass('active');
+        var currentroom = 'room-'+roomtojoin;
+}
 
 
 
@@ -188,38 +222,232 @@ function MessagePopUp(message) {
     alert(message);
 }
 
-function LoginAccept(username) {
-    if ($('#username').val() == username) {
-        $('.login').toggle();
-        $('#launcher').toggle();
-        $.ajax({
-            type: 'GET',
-            url: 'http://ygopro.de/deckreader/all.php?username=benblub&callback=',
-            dataType: 'jsonp',
-            success: function (data) {
-                decklistData = data;
+function OnHubMessage(type, data) {
+    
+    var update = JSON.parse(data);
+    console.log(type, update);
+    //console.log(update);
+    var rank = "";
+    var json = {
+        id: type,
+        content: update
+    };
+    //console.log(json);
+    switch (json.id) {
+    case 0:
+        {
+            //gamelist
+        }
+        break;
+        //--------------
+    case 1:
+        {
+            //remove room
+            $('#' + json.content).remove();
 
-                for (var i = 0; i < decklistData.decknames.length; i++) {
-                    decklist.push(
-                        new deck(decklistData.decknames[i],
-                            decklistData.Maindeck[i],
-                            decklistData.Sidedeck[i],
-                            decklistData.extradeck[i]));
+        }
+        break;
+        //--------------
+    case 2:
+        {
+            //update rooms players
+            //console.log(json);
+            $('#' + json.content.Command).html(json.content.Data);
+        }
+        break;
+        //--------------
+    case 3:
+        {   
+            //console.log(json);
+            var username = json.content.Username;
+            //console.log('Login accepted', json);
+            if ($('#username').val() == username) {
+    $('.login').toggle();
+    $('#launcher').toggle();
+    $.ajax({
+        type: 'GET',
+        url: 'http://ygopro.de/deckreader/all.php?username=benblub&callback=',
+        dataType: 'jsonp',
+        success: function (data) {
+            decklistData = data;
+
+            for (var i = 0; i < decklistData.decknames.length; i++) {
+                decklist.push(
+                    new deck(decklistData.decknames[i],
+                        decklistData.Maindeck[i],
+                        decklistData.Sidedeck[i],
+                        decklistData.extradeck[i]));
+
+            }
+            //console.log(decklist);
+            for (i = 0; i < decklist.length; i++) {
+                $("#selectdeck").append('<option value="' + i + '">' + decklist[i].name + '</option>');
+            }
+        },
+        error: function (er) {
+            console.log('Uh Oh!');
+            console.log(currenterror = er);
+        },
+
+    });
+
+}
+//            chatserver.socket.send(JSON.stringify({
+//                id: 6,
+//                content: ''
+//            }));
+//            joinroom(activeroom);
+        }
+        break;
+        //--------------
+    case 4:
+        {
+            alert('Invalid Login, Try again.');
+            
+        }
+        break;
+        //--------------
+    case 10:
+        {
+            //ping
+        }
+        break;
+        //--------------
+    case 11:
+        {
+            $('#' + json.content).addClass('roomstarted');
+            //roomstart
+        }
+        break;
+        //--------------
+    case 12:
+        {
+            for (var i = json.content.length - 1; i >= 0; i--) {
+                if (json.content[i].rank >= 1) {
+                    rank = "[<span class='dev-" + json.content[i].rank + "''>Dev</span>]";
+                }
+                $('#users')
+                    .append('<li id="userlist-' + json.content[i].username + '"">' + rank + json.content[i].username + '</li>');
+            }
+            //sortdevs();
+            //sortusers();
+            //usercount();
+        }
+        break;
+        //--------------
+    case 13:
+        {
+            if (json.content.rank >= 1) {
+                rank = "[<span class='dev-" + json.content.rank + "''>Dev</span>]";
+            } else {
+                rank = "";
+            }
+            $('#users')
+                .append('<li id="userlist-' + json.content.username + '"">' + rank + json.content.username + '</li>');
+
+            
+        }
+        break;
+        //--------------
+    case 14:
+        {
+            $('#userlist-' + json.content.username).remove();
+        }
+        break;
+        //--------------
+    case 15:
+        {
+            console.log('Friends list recived:' + json);
+        }
+        break;
+        //--------------
+    case 16:
+        {
+            console.log('Joined ' + json.content);
+        }
+        break;
+    case 17:
+        {
+            var name = "";
+            switch (json.content.type) {
+            case 1:
+                {
+                    if (json.content.from.rank >= 1) {
+                        rank = "[<span class='dev-" + json.content.from.rank + "''>Dev</span>]";
+                    } else {
+                        rank = "";
+                    }
+                    if (json.content.command == 1) {
+                        name = '<em>' + rank;
+                    } else {
+                        name = '<strong>' + rank + json.content.from.username + ':</strong> ';
+                    }
+                    $('#room-' + json.content.channel)
+                        .append('<li id="linecount-' + servermessagecount + '">' + name + json.content.message + '</li>');
+                    $('#linecount-' + servermessagecount)
+                        .urlize();
 
                 }
-                //console.log(decklist);
-                for ( i = 0; i < decklist.length; i++) {
-                    $("#selectdeck").append('<option value="' + i + '">' + decklist[i].name + '</option>');
+                break;
+            case 2:
+                {
+                    $('#room-' + activeroom)
+                        .append('<li class="servermessage" id="linecount-' + servermessagecount + '">Server : ' + json.content.message + '</li>');
                 }
-            },
-            error: function (er) {
-                console.log('Uh Oh!');
-                console.log(currenterror = er);
-            },
+                break;
+            default:
+                {
+                    console.log('Unknown ID:17');
+                    console.log(json);
+                }
+            }
+        }
+        break;
+    case 29:
+        {
+            // server list
+            
+            for (var server_i = json.content.length - 1; server_i >= 0; server_i--) {
+                serverlocations.push(json.content[server_i]);
+            }
+        }
+        break;
+        //--------------
+    case 37:
+        {
+            //create room
+            //console.log(json);
+            var rankunrank;
+            if (json.content.isRanked) {
+                rankunrank = 'ranked';
+            } else {
+                rankunrank = 'unranked';
+            }
+            $('#' + rankunrank).append('<li id="' + json.content.server + '-' + json.content.roomName + '">' + json.content.playerList.concat() + '</li>');
 
-        });
-
+        }
+        break;
+        //--------------
+    default:
+        {
+            console.log(json);
+            alert('new data');
+        }
     }
+    
+    servermessagecount = servermessagecount + 1;
+}
+
+
+
+
+
+
+
+
+
+function LoginAccept(username){
+
 }
 
 function toggleConsole() {
@@ -257,7 +485,7 @@ function UpdatePlayer(pos, newpos) {
 }
 
 function PlayerReady(pos, ready) {
-    ready = (ready) ? 1 : 0; 
+    ready = (ready) ? 1 : 0;
     playerStart[pos] = ready;
     var state = playerStart[0] + playerStart[1];
     $('#lobbyplayer' + pos).toggleClass('ready');
@@ -314,97 +542,119 @@ function SelectFirstPlayer(value) {
     $('#selectduelist').toggle();
 
 }
-function StartDuel(data){
+
+function StartDuel(data) {
     var duelData = JSON.parse(data);
     console.log(duelData);
     player1StartLP = duelData.LifePoints[0];
     player2StartLP = duelData.LifePoints[1];
-    
-    $('#player1lp').html("div class='width' style='width:"+(duelData.LifePoints[0]/player1StartLP)+"'></div>"+duelData.LifePoints[0]+"</div>");
-    $('#player2lp').html("div class='width' style='width:"+(duelData.LifePoints[1]/player2StartLP)+"'></div>"+duelData.LifePoints[1]+"</div>");
-    
+
+    $('#player1lp').html("div class='width' style='width:" + (duelData.LifePoints[0] / player1StartLP) + "'></div>" + duelData.LifePoints[0] + "</div>");
+    $('#player2lp').html("div class='width' style='width:" + (duelData.LifePoints[1] / player2StartLP) + "'></div>" + duelData.LifePoints[1] + "</div>");
+
     var a = new DOMWriter(duelData.PlayerOneDeckSize, 'Deck', 'p0');
     var b = new DOMWriter(duelData.PlayerTwoDeckSize, 'Deck', 'p1');
     var c = new DOMWriter(duelData.PlayerOneExtraSize, 'Extra', 'p0');
     var d = new DOMWriter(duelData.PlayerTwoExtraSize, 'Extra', 'p1');
     shuffle();
 }
-function DOMWriter(size, movelocation, player){
+
+function DOMWriter(size, movelocation, player) {
     for (i = 0; i < size; i++) {
-         animateState('none', 'unknown', i, player, movelocation, i, 'FaceDownAttack')
+        animateState('none', 'unknown', i, player, movelocation, i, 'FaceDownAttack');
         //animateState(player, clocation, index, moveplayer, movelocation, movezone, moveposition){
     }
-    
+
 }
-function UpdateCards( player, clocation, data){
+
+function UpdateCards(player, clocation, data) {
     var update = JSON.parse(data);
-    player =  'p'+player;
+    player = 'p' + player;
     var place = cardplace[clocation];
-    console.log("Updating Multiple Card Positions for", player+ "'s", place);
-    try{
-     duel[player][place]= update;
-     //console.log(duel);
-    }catch(error){
+    console.log("Updating Multiple Card Positions for", player + "'s", place);
+    try {
+        duel[player][place] = update;
+        //console.log(duel);
+    } catch (error) {
         console.log(error);
-        console.log(duel, player, place, update);      
+        console.log(duel, player, place, update);
     }
-    
-    
-    
+
+
+
 }
-function UpdateCard(player, clocation, index, data){
+
+function UpdateCard(player, clocation, index, data) {
     var update = JSON.parse(data);
-    player =  'p'+player;    
-    console.log("Updating Single Card Position",update, player+" ", "Card : "+index, cardplace[clocation]);
-        
-        
-        duel[player][cardplace[clocation]][index] = update;
-        
+    player = 'p' + player;
+    console.log("Updating Single Card Position", update, player + " ", "Card : " + index, cardplace[clocation]);
+
+
+    duel[player][cardplace[clocation]][index] = update;
+
 }
-function DrawCard(player, numberOfCards){
-    console.log("p"+player+" drew "+numberOfCards+" card(s)");
+
+function DrawCard(player, numberOfCards) {
+    console.log("p" + player + " drew " + numberOfCards + " card(s)");
 }
-function NewPhase(phase){
+
+function NewPhase(phase) {
     console.log(enumPhase[phase]);
 }
-function NewTurn(turn){
-    console.log("It is now p"+turn+"'s turn.");
+
+function NewTurn(turn) {
+    console.log("It is now p" + turn + "'s turn.");
 }
-function MoveCard(player, clocation, index,moveplayer, movelocation, movezone, moveposition){
-    console.log('p'+player+"'s' ", cardplace[clocation], index, "Moved to p"+moveplayer+"s", cardplace[movelocation], movezone, moveposition);
+
+function MoveCard(player, clocation, index, moveplayer, movelocation, movezone, moveposition) {
+    console.log('p' + player + "'s' ", cardplace[clocation], index, "Moved to p" + moveplayer + "s", cardplace[movelocation], movezone, moveposition);
 }
-function OnWin(result){
-    console.log("Function OnWin: "+result);
+
+function OnWin(result) {
+    console.log("Function OnWin: " + result);
 }
-function SelectCards(cards, min, max, cancelable){
-    var debugObject = {cards : cards, min : min, max : max, cancelable : cancelable};
-    console.log('Function SelectCards:'+JSON.stringify(debugObject));
+
+function SelectCards(cards, min, max, cancelable) {
+    var debugObject = {
+        cards: cards,
+        min: min,
+        max: max,
+        cancelable: cancelable
+    };
+    console.log('Function SelectCards:' + JSON.stringify(debugObject));
 }
-function DuelEnd(){
+
+function DuelEnd() {
     console.log('Duel has ended.');
 }
-function SelectYn(description){
-    console.log("Function SelectYn :"+description);
+
+function SelectYn(description) {
+    console.log("Function SelectYn :" + description);
 }
-function IdleCommands(main){
-    
+
+function IdleCommands(main) {
+
     console.log(main);
 }
-function SelectPosition(positions){
+
+function SelectPosition(positions) {
     var debugObject = JSON.Strigify(positions);
     console.log(debugObject);
 }
-function SelectOption(options){
+
+function SelectOption(options) {
     var debugObject = JSON.Strigify(options);
     console.log(debugObject);
 }
-function AnnounceCard(){
+
+function AnnounceCard() {
     //Select a card from all known cards.
     console.log('AnnounceCard');
 }
-function OnChaining(cards, desc,forced){
+
+function OnChaining(cards, desc, forced) {
     var cardIDs = JSON.stringify(cards);
     var cardDescripts = JSON.stringify(desc);
     console.log(cardIDs, cardDescripts);
-    
+
 }

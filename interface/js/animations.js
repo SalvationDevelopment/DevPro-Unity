@@ -50,7 +50,7 @@ function shuffle() {
 
 
     });
-    fix = setTimeout(function () {+
+    fix = setTimeout(function () {
         cardmargin(deckpositionx);
     }, 50);
 }
@@ -84,10 +84,11 @@ cardmargin(deckpositionx);
 
 function animateDrawCard(player, amount){
     $('.'+player+' .deck').split(0,amount).removeClass('deck').addClass('hand').each(function(i){
-        $(this).addClass("i"+i, 'Attack')
-    };
-}
+        $(this).addClass("i"+i, 'Attack');
+    }
+);}
+
 function animateState(player, clocation, index, moveplayer, movelocation, movezone, moveposition){
-        $('.'+player+' .'+clocation+" .i+"index+')').attr('class': "card'+" moveplayer" "+ movelocation +" z"+movezone+" " moveposition)
+        $('.'+player+' .'+clocation+" .i+"+index+')').attr('class', "card "+ moveplayer+" "+ movelocation +" z"+movezone+" "+moveposition);
 }
 
