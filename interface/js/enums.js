@@ -149,6 +149,25 @@ var enumPhase =
         8:  'Battle Phase',
         16: 'Battle Calculation',
         32: 'Main Phase 2',
-        64: 'End Phase'
+        64: 'End Phase',
+       128: 'End of Turn'
     };
 var winconditions = ['Opponent Quit', 'time'];
+
+
+var MainAction =
+        {
+            0 : 'Summon' ,
+            1 : 'SpSummon',
+            2 : 'Repos',
+            3 : 'SetMonster',
+            4 : 'SetSpell',
+            5 : 'Activate',
+            6 : 'ToBattlePhase',
+            7 : 'ToEndPhase'
+        };
+
+/*
+[1:46:57 PM]  (Buttys): you need to send me josn data to me
+[1:47:06 PM]  (Buttys): with int Action and int Index
+*/

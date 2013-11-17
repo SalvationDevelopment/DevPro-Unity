@@ -1,4 +1,4 @@
-/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout */
+/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout, duel */
 var deckpositionx = 735;
 var currenterror;
 var positions = {
@@ -82,3 +82,22 @@ function complete(x) {
 cardmargin(deckpositionx);
 
 
+function animateDrawCard(player, amount){
+    var c = $('.'+player+'.Deck').splice(0,amount);
+    $(c).each(function(i){
+        $(this).attr('class', player+' '+'Hand i'+(i+duel[player].Hand.length)+' AttackFaceUp');
+    }
+);}
+
+function animateState(player, clocation, index, moveplayer, movelocation, movezone, moveposition, count){
+    if (count === undefined) {count = 1;}
+    var query = "."+player+"."+clocation+".i"+index;
+    console.log(query);
+    $(query).slice(0,count).attr('class', ""+ moveplayer+" "+ movelocation +" i"+movezone+" "+moveposition);
+}
+function animateChaining(player,clocation,index){
+    $(player+'.'+clocation+'.i'+index).addClass('chainable');
+}
+function animateRemoveChaining(){
+    $('.chainable').removeClass('chainable');
+}
