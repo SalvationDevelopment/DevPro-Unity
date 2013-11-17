@@ -1,0 +1,39 @@
+.p0 {position:absolute}
+.p0.Deck         {top : 43px; left: 735px; }
+.p0.Hand         {top : -10px; left: 124px; }
+.p0.ExtraDeck    {top : 43p; left: 22px; }
+
+
+.p0.SpellZone .i0     {top :188px; left:144px;}
+.p0.SpellZone .i1     {top :188px; left:261px;}
+.p0.SpellZone .i2     {top :188px; left:379px;}
+.p0.SpellZone .i3     {top :188px; left:497px;}
+.p0.SpellZone .i4     {top :188px; left:614px;}
+.p0.SpellZone .i5     {top :188px; left:;}
+
+
+.p0.MonsterZone .i0     {top :250px; left:144px;}
+.p0.MonsterZone .i1     {top :250px; left:261px;}
+.p0.MonsterZone .i2     {top :250px; left:379px;}
+.p0.MonsterZone .i3     {top :250px; left:497px;}
+.p0.MonsterZone .i4     {top :250px; left:614px;}
+
+.p1{position:absolute}
+.p1.Deck         {top : 686px; left: 735px; }
+.p1.Hand         {top : -10px; left: 124px; }
+.p1.ExtraDeck    {top : 43p; left: 22px; }
+
+
+.p1.SpellZone .i0     {top :610px; left:144px;}
+.p1.SpellZone .i1     {top :610px; left:261px;}
+.p1.SpellZone .i2     {top :610px; left:379px;}
+.p1.SpellZone .i3     {top :610px; left:497px;}
+.p1.SpellZone .i4     {top :610px; left:614px;}
+.p1.SpellZone .i5     {top :610px; left:;}
+
+
+.p1.MonsterZone .i0     {top :548px; left:614px;}
+.p1.MonsterZone .i1     {top :548px; left:497px;}
+.p1.MonsterZone .i2     {top :548px; left:379px;}
+.p1.MonsterZone .i3     {top :548px; left:264px;}
+.p1.MonsterZone .i4     {top :548px; left:144px;}

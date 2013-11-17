@@ -1,4 +1,4 @@
-/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout,shuffle, cardplace, cardpositions, enumPhase, animateState */
+/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout,shuffle, cardplace, cardpositions, enumPhase, animateState, animateChaining, animateRemoveChaining */
 /* DEAR GOD ACCESSDENIED LEARN TO USE A FOR LOOP!
 for (i = 0; i < size; i++) {
 }
@@ -530,7 +530,7 @@ function messageUnity(functionName, message) {
 }
 
 function DeckError(card) {
-    MessagePopUp(cardIndex(card).name + " is not legal for this game format");
+    MessagePopUp(cardIndex('c'+card).name + " is not legal for this game format");
 }
 
 function SelectRPS(value) {
@@ -556,12 +556,12 @@ function StartDuel(data) {
     var b = new DOMWriter(duelData.PlayerTwoDeckSize, 'Deck', 'p1');
     var c = new DOMWriter(duelData.PlayerOneExtraSize, 'Extra', 'p0');
     var d = new DOMWriter(duelData.PlayerTwoExtraSize, 'Extra', 'p1');
-    shuffle();
+    
 }
 
 function DOMWriter(size, movelocation, player) {
     for (i = 0; i < size; i++) {
-        animateState('none', 'unknown', i, player, movelocation, i, 'FaceDownAttack');
+        animateState('none', 'unknown', 0, player, movelocation, i, 'FaceDownAttack');
         //animateState(player, clocation, index, moveplayer, movelocation, movezone, moveposition){
     }
 
@@ -608,6 +608,8 @@ function NewTurn(turn) {
 
 function MoveCard(player, clocation, index, moveplayer, movelocation, movezone, moveposition) {
     console.log('p' + player + "'s' ", cardplace[clocation], index, "Moved to p" + moveplayer + "s", cardplace[movelocation], movezone, moveposition);
+    animateState('p'+player, cardplace[clocation], index, 'p'+moveplayer, cardplace[movelocation], movezone, moveposition);
+    //animateState(player, clocation, index, moveplayer, movelocation, movezone, moveposition);
 }
 
 function OnWin(result) {
@@ -633,8 +635,10 @@ function SelectYn(description) {
 }
 
 function IdleCommands(main) {
-
-    console.log(main);
+    var update = JSON.parse(main); 
+    console.log('IdleCommands', update);
+    u.getUnity().SendMessage("GameClient", 'NewTurn', 1);
+    
 }
 
 function SelectPosition(positions) {
@@ -653,8 +657,24 @@ function AnnounceCard() {
 }
 
 function OnChaining(cards, desc, forced) {
-    var cardIDs = JSON.stringify(cards);
-    var cardDescripts = JSON.stringify(desc);
-    console.log(cardIDs, cardDescripts);
+    var cardIDs = JSON.parse(cards);
+    
+    for(var i=0; i < cardIDs.length; i++){
+        animateChaining(('p'+cardIDs[i].Player), cardplace[cardIDs[i].location],cardIDs[i].Index);
+    }
+    
+    //auto say no
+    if (forced){
+        //modual Q
+         u.getUnity().SendMessage('GameClient', 'SendOnChain', 0);
+        animateRemoveChaining();
+    }
+
+    else {
+        //modual Q
+         u.getUnity().SendMessage('GameClient', 'SendOnChain', -1);
+        animateRemoveChaining();
+    }
+    console.log('chaining', cardIDs, desc);
 
 }
