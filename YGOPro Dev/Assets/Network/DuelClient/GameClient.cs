@@ -12,7 +12,7 @@ using Pathfinding.Serialization.JsonFx;
 
 public class GameClient : MonoBehaviour {
 	
-	public const short Version = 0x1320;
+	public const short Version = 0x1321;
 	public GameConnection Connection { get; private set; }
 	private GameBehavior m_behavior;
 	private Deck Deck;
