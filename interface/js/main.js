@@ -1,4 +1,4 @@
-/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout,shuffle, cardplace, cardpositions, enumPhase, animateState, animateChaining, animateRemoveChaining */
+/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout,shuffle, cardplace, cardlocations, enumPhase, animateState, animateChaining, animateRemoveChaining */
 /* DEAR GOD ACCESSDENIED LEARN TO USE A FOR LOOP!
 for (i = 0; i < size; i++) {
 }
@@ -120,7 +120,7 @@ $(document).ready(function () {
         }
     });
     $('#loginbutton').on('click', function () {
-        u.getUnity().SendMessage("HubClient", "Login", "{'Username' : '" + ($('#username').val()) + "', 'Password' : '" + ($('#password').val()) + "', 'UID' : 'Unity'}");
+        u.getUnity().SendMessage("HubClient", "Login", "{'Username' : '" + ($('#username').val()) + "', 'Password' : '" + ($('#password').val()) + "', 'UID' : 'Unity', 'Version' : 198000 }");
     });
 
     $('#lobbylock, #majorpopup').on('click', function () {
@@ -186,12 +186,12 @@ $(document).ready(function () {
     });
     $('#igofirst').on("click", function () {
         $('#selectduelist').toggle();
-        u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', 0);
+        u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', 1);
 
     });
     $('#opponentfirst').on("click", function () {
         $('#selectduelist').toggle();
-        u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', 1);
+        u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', 0);
 
     });
     $('#messagerbox .close').on('click', function () {
@@ -556,7 +556,8 @@ function StartDuel(data) {
     var b = new DOMWriter(duelData.PlayerTwoDeckSize, 'Deck', 'p1');
     var c = new DOMWriter(duelData.PlayerOneExtraSize, 'Extra', 'p0');
     var d = new DOMWriter(duelData.PlayerTwoExtraSize, 'Extra', 'p1');
-    
+    shuffle('p0');
+    shuffle('p1');
 }
 
 function DOMWriter(size, movelocation, player) {
@@ -677,4 +678,8 @@ function OnChaining(cards, desc, forced) {
     }
     console.log('chaining', cardIDs, desc);
 
+}
+function ShuffleDeck(player){
+    console.log(player);
+    shuffle('p'+player);
 }
