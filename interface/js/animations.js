@@ -16,27 +16,32 @@ $(document).ready(function(){
 
 
 // Animation functions
-
-function shuffle(player) {
-    function cardmargin(player) {
-        $('.'+player+'.deck').each(function (i) {
-            var decklocationx = (i / 2) + cardlocations[player].Deck.x_origin;
-            var decklocationy = (i / 2) + cardlocations[player].Deck.y_origin;
-            $(this).css({
-                'bottom': decklocationy + 'px',
-                'left': decklocationx + 'px'
-            });
+ 
+    function cardmargin(player,deck) {
+        var orientation = (player === 'p0') ? ({x : 'left', y : 'bottom', direction : 1} ) : ({x : 'right', y : 'top', direction : -1} );
+        $('.card.'+player+'.'+deck).each(function (i) {
+            console.log($('.card.'+player+'.'+deck), cardlocations[player],player,deck);
+            var decklocationx = (orientation.direction *  i / 2) + (cardlocations[player].Deck.x_origin);
+            var decklocationy = (orientation.direction *  i / 2) + (cardlocations[player].Deck.y_origin);
+            console.log(decklocationx,decklocationy);
+            
+            $(this).css(
+                orientation.y, decklocationy + 'px').css(
+                orientation.x, decklocationx + 'px'
+            );
     
         });
     }
-    cardmargin(player);
-    $($(player+".card.Deck").get().reverse()).each(function (i) {
-        var cache = $(this).css('left');
+function shuffle(player, deck) {
+   var orientation = (player === 'p0') ? ({x : 'left', y : 'bottom', direction : 1} ) : ({x : 'right', y : 'top', direction : -1} );
+    cardmargin(player, deck);
+    $($('.card.'+player+'.'+deck).get().reverse()).each(function (i) {
+        var cache = $(this).css(orientation.x);
         var spatical = Math.floor((Math.random() * 150) - 75);
-        $(this).css('left', '-=' + spatical + 'px');
+        $(this).css(orientation.x, '-=' + spatical + 'px');
     });
     fix = setTimeout(function () {
-        cardmargin(player);
+        cardmargin(player,deck);
     }, 50);
 }
 
@@ -76,7 +81,6 @@ function animateDrawCard(player, amount){
 function animateState(player, clocation, index, moveplayer, movelocation, movezone, moveposition, count){
     if (count === undefined) {count = 1;}
     var query = "."+player+"."+clocation+".i"+index;
-    console.log(moveposition, cardPositions[moveposition]);
     $(query).slice(0,count).attr('class', "card "+ moveplayer+" "+ movelocation +" i"+movezone+" "+cardPositions[moveposition])
     .attr('style','');
 }
@@ -86,3 +90,29 @@ function animateChaining(player,clocation,index){
 function animateRemoveChaining(){
     $('.chainable').removeClass('chainable');
 }
+function layouthand(player){
+    var count = $('.'+player+'.Hand').length;
+    var f = 83/0.8;
+    var xCoord;
+    console.log(count,f,xCoord);
+    for (var sequence = 0; sequence < count; sequence++) {
+        if(duel[player].Hand.length < 6 ){
+            xCoord = ( 5.5*f - 0.8*f * count) / 2 + 1.55*f + sequence * 0.8*f;
+        }else{
+            xCoord = 1.9*f + sequence * 4.0*f / (count - 1);
+        }
+        console.log('.'+player+'.Hand.i'+sequence);
+        console.log(xCoord);
+        if (player === 'p0'){
+            $('.'+player+'.Hand.i'+sequence).css('left',''+xCoord+'px');
+        }else{
+            $('.'+player+'.Hand.i'+sequence).css('right',''+xCoord+'px');
+        }
+    }
+}
+    
+//    
+//    if (count <= 6)
+//    t->X = (5.5f - 0.8f * count) / 2 + 1.55f + sequence * 0.8f;
+//   else
+//    t->X = 1.9f + sequence * 4.0f / (count - 1);

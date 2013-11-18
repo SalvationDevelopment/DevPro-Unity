@@ -3,7 +3,7 @@
 
 .p0.Deck         {bottom : 43px; left: 735px; }
 .p0.Hand         {bottom : -10px; left: 124px; }
-.p0.Extra        {bottom : 43p; left: 22px; }
+.p0.Extra        {bottom : 43px; left: 22px; }
 
 
 .p0.SpellZone.i0     {bottom :188px; left:144px;}
@@ -23,9 +23,9 @@
 
 .p1 {position:absolute; display:block}
 
-.p1.Deck         {top : 43px; right: 735px; }
+.p1.Deck         {top : 43px; right: 744px; }
 .p1.Hand         {top : -10px; right: 124px; }
-.p1.Extra        {top : 43p; right: 22px; }
+.p1.Extra        {top : 43p; right: 32px; }
  
 
 .p1.SpellZone.i0     {top :188px; right:144px;}
@@ -65,8 +65,8 @@
     -webkit-transform: rotate3d(0,0,1, 90deg );
 
 }
-.faceup {-webkit-transform: rotate3d(0,1,0 180deg ); }
-.defensemode.faceup { -webkit-transform: rotate3d(0,0,1, 90deg ) rotate3d(0,1,0, 180deg );}
+.faceup {-webkit-transform: rotate3d(0,1,0,180deg ); }
+.FaceUpDefence { -webkit-transform: rotate3d(0,0,1, 90deg ) rotate3d(0,1,0, 180deg ); }
 .faceup div {
-    -webkit-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden
 }
