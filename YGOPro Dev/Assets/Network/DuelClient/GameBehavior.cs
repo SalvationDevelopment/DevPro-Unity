@@ -47,10 +47,12 @@ namespace DevPro.Game
             if (id == StocMessage.GameMsg)
             {
                 GameMessage msg = packet.ReadGameMsg();
+				Debug.Log ("GamePacket: " + id + " - " + msg);
                 if (m_messages.ContainsKey(msg))
                     m_messages[msg](packet);
                 return;
             }
+			Debug.Log ("GamePacket: " + id);
             if (m_packets.ContainsKey(id))
                 m_packets[id](packet);
         }

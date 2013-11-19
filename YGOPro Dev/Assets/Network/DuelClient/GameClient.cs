@@ -34,7 +34,6 @@ public class GameClient : MonoBehaviour {
 			while (Connection.HasPacket())
 			{
 				GameServerPacket packet = Connection.Receive();
-				Debug.Log ("GamePacket: " +(StocMessage)packet.Content[0]);
 				m_behavior.OnPacket(packet);
 			}
 		}
