@@ -1,8 +1,11 @@
-/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout,shuffle, cardplace, cardpositions, enumPhase, animateState, animateChaining, animateRemoveChaining */
+/* globals $,UnityObject2, jQuery,showUnsupported, alert, document,isChecked,randomString, console, clearInterval, setInterval, setTimeout,shuffle, cardplace, cardlocations, enumPhase, animateState, animateChaining, animateRemoveChaining */
+
 /* DEAR GOD ACCESSDENIED LEARN TO USE A FOR LOOP!
 for (i = 0; i < size; i++) {
 }
 */
+
+//Define all the globals you are going to use. Avoid using to many globals. All Globals should be databases of sorts.
 var saftey = false;
 var Unityconsole = false;
 var u = new UnityObject2();
@@ -21,6 +24,7 @@ var activeroom ='DevPro-English';
 var servermessagecount = 0;
 var serverlocations = [];
 
+//This Global defines the duel state at all times via update functions. It has no impact on the DOM but may be referenced to provide information to the user or draw images.
 var duel = {
     'p0': {
         'Deck': [],
@@ -47,23 +51,7 @@ var duel = {
 };
 
 
-function deck(filename, main, side, extra) {
-    //    if (typeof name  !== "string"){console.log('name must be a string'); return false}
-    //    if (typeof main  !== "array") {console.log('main must be a array'); return false}
-    //    if (typeof side  !== "array") {console.log('side must be a array'); return false}
-    //    if (typeof extra !== "array") {console.log('extra must be a array'); return false}
-    var name = filename.substring(0, (filename.length - 4));
-    this.name = name;
-    this.main = main;
-    this.side = side;
-    this.extra = extra;
-    this.data = JSON.stringify({
-        main: this.main,
-        side: this.side,
-        extra: this.extra
-    });
 
-}
 
 
 /* create Unity object */
@@ -93,6 +81,8 @@ u.observeProgress(function (progress) {
         break;
     }
 });
+
+//The following jquery events define user interactions; When they click, answer questions, the creation and movement of screens.
 $(document).ready(function () {
     u.initPlugin(jQuery("#unityPlayer")[0], "http://unity.devpro.org/DevProWeb.unity3d");
     $.getJSON("http://unity.devpro.org/cardreader/?folder=English", function (data) {
@@ -120,7 +110,7 @@ $(document).ready(function () {
         }
     });
     $('#loginbutton').on('click', function () {
-        u.getUnity().SendMessage("HubClient", "Login", "{'Username' : '" + ($('#username').val()) + "', 'Password' : '" + ($('#password').val()) + "', 'UID' : 'Unity'}");
+        u.getUnity().SendMessage("HubClient", "Login", "{'Username' : '" + ($('#username').val()) + "', 'Password' : '" + ($('#password').val()) + "', 'UID' : 'Unity', 'Version' : 198000 }");
     });
 
     $('#lobbylock, #majorpopup').on('click', function () {
@@ -186,12 +176,12 @@ $(document).ready(function () {
     });
     $('#igofirst').on("click", function () {
         $('#selectduelist').toggle();
-        u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', 0);
+        u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', 1);
 
     });
     $('#opponentfirst').on("click", function () {
         $('#selectduelist').toggle();
-        u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', 1);
+        u.getUnity().SendMessage("GameClient", 'SelectFirstPlayer', 0);
 
     });
     $('#messagerbox .close').on('click', function () {
@@ -212,7 +202,7 @@ function joinroom(roomtojoin){
 }
 
 
-
+//Functions used by the Unity object
 
 function MessageBrowser(message) {
     console.log(message);
@@ -270,7 +260,19 @@ function OnHubMessage(type, data) {
         dataType: 'jsonp',
         success: function (data) {
             decklistData = data;
-
+            function deck(filename, main, side, extra) {
+                var name = filename.substring(0, (filename.length - 4));
+                this.name = name;
+                this.main = main;
+                this.side = side;
+                this.extra = extra;
+                this.data = JSON.stringify({
+                    main: this.main,
+                    side: this.side,
+                    extra: this.extra
+                });
+            
+            }
             for (var i = 0; i < decklistData.decknames.length; i++) {
                 decklist.push(
                     new deck(decklistData.decknames[i],
@@ -446,11 +448,8 @@ function OnHubMessage(type, data) {
 
 
 
-function LoginAccept(username){
 
-}
-
-function toggleConsole() {
+function toggleConsole() { // Togggle the console for Unity on and off.
     if (Unityconsole) {
         $('#unityPlayer').css('height', '25%');
         Unityconsole = false;
@@ -460,31 +459,31 @@ function toggleConsole() {
     }
 }
 
-function SetRoomInfo(info) {
+function SetRoomInfo(info) { 
     info = JSON.parse(info);
 }
 
-function PosUpdate(pos) {
+function PosUpdate(pos) { // Used in the lobby to notify the viewer of who is in the lobby.
     console.log('PosUpdate: ' + pos);
 }
 
-function PlayerEnter(username, pos) {
+function PlayerEnter(username, pos) { // Used in the lobby to notify the viewer of who is in the lobby.
     console.log('PlayerEnter: ' + username + ", " + pos);
     $('#lobbyplayer' + pos).html(username);
 }
 
-function PlayerLeave(pos) {
+function PlayerLeave(pos) { // Used in the lobby to notify the viewer of who is in the lobby.
     $('#lobbyplayer' + pos).html("");
     $('#lobbystart').attr('class', 'button ready0');
 }
 
-function UpdatePlayer(pos, newpos) {
+function UpdatePlayer(pos, newpos) { // Used in the lobby to notify the viewer of who is in the lobby.
     var UpdatePlayerposscache = $('#lobbyplayer' + pos).html();
     $('#lobbyplayer' + pos).html("");
     $('#lobbyplayer' + newpos).html(UpdatePlayerposscache);
 }
 
-function PlayerReady(pos, ready) {
+function PlayerReady(pos, ready) { // Used in the lobby to notify the viewer of who is in the lobby.
     ready = (ready) ? 1 : 0;
     playerStart[pos] = ready;
     var state = playerStart[0] + playerStart[1];
@@ -502,7 +501,7 @@ function PlayerReady(pos, ready) {
 
 }
 
-function PlayerMessage(player, message) {
+function PlayerMessage(player, message) { //YGOPro messages.
     var playername;
     if (player) {
         playername = $('#lobbyplayer' + player).html();
@@ -517,7 +516,7 @@ function PlayerMessage(player, message) {
     console.log(playername + " :" + message);
 }
 
-function IsLoaded() {
+function IsLoaded() { // Disengage saftey mechinisms to prevent the user from accessing the login before unity is loaded.
     saftey = true;
     $('.downloadbutton').toggle();
     $('.originloading').toggle();
@@ -525,25 +524,21 @@ function IsLoaded() {
     $("#jquery_jplayer_1").jPlayer("play", 0);
 }
 
-function messageUnity(functionName, message) {
-    u.getUnity().SendMessage("HubClient", functionName, message);
-}
-
-function DeckError(card) {
+function DeckError(card) { //When you have an illegal card in your deck.
     MessagePopUp(cardIndex('c'+card).name + " is not legal for this game format");
 }
 
-function SelectRPS(value) {
+function SelectRPS(value) { // Toggle RPS Screen. Screen will diengage when used.
     $('#rps').toggle();
 
 }
 
-function SelectFirstPlayer(value) {
+function SelectFirstPlayer(value) { // Select the player that goes first.
     $('#selectduelist').toggle();
 
 }
 
-function StartDuel(data) {
+function StartDuel(data) { // Interface signalled the game has started
     var duelData = JSON.parse(data);
     console.log(duelData);
     player1StartLP = duelData.LifePoints[0];
@@ -552,22 +547,27 @@ function StartDuel(data) {
     $('#player1lp').html("div class='width' style='width:" + (duelData.LifePoints[0] / player1StartLP) + "'></div>" + duelData.LifePoints[0] + "</div>");
     $('#player2lp').html("div class='width' style='width:" + (duelData.LifePoints[1] / player2StartLP) + "'></div>" + duelData.LifePoints[1] + "</div>");
 
-    var a = new DOMWriter(duelData.PlayerOneDeckSize, 'Deck', 'p0');
-    var b = new DOMWriter(duelData.PlayerTwoDeckSize, 'Deck', 'p1');
-    var c = new DOMWriter(duelData.PlayerOneExtraSize, 'Extra', 'p0');
-    var d = new DOMWriter(duelData.PlayerTwoExtraSize, 'Extra', 'p1');
-    
+    DOMWriter(duelData.PlayerOneDeckSize, 'Deck', 'p0');
+    DOMWriter(duelData.PlayerTwoDeckSize, 'Deck', 'p1');
+    DOMWriter(duelData.PlayerOneExtraSize, 'Extra', 'p0');
+    DOMWriter(duelData.PlayerTwoExtraSize, 'Extra', 'p1');
+    shuffle('p0', 'Deck');
+    shuffle('p1', 'Deck');
+    shuffle('p0', 'Extra');
+    shuffle('p1', 'Extra');
+     layouthand('p0');
+     layouthand('p1');
 }
 
 function DOMWriter(size, movelocation, player) {
     for (i = 0; i < size; i++) {
-        animateState('none', 'unknown', 0, player, movelocation, i, 'FaceDownAttack');
+        animateState('none', 'unknown', 0, player, movelocation, i, 1);
         //animateState(player, clocation, index, moveplayer, movelocation, movezone, moveposition){
     }
 
 }
 
-function UpdateCards(player, clocation, data) {
+function UpdateCards(player, clocation, data) { //YGOPro is constantly sending data about game state, this function stores and records that information to allow access to a properly understood gamestate for reference. 
     var update = JSON.parse(data);
     player = 'p' + player;
     var place = cardplace[clocation];
@@ -596,6 +596,8 @@ function UpdateCard(player, clocation, index, data) {
 
 function DrawCard(player, numberOfCards) {
     console.log("p" + player + " drew " + numberOfCards + " card(s)");
+    animateDrawCard(player,numberOfCards);
+     layouthand('p1');
 }
 
 function NewPhase(phase) {
@@ -610,6 +612,7 @@ function MoveCard(player, clocation, index, moveplayer, movelocation, movezone, 
     console.log('p' + player + "'s' ", cardplace[clocation], index, "Moved to p" + moveplayer + "s", cardplace[movelocation], movezone, moveposition);
     animateState('p'+player, cardplace[clocation], index, 'p'+moveplayer, cardplace[movelocation], movezone, moveposition);
     //animateState(player, clocation, index, moveplayer, movelocation, movezone, moveposition);
+     layouthand('p'+moveplayer);
 }
 
 function OnWin(result) {
@@ -677,4 +680,21 @@ function OnChaining(cards, desc, forced) {
     }
     console.log('chaining', cardIDs, desc);
 
+}
+function ShuffleDeck(player){
+    console.log(player);
+    shuffle('p'+player, 'Deck');
+}
+function debugField(){
+    $('.field').toggle();
+     DOMWriter(40, 'Deck', 'p0');
+     DOMWriter(40, 'Deck', 'p1');
+     DOMWriter(15, 'Extra', 'p0');
+     DOMWriter(15, 'Extra', 'p1');
+     DrawCard('p0', 5);
+     DrawCard('p1', 5);
+     layouthand('p0');
+     layouthand('p1');
+    
+     
 }

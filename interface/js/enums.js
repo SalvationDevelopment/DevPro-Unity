@@ -1,4 +1,4 @@
-var cardpositions = {
+var cardlocations = {
     
     'p0' : { 
         Deck : {
@@ -152,9 +152,17 @@ var enumPhase =
         64: 'End Phase',
        128: 'End of Turn'
     };
-var winconditions = ['Opponent Quit', 'time'];
-
-
+var cardPositions =
+    {
+        0:  'FaceUpAttack',
+        1:  'FaceDownAttack',
+        2:  'FaceUpDefence',
+        3:  'FaceDownDefence',
+        4: 'FaceUp',
+        5: 'FaceDown',
+        6: 'Attack',
+        7: 'Defence'
+    };
 var MainAction =
         {
             0 : 'Summon' ,
