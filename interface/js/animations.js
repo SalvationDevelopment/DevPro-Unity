@@ -18,12 +18,12 @@ $(document).ready(function(){
 // Animation functions
  
     function cardmargin(player,deck) {
-        var orientation = (player === 'p0') ? ({x : 'left', y : 'bottom', direction : 1} ) : ({x : 'right', y : 'top', direction : -1} );
+        var orientation = (player === 'p0') ? ({x : 'left', y : 'bottom', direction : 1,multiple : 2} ) : ({x : 'right', y : 'top', direction : -1, multiple : 3} );
         $('.card.'+player+'.'+deck).each(function (i) {
-            console.log($('.card.'+player+'.'+deck), cardlocations[player],player,deck);
-            var decklocationx = (orientation.direction *  i / 2) + (cardlocations[player].Deck.x_origin);
-            var decklocationy = (orientation.direction *  i / 2) + (cardlocations[player].Deck.y_origin);
-            console.log(decklocationx,decklocationy);
+           // console.log($('.card.'+player+'.'+deck), cardlocations[player],player,deck);
+            var decklocationx = (orientation.direction *  i / orientation.multiple) + (cardlocations[player][deck].x_origin);
+            var decklocationy = (orientation.direction *  i / orientation.multiple) + (cardlocations[player][deck].y_origin);
+            //console.log(decklocationx,decklocationy);
             
             $(this).css(
                 orientation.y, decklocationy + 'px').css(
@@ -70,8 +70,8 @@ function complete(x) {
 
 function animateDrawCard(player, amount){
     var c = $('.'+player+'.Deck').splice(0,amount);
-    console.log('.'+player+'.Deck');
-    console.log(c.length);
+//    console.log('.'+player+'.Deck');
+//    console.log(c.length);
     $(c).each(function(i){
         $(this).attr('class', "card "+player+' '+'Hand i'+(i+duel[player].Hand.length)+' AttackFaceUp')
         .attr('style','');
@@ -94,7 +94,7 @@ function layouthand(player){
     var count = $('.'+player+'.Hand').length;
     var f = 83/0.8;
     var xCoord;
-    console.log(count,f,xCoord);
+//    console.log(count,f,xCoord);
     for (var sequence = 0; sequence < count; sequence++) {
         if(duel[player].Hand.length < 6 ){
             xCoord = ( 5.5*f - 0.8*f * count) / 2 + 1.55*f + sequence * 0.8*f;

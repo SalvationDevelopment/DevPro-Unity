@@ -9,7 +9,7 @@ var cardlocations = {
             x_origin : 124,
             y_origin : -10
         },
-        ExtraDeck : {
+        Extra : {
             x_origin :22,
             y_origin :43
         },
@@ -66,63 +66,63 @@ var cardlocations = {
     },
     'p1' : { 
         Deck : {
-            x_origin :735, // player 2
-            y_origin : 686
+            x_origin :744, // player 1
+            y_origin : 43
         },
         Hand : {
-            x_origin : 755,
-            y_origin : 643
+            x_origin : 124,
+            y_origin : -10
         },
-        ExtraDeck : {
-            x_origin :735,
-            y_origin :686
+        Extra : {
+            x_origin :32,
+            y_origin :43
         },
         Field :{
-            x_origin :735,
-            y_origin :546
+            x_origin :22,
+            y_origin :181
         },
         Spells : {
             zone1: {
-                x_origin : 614,
-                y_origin : 610
+                x_origin : 144,
+                y_origin : 188
             },
             zone2: {
-                x_origin : 497,
-                y_origin : 610
+                x_origin : 261,
+                y_origin : 188
             },
             zone3: {
                 x_origin : 379,
-                y_oirgin : 610
+                y_oirgin : 188
             },
             zone4: {
-                x_origin : 261,
-                y_origin : 610
+                x_origin : 497,
+                y_origin : 188
             },
             zone5: {
-                x_origin : 144,
-                y_origin : 610
+                x_origin : 614,
+                y_origin : 188
             }
         },
         MonsterZone : {
             zone1: {
-                x_origin : 614,
-                y_origin : 548
+                x_origin : 144,
+                y_origin : 250
             },
             zone2: {
-                x_origin : 497,
-                y_origin : 548
+                x_origin : 261,
+                y_origin : 250
             },
             zone3: {
                 x_origin : 379,
-                y_oirgin : 548
+                y_oirgin : 250
             },
             zone4: {
-                x_origin : 261,
-                y_origin : 548
+                x_origin : 497,
+                y_origin : 250
             },
             zone5: {
-                x_origin : 144,
-                y_origin : 548
+                x_origin : 614,
+                y_origin : 250
             }
         }
     

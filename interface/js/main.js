@@ -204,8 +204,8 @@ function joinroom(roomtojoin){
 
 //Functions used by the Unity object
 
-function MessageBrowser(message) {
-    console.log(message);
+function MessageBrowser(message,int) {
+    console.log(int,message);
 }
 
 function MessagePopUp(message) {
@@ -499,6 +499,11 @@ function PlayerReady(pos, ready) { // Used in the lobby to notify the viewer of 
         });
     }
 
+
+}
+function KickPlayer(pos){
+    pos = (pos) ? pos : 1;
+    u.getUnity.SendMessage("GameClient","KickPlayer", pos);
 }
 
 function PlayerMessage(player, message) { //YGOPro messages.
@@ -573,6 +578,9 @@ function UpdateCards(player, clocation, data) { //YGOPro is constantly sending d
     var place = cardplace[clocation];
     console.log("Updating Multiple Card Positions for", player + "'s", place);
     try {
+        if (update != duel[player][place]){
+           // console.log(update);     
+        }
         duel[player][place] = update;
         //console.log(duel);
     } catch (error) {
@@ -588,16 +596,19 @@ function UpdateCard(player, clocation, index, data) {
     var update = JSON.parse(data);
     player = 'p' + player;
     console.log("Updating Single Card Position", update, player + " ", "Card : " + index, cardplace[clocation]);
-
-
+    if (duel[player][cardplace[clocation]][index] != update){
+        $('.card.'+player+'.'+[cardplace[clocation]]+'.i'+index+' .front').css('background',
+            "yellow url(http://ygopro.de/img/cardpics/"+update.Id+'.jpg) no-repeat auto 0 0 cover');
+    }
+    
     duel[player][cardplace[clocation]][index] = update;
 
 }
 
 function DrawCard(player, numberOfCards) {
     console.log("p" + player + " drew " + numberOfCards + " card(s)");
-    animateDrawCard(player,numberOfCards);
-     layouthand('p1');
+    animateDrawCard("p"+player,numberOfCards);
+    layouthand('p'+player);
 }
 
 function NewPhase(phase) {
