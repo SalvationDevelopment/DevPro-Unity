@@ -118,17 +118,86 @@ public class HubCommands : MonoBehaviour
 		m_lastLoginRequest = DateTime.Now;
 	}
 	
+	public void GetGameList(string data)
+	{
+		SearchRequest request = JsonReader.Deserialize<SearchRequest>(data);
+		m_client.SendPacket(DevServerPackets.GameList,data);
+	}
+	
+	public void GetChannelList()
+	{
+		m_client.SendPacket(DevServerPackets.ChannelList);	
+	}
+	
+	public void JoinChannel(string channel)
+	{
+		m_client.SendPacket(DevServerPackets.JoinChannel,channel);
+	}
+	
+	public void LeaveChannel(string channel)
+	{
+		m_client.SendPacket(DevServerPackets.LeaveChannel,channel);
+	}
+	
+	public void RandomSpectate()
+	{
+		m_client.SendPacket(DevServerPackets.RandomSpectate);
+	}
+	
 	public void SendMessage(string location,int command,string message, int isprivate)
 	{
+		string[] parts = message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+		
+		if (parts[0].StartsWith("/") && !Convert.ToBoolean(isprivate))
+		{
+			if(!HandleCommand(parts[0],message,location))
+				return;
+		}
+        else
+		{
+			SendMessage(Convert.ToBoolean(isprivate) ? MessageType.PrivateMessage : MessageType.Message,
+				(CommandType)command,location,message,ServerDetails.User);
+		}
+	}
+	
+	private void SendMessage(MessageType type, CommandType command, string location, string message,UserData user)
+	{
 		m_client.SendPacket(DevServerPackets.ChatMessage, 
-                JsonWriter.Serialize(
-		new ChatMessage()
+			JsonWriter.Serialize(
+			new ChatMessage()
 		{ 
-			type = Convert.ToBoolean(isprivate) ?(int)MessageType.PrivateMessage : (int)MessageType.Message, 
-			command = command, 
+			type = (int)type, 
+			command = (int)command, 
 			channel = location, 
 			message = message,
-			from = ServerDetails.User
+			from = user
 		}));
 	}
+	
+	private bool HandleCommand(string part,string message, string location)
+        {
+            var cmd = part.Substring(1).ToLower();
+            switch(cmd)
+            {
+                case "me":
+                    var isTeam = location == MessageType.Team.ToString();
+					SendMessage(isTeam ? MessageType.Team : MessageType.Message, CommandType.Me, location, 
+						message.Substring(part.Length).Trim(),ServerDetails.User);
+                    break;
+                case "join":
+                    JoinChannel(message.Substring(part.Length).Trim());
+                    break;
+                case "ping":
+                    m_client.SendPacket(DevServerPackets.Ping);
+                    break;
+                case "teamdisband":
+                    m_client.SendPacket(DevServerPackets.ChatCommand, JsonWriter.Serialize(new PacketCommand { Command = cmd.ToUpper(), Data = message.Substring(part.Length).Trim() }));
+                    break;
+                default:
+                    m_client.SendPacket(DevServerPackets.ChatCommand, JsonWriter.Serialize(new PacketCommand { Command = cmd.ToUpper(), Data = message.Substring(part.Length).Trim() }));
+                    break;
+            }
+
+            return true;
+        }
 }

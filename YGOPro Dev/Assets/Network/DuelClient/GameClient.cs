@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Text;
 using System.Net;
 using System.Collections.Generic;
 using DevPro.Game.Network.Helpers;
@@ -293,6 +294,26 @@ public class GameClient : MonoBehaviour {
 		}
 		
 		Connection.Send(Convert.ToBoolean(ready) ? CtosMessage.HsReady: CtosMessage.HsNotReady);
+	}
+	
+	public void KickPlayer(int user)
+	{
+		if(m_behavior.m_duel == null)
+		{
+			if(!m_behavior.m_room.IsHost)
+				return;
+			GameClientPacket kick = new GameClientPacket(CtosMessage.HsKick);
+			kick.Write((byte)user);
+			Connection.Send(kick);
+		}
+	}
+	
+	public void Chat(string message)
+	{
+		byte[] content = Encoding.Unicode.GetBytes(message + "\0");
+		GameClientPacket chat = new GameClientPacket(CtosMessage.Chat);
+		chat.Write(content);
+		Connection.Send(chat);
 	}
 	
 	public void StartDuel()
