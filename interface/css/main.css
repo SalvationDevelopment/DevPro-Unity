@@ -65,13 +65,18 @@ textarea {
   -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
  }
 
-
+@font-face
+{
+font-family: MKStencilsansBlack;
+src: url('/font/MKStencilsansBlack.ttf'),
+     
+}
 
 body { background-attachment: fixed; background-repeat: no-repeat; background-color:black; background-image: url(../img/bg.jpg); background-size: 100%; font-family: 'Roboto', sans-serif; font-size: 15px; font-weight: 400;}
 html, body, header, .game, .field{height:100% !important;}
 
 
-#logo {margin-top:-35px; margin-right:20px; height:150px; width:150px; display: inline-block; text-align: center; }
+#logo {margin-top:-35px; margin-right:-20px; height:150px; width:150px; display: inline-block; text-align: center; }
 h1 {color:darkgrey;font-size:80px;margin: 0 auto; padding:0; text-align: center; padding: 0; line-height: 1.2em; font-family: 'Poiret One', cursive; text-shadow:0 0 1px darkgrey; font-weight: 200}
 h2 {margin-top:-0px;text-align: center; maring:0 auto; padding:0; font-family: 'Poiret One', cursive; text-shadow:0 0 1px white; font-weight: 200; }
 header, .game {min-height:450px; margin: 0 auto; padding:250px 0; color:white; background:rgba(0,0,0,.65); overflow: auto}

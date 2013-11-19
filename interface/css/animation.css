@@ -25,14 +25,14 @@
 
 .p1.Deck         {top : 43px; right: 744px; }
 .p1.Hand         {top : -10px; right: 124px; }
-.p1.Extra        {top : 43p; right: 32px; }
+.p1.Extra        {top : 43px; right: 32px; }
  
 
-.p1.SpellZone.i0     {top :188px; right:144px;}
-.p1.SpellZone.i1     {top :188px; right:261px;}
-.p1.SpellZone.i2     {top :188px; right:379px;}
-.p1.SpellZone.i3     {top :188px; right:497px;}
-.p1.SpellZone.i4     {top :188px; right:614px;}
+.p1.SpellZone.i0     {top :117px; right:144px;}
+.p1.SpellZone.i1     {top :117px; right:261px;}
+.p1.SpellZone.i2     {top :117px; right:379px;}
+.p1.SpellZone.i3     {top :117px; right:497px;}
+.p1.SpellZone.i4     {top :117px; right:614px;}
 .p1.SpellZone.i5     {top :188px; right:;}
 
 
@@ -43,7 +43,7 @@
 .p1.MonsterZone.i4     {top :250px; right:614px;}
 
 .card { -webkit-transform-style: preserve-3d; width:83px; height:124px; background:blue; position:absolute; -z-index: 3; -webkit-transition: all 500ms;}
-.card.deck { -webkit-transition: left 15ms;}
+.card.deck { -webkit-transition: left 150ms;}
 
 
 .card div {
@@ -51,6 +51,7 @@
   position: absolute;
   width: 100%;
   height: 100%;
+    background-size:cover;
    
 }
 .card .front {
@@ -61,12 +62,14 @@
     -webkit-transform: rotate3d(0,1,0, 180deg );
 
 }
-.defensemode{
+.Defense{
     -webkit-transform: rotate3d(0,0,1, 90deg );
-
 }
-.faceup {-webkit-transform: rotate3d(0,1,0,180deg ); }
+.Defense .back {-webkit-transform: rotate3d(0,1,0, 180deg );}
+
+
+.FaceDownAttack  {-webkit-transform: rotate3d(0,1,0,180deg ); }
 .FaceUpDefence { -webkit-transform: rotate3d(0,0,1, 90deg ) rotate3d(0,1,0, 180deg ); }
-.faceup div {
+.AttackFaceUp div, .FaceUp div {
     -webkit-backface-visibility: hidden
 }
