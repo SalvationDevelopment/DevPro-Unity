@@ -235,13 +235,19 @@ public class GameClient : MonoBehaviour {
 		}
 	}
 	
-	public void CreateGame(string roomInfos)
+	public void CreateGame(string data)
 	{
 		if(Connection != null)
 			if(Connection.IsConnected)
 				Connection.Close();
 		
-		ServerInfo server = ServerDetails.GetRandomServer();
+		StartDuel duelinfo = JsonReader.Deserialize<StartDuel>(data);		
+		ServerInfo server;
+		if(string.IsNullOrEmpty(duelinfo.Server))
+			server = ServerDetails.GetRandomServer();
+		else
+			server = ServerDetails.GetServer(duelinfo.Server);
+		
 		if(server != null && ServerDetails.User != null)
 		{
 			Connection = new GameConnection(IPAddress.Parse(server.serverAddress),server.serverPort);
@@ -254,7 +260,7 @@ public class GameClient : MonoBehaviour {
         	packet = new GameClientPacket(CtosMessage.JoinGame);
         	packet.Write(Version);
         	packet.Write(junk);
-        	packet.Write(roomInfos, 30);
+        	packet.Write(duelinfo.DuelString, 30);
         	Connection.Send(packet);
 		}
 		else
@@ -262,7 +268,8 @@ public class GameClient : MonoBehaviour {
 			//send no servers avliable message
 			BrowserMessages.MessagePopUp("No servers are currently available.");
 		}
-	
+		
+		
 	}
 	
 	public void UpdateDeck(string data)
