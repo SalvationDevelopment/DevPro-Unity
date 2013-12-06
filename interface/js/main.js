@@ -384,7 +384,7 @@ function OnHubMessage(type, data) {
                     } else {
                         name = '<strong>' + rank + json.content.from.username + ':</strong> ';
                     }
-                    $('#room-' + json.content.channel)
+                    $('#room')
                         .append('<li id="linecount-' + servermessagecount + '">' + name + json.content.message + '</li>');
                     $('#linecount-' + servermessagecount)
                         .urlize();
