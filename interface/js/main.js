@@ -101,9 +101,9 @@ $(document).ready(function () {
             $('#intro').toggle();
             $('.login').toggle();
             $('header').toggle();
-            $('body').css({
-                'background': 'url(http://ygopro.de/img/bg_black.png)'
-            });
+//            $('body').css({
+//                'background': 'url(http://ygopro.de/img/bg_black.png)'
+//            });
         } else {
             alert('just one moment, server connection system is loading.');
 
@@ -188,13 +188,21 @@ $(document).ready(function () {
         $('#messagerbox').css('height', '0px');
     });
     $("#jquery_jplayer_1").jPlayer("play", 0);
+    $('#chatform').on('submit',function(event) {
+         messageon();
+         autoscroll1();
+        console.log('message sent'); 
+        
+         
+         
+    });
 });
 
 
 function joinroom(roomtojoin){
         activeroom = roomtojoin;
         
-         u.getUnity().SendMessage("HubClient", '', 9, roomtojoin);
+         u.getUnity().SendMessage('HubClient','JoinChannel', roomtojoin);
         $('#chatbox').append('<ul class="room active" id=room-'+roomtojoin+'></ul>');
         $('#chatrooms').append('<li class="active" id=control-'+roomtojoin+'>'+roomtojoin+'</li>');
         $('#chatbox ul, #chatrooms li').not('#'+roomtojoin).removeClass('active');
@@ -294,11 +302,8 @@ function OnHubMessage(type, data) {
     });
 
 }
-//            chatserver.socket.send(JSON.stringify({
-//                id: 6,
-//                content: ''
-//            }));
-//            joinroom(activeroom);
+
+            joinroom(activeroom);
         }
         break;
         //--------------
@@ -393,7 +398,7 @@ function OnHubMessage(type, data) {
                 break;
             case 2:
                 {
-                    $('#room-' + activeroom)
+                    $('#room')
                         .append('<li class="servermessage" id="linecount-' + servermessagecount + '">Server : ' + json.content.message + '</li>');
                 }
                 break;
@@ -433,7 +438,7 @@ function OnHubMessage(type, data) {
     default:
         {
             console.log(json);
-            alert('new data');
+            
         }
     }
     
@@ -709,3 +714,23 @@ function debugField(){
     
      
 }
+
+
+
+
+
+//chat
+
+function messageon(){
+
+                if ( $('#chatform input').val() === ""){return false;}
+                messagesend = $('#chatform input').val();
+                $('#chatform input').val("");
+
+
+                u.getUnity().SendMessage('HubClient','SendMessage', activeroom, false, messagesend, false);
+                autoscroll = 60;
+    e.preventDefault();            
+    return true;
+
+        }
