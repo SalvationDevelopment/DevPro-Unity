@@ -50,8 +50,16 @@ var duel = {
     }
 };
 
-
-
+var autoscroll = 0;
+setInterval(function() {
+        
+  if( autoscroll >= 0  ){
+          try{autoscroll1();
+          }catch(e){}
+  }
+         autoscroll--;
+}, 500);
+autoscroll1 = function(){var elem = document.getElementById(activeroom);elem.scrollTop = elem.scrollHeight;};
 
 
 /* create Unity object */
@@ -721,14 +729,15 @@ function debugField(){
 
 //chat
 
-function messageon(){
-
+function messageon(private){
+                private  = 0;
                 if ( $('#chatform input').val() === ""){return false;}
                 messagesend = $('#chatform input').val();
-                $('#chatform input').val("");
+                $('#chatform input').val(""); 
 
-
-                u.getUnity().SendMessage('HubClient','SendMessage', activeroom, false, messagesend, false);
+                var tosend= {location : activeroom, message :  messagesend, isprivate: false};
+                tosend = JSON.stringify(tosend);
+                u.getUnity().SendMessage('HubClient','ChatMessage', tosend);
                 autoscroll = 60;
     e.preventDefault();            
     return true;
