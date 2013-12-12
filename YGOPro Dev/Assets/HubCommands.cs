@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using DevPro.Network;
 using DevPro.Network.Enums;
 using DevPro.Network.Data;
+using DevPro.Network.Data.Unity;
 using System;
 using System.Text;
 using System.Security.Cryptography;
@@ -85,7 +86,7 @@ public class HubCommands : MonoBehaviour
 				ServerDetails.ServerList.Remove(removeserver);
 			break;
 		}
-		BrowserMessages.HubMessage((int)data.Packet,Encoding.UTF8.GetString(data.Raw));
+		BrowserMessages.HubMessage((int)data.Packet, Encoding.UTF8.GetString(data.Raw));
 	}
 	
 	DateTime m_lastRegisterRequest  = new DateTime();
@@ -144,19 +145,21 @@ public class HubCommands : MonoBehaviour
 		m_client.SendPacket(DevServerPackets.RandomSpectate);
 	}
 	
-	public void SendMessage(string location,int command,string message, int isprivate)
+	public void ChatMessage(string data)
 	{
-		string[] parts = message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+		ChatRequest messagedata = JsonReader.Deserialize<ChatRequest>(data);
 		
-		if (parts[0].StartsWith("/") && !Convert.ToBoolean(isprivate))
+		string[] parts = messagedata.message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+		
+		if (parts[0].StartsWith("/") && !Convert.ToBoolean(messagedata.isprivate))
 		{
-			if(!HandleCommand(parts[0],message,location))
+			if(!HandleCommand(parts[0],messagedata.message,messagedata.location))
 				return;
 		}
         else
 		{
-			SendMessage(Convert.ToBoolean(isprivate) ? MessageType.PrivateMessage : MessageType.Message,
-				(CommandType)command,location,message,ServerDetails.User);
+			SendMessage(Convert.ToBoolean(messagedata.isprivate) ? MessageType.PrivateMessage : MessageType.Message,
+				CommandType.None,messagedata.location,messagedata.message,ServerDetails.User);
 		}
 	}
 	

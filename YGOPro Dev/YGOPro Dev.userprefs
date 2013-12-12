@@ -1,22 +1,22 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Network\HubServer\Data\Unity\ChatRequest.cs">
+    <Files>
+      <File FileName="Assets\HubCommands.cs" Line="161" Column="12" />
+      <File FileName="Assets\HubCommands.cs" Line="160" Column="4" />
+      <File FileName="Assets\Network\HubServer\Data\Unity\ChatRequest.cs" Line="8" Column="5" />
+      <File FileName="Assets\Network\HubServer\Data\ChannelData.cs" Line="1" Column="1" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Assembly-CSharp" expanded="True">
-            <Node name="Assets" expanded="True">
-              <Node name="Network" expanded="True">
-                <Node name="DuelClient" expanded="True">
-                  <Node name="Data" expanded="True">
-                    <Node name="StartDuel.cs" selected="True" />
+            <Node name="Network" expanded="True">
+              <Node name="HubServer" expanded="True">
+                <Node name="Data" expanded="True">
+                  <Node name="Unity" expanded="True">
+                    <Node name="ChatRequest.cs" selected="True" />
                   </Node>
-                  <Node name="Enums" expanded="True" />
-                  <Node name="Helpers" expanded="True" />
-                </Node>
-                <Node name="HubServer" expanded="True">
-                  <Node name="Data" expanded="True" />
-                  <Node name="Enums" expanded="True" />
                 </Node>
               </Node>
             </Node>
