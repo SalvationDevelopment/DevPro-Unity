@@ -1,4 +1,4 @@
-/* globals window, $ */
+/* globals window, $, jQuery */
 // Avoid `console` errors in browsers that lack a console.
 (function() {
     var method;
@@ -39,3 +39,20 @@ function tetris(array){
      var arr = array.filter(function(n){return n;});
     return arr;
 }
+jQuery.fn.urlize = function() {
+    if (this.length > 0) {
+        this.each(function(i, obj){
+            // making links active
+            var x = $(obj).html();
+            var list = x.match( /\b(http:\/\/|www\.|http:\/\/www\.)[^ <]{2,200}\b/g );
+            if (list) {
+                for ( i = 0; i < list.length; i++ ) {
+                    var prot = list[i].indexOf('http://') === 0 || list[i].indexOf('https://') === 0 ? '' : 'http://';
+                    x = x.replace( list[i], "<a target='_blank' href='" + prot + list[i] + "'>"+ list[i] + "</a>" );
+                }
+
+            }
+            $(obj).html(x);
+        });
+    }
+};

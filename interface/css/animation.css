@@ -4,6 +4,8 @@
 .p0.Deck         {bottom : 43px; left: 735px; }
 .p0.Hand         {bottom : -10px; left: 124px; }
 .p0.Extra        {bottom : 43px; left: 22px; }
+.p0.Grave        {bottom : 181px; left: 735px; }
+
 
 
 .p0.SpellZone.i0     {bottom :188px; left:144px;}
@@ -23,9 +25,10 @@
 
 .p1 {position:absolute; display:block}
 
-.p1.Deck         {top : 43px; right: 744px; }
+.p1.Deck         {top : 43px;right: 744px; }
 .p1.Hand         {top : -10px; right: 124px; }
 .p1.Extra        {top : 43px; right: 32px; }
+.p1.Grave        {top : 181px; right: 735px; }
  
 
 .p1.SpellZone.i0     {top :117px; right:144px;}

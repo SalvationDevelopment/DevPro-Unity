@@ -9,7 +9,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>DevPro Online Version 0.0.0.74</title>
+    <title>DevPro Online Version 0.01.0.99</title>
     <link rel="shortcut icon" href="/favicon.ico" />
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
@@ -61,7 +61,7 @@
         <div class="originloading" style="text-align:center; margin-top:">Loading Unity...
             <br>
         </div>
-        <div style="font-size:.5em; text-align:center; padding-top:20px;">Version 0 : Production 0 : Revision 0 : Commit 74</div>
+        <div style="font-size:.5em; text-align:center; padding-top:20px;">Version 0 : Production 1 : Revision 0 : Commit 99</div>
     </header>
     <footer id="messagerbox">
         <div class="close">close</div>
@@ -74,6 +74,22 @@
         <div class="container">
             <span id="creategamebutton">create game</span>
             <a href="cardreader/">Deck Builder</a>
+             <div class="transparent container" id="chat" >
+                    <div id="chatbody">
+                        <div id="chatbox">
+                        <ul id="room"></ul>
+                    </div>
+                        <ul id="users">
+                        </ul>
+                        <ul id="chatrooms" class="form-body"></ul>
+                        
+                        <menu id="chatform" > 
+                            <input placeholder="Enter text here,..." type="text" />
+                            <button type="button" onclick="messageon()">Send</button>
+                        </menu>
+                    </div>
+                    
+            </div>
         </div>
     </section>
     <section id="creategame" style="display:none">

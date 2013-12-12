@@ -101,8 +101,8 @@ function layouthand(player){
         }else{
             xCoord = 1.9*f + sequence * 4.0*f / (count - 1);
         }
-        console.log('.'+player+'.Hand.i'+sequence);
-        console.log(xCoord);
+       // console.log('.'+player+'.Hand.i'+sequence);
+        //console.log(xCoord);
         if (player === 'p0'){
             $('.'+player+'.Hand.i'+sequence).css('left',''+xCoord+'px');
         }else{
